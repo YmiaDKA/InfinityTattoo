@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   ImageIcon,
   ImagePlusIcon,
@@ -25,13 +25,43 @@ type WorkItem = {
 };
 
 const tags = ["Realism", "Vector", "Custom"];
+const storageKey = "infinity-admin-work-items";
 
 export function AdminWorkEditor() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
+  const [hasLoadedItems, setHasLoadedItems] = useState(false);
   const [items, setItems] = useState<WorkItem[]>([]);
   const [tag, setTag] = useState(tags[0]);
   const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      const savedItems = window.localStorage.getItem(storageKey);
+
+      if (savedItems) {
+        try {
+          const parsedItems = JSON.parse(savedItems) as WorkItem[];
+
+          if (Array.isArray(parsedItems)) {
+            setItems(parsedItems);
+          }
+        } catch {
+          window.localStorage.removeItem(storageKey);
+        }
+      }
+
+      setHasLoadedItems(true);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    if (hasLoadedItems) {
+      window.localStorage.setItem(storageKey, JSON.stringify(items));
+    }
+  }, [hasLoadedItems, items]);
 
   function handleAddItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -130,7 +160,7 @@ export function AdminWorkEditor() {
           items.map((item) => (
             <Card className="overflow-hidden bg-card/70" key={item.id}>
               <div className="relative aspect-[4/5] bg-background">
-                {/* Uploaded previews are local to this browser session. */}
+                {/* Uploaded previews are saved in this browser until shared storage is added. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   alt={item.title}
@@ -164,7 +194,7 @@ export function AdminWorkEditor() {
           <Card className="bg-card/70 sm:col-span-2">
             <CardContent className="flex items-center gap-3 p-6 text-muted-foreground">
               <ImageIcon className="size-5 text-[color:var(--studio-red)]" />
-              No tattoos added in this session.
+              No tattoos saved in this browser yet.
             </CardContent>
           </Card>
         )}
