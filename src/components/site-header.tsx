@@ -18,8 +18,8 @@ export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    let animationFrame = 0;
     let lastValue = false;
+    let deferredScrollCheck = 0;
 
     const updateScrollState = () => {
       const nextValue = window.scrollY > 36;
@@ -30,25 +30,21 @@ export function SiteHeader() {
       }
     };
 
-    const scheduleScrollState = () => {
-      if (animationFrame) {
-        return;
-      }
-
-      animationFrame = window.requestAnimationFrame(() => {
-        animationFrame = 0;
-        updateScrollState();
-      });
+    const scheduleDeferredScrollState = () => {
+      window.clearTimeout(deferredScrollCheck);
+      deferredScrollCheck = window.setTimeout(updateScrollState, 180);
     };
 
-    scheduleScrollState();
-    window.addEventListener("scroll", scheduleScrollState, { passive: true });
+    scheduleDeferredScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+    window.addEventListener("hashchange", scheduleDeferredScrollState);
 
     return () => {
-      window.removeEventListener("scroll", scheduleScrollState);
-      if (animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
-      }
+      window.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+      window.removeEventListener("hashchange", scheduleDeferredScrollState);
+      window.clearTimeout(deferredScrollCheck);
     };
   }, []);
 
@@ -61,15 +57,24 @@ export function SiteHeader() {
     >
       <nav
         className={cn(
-          "grid h-16 w-full max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-2 transition-[max-width,background-color,border-color,box-shadow,padding] duration-300 ease-out will-change-transform sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-out sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
-            ? "max-w-5xl rounded-full border border-foreground/10 bg-background/45 px-2.5 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:px-3"
-            : "border border-transparent bg-transparent px-0"
+            ? "max-w-[56rem] px-2.5 sm:px-3 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
+            : "px-0"
         )}
         aria-label="Main navigation"
       >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute top-1/2 z-0 hidden h-14 rounded-full border border-foreground/10 bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl transition-[left,width,transform,background-color] duration-300 ease-out md:block",
+            isScrolled
+              ? "left-0 w-full -translate-y-1/2 translate-x-0"
+              : "left-1/2 w-[15.5rem] -translate-x-1/2 -translate-y-1/2 bg-muted/40 shadow-none backdrop-blur-none"
+          )}
+        />
         <Link
-          className="flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
+          className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
           href="#home"
         >
           <span className="relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground sm:size-11">
@@ -89,8 +94,8 @@ export function SiteHeader() {
 
         <div
           className={cn(
-            "hidden items-center gap-1 rounded-full transition-[background-color,padding] duration-300 ease-out md:flex",
-            isScrolled ? "bg-transparent p-0" : "bg-muted/40 p-1"
+            "relative z-10 hidden translate-y-0.5 items-center gap-1 rounded-full transition-[padding] duration-300 ease-out md:flex",
+            isScrolled ? "p-0" : "p-1"
           )}
         >
           {navItems.map((item) => (
@@ -104,7 +109,7 @@ export function SiteHeader() {
           ))}
         </div>
 
-        <div className="justify-self-end">
+        <div className="relative z-10 justify-self-end">
           <Button
             className="h-11 gap-2 rounded-full pl-4 !pr-4 text-sm sm:gap-2.5 sm:pl-7 sm:!pr-7"
             nativeButton={false}

@@ -28,7 +28,7 @@ export function SetmoreBooking() {
       />
       <label
         aria-label="Hide cookie hint"
-        className="absolute right-6 top-1/2 z-50 hidden w-52 -translate-y-1/2 cursor-pointer text-left opacity-95 drop-shadow-2xl transition hover:opacity-100 peer-checked:hidden lg:block"
+        className="absolute right-1 top-[58%] z-50 hidden w-52 -translate-y-1/2 cursor-pointer text-left opacity-95 drop-shadow-2xl transition hover:opacity-100 peer-checked:hidden lg:block"
         htmlFor="setmore-cookie-hint-toggle"
       >
         <Image

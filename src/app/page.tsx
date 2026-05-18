@@ -331,7 +331,7 @@ export default function Home() {
         <div className="overflow-hidden rounded-3xl border bg-card/80 p-2">
           <iframe
             aria-label="Infinity Tattoo location on Google Maps"
-            className="h-[25rem] w-full rounded-[1.25rem] border-0 grayscale"
+            className="h-[25rem] w-full rounded-2xl border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             scrolling="no"
@@ -341,7 +341,7 @@ export default function Home() {
       </section>
 
       <footer className="px-5 pb-10 sm:px-8">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-[68rem]">
           <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-foreground">
               <span className="relative flex size-10 overflow-hidden rounded-full bg-foreground">
