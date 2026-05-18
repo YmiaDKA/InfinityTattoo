@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   CalendarDaysIcon,
   CheckIcon,
@@ -13,6 +14,12 @@ import {
 import { SetmoreBooking } from "@/components/setmore-booking";
 import { SiteHeader } from "@/components/site-header";
 import { InstagramIcon, TikTokIcon } from "@/components/social-icons";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
@@ -74,18 +81,46 @@ const standards = [
 const testimonials = [
   {
     quote:
-      "Amazing experience from start to finish. The studio is clean, professional, and the attention to detail is next level.",
-    name: "antreas P.",
+      "Very happy with the result and the full experience. Comfortable session, visible passion, and strong attention to detail.",
+    name: "Kristi Rouko",
   },
   {
     quote:
-      "The artist really took the time to understand my idea and turned it into something better than I imagined. Clean lines, great atmosphere, and true craftsmanship.",
-    name: "Christos A.",
+      "Clean studio, welcoming energy, chill vibe, and a tattoo that turned out better than expected.",
+    name: "Areti Anastasi",
   },
   {
     quote:
-      "High-quality work and a very professional approach. You can see the passion in every detail. I highly recommend Infinity Tattoo Studio.",
-    name: "thomas p.",
+      "Clean and welcoming studio with a great vibe. The artist listens, gives advice, and makes the process comfortable.",
+    name: "Petros Tzegias",
+  },
+  {
+    quote:
+      "Excellent communication from the start, with time spent understanding the idea and helping shape the right design.",
+    name: "Hlias Hysos",
+  },
+];
+
+const faqItems = [
+  {
+    question: "How do I book a consultation?",
+    answer:
+      "Use the booking calendar above and choose a consultation length that fits your idea. You can share references and placement details during the consultation.",
+  },
+  {
+    question: "What should I bring?",
+    answer:
+      "Bring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.",
+  },
+  {
+    question: "Do you do custom designs?",
+    answer:
+      "Yes. Most work is custom, built around your idea, body placement, and the long-term look of the tattoo.",
+  },
+  {
+    question: "Where is the studio?",
+    answer:
+      "Infinity Tattoo is at Skårersletta 48c in Lørenskog. The map above opens the exact location.",
   },
 ];
 
@@ -102,7 +137,8 @@ export default function Home() {
           loop
           muted
           playsInline
-          poster="/media/artist/filippos.jpg"
+          poster="/media/hero-poster.png"
+          preload="metadata"
         >
           <source src="/media/video/studio-reel.mp4#t=4" type="video/mp4" />
         </video>
@@ -283,10 +319,10 @@ export default function Home() {
 
       <section
         id="contact"
-        className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-20 sm:px-8 lg:py-28"
+        className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
-          Consulation
+          Consultation
         </h2>
 
         <div className="grid gap-3 md:grid-cols-3">
@@ -317,15 +353,39 @@ export default function Home() {
 
         <div id="setmore-booking" className="scroll-mt-28" />
 
-        <div className="relative overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]">
-          <BorderBeam
-            borderWidth={1}
-            colorFrom="var(--studio-red)"
-            colorTo="var(--foreground)"
-            duration={9}
-            size={240}
+        <div className="relative">
+          <input
+            aria-hidden="true"
+            className="peer sr-only"
+            id="setmore-cookie-hint-toggle"
+            tabIndex={-1}
+            type="checkbox"
           />
-          <SetmoreBooking />
+          <div className="relative overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]">
+            <BorderBeam
+              borderWidth={1}
+              colorFrom="var(--studio-red)"
+              colorTo="var(--foreground)"
+              duration={9}
+              size={240}
+            />
+            <SetmoreBooking />
+          </div>
+          <label
+            aria-label="Hide cookie hint"
+            className="absolute left-[calc(100%+1.25rem)] top-[62%] z-50 hidden w-52 -translate-y-1/2 cursor-pointer text-left opacity-95 drop-shadow-2xl transition duration-150 ease-out hover:opacity-100 peer-checked:pointer-events-none peer-checked:scale-95 peer-checked:opacity-0 xl:block"
+            htmlFor="setmore-cookie-hint-toggle"
+          >
+            <Image
+              alt="Accept cookies to use calendar"
+              className="pointer-events-none h-auto w-full"
+              height={536}
+              loading="eager"
+              src="/media/cookies.svg"
+              unoptimized
+              width={496}
+            />
+          </label>
         </div>
 
         <div className="overflow-hidden rounded-3xl border bg-card/80 p-2">
@@ -337,6 +397,21 @@ export default function Home() {
             scrolling="no"
             src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
           />
+        </div>
+
+        <div className="rounded-3xl border bg-card/60 p-2">
+          <Accordion className="px-4 py-2" defaultValue={[faqItems[0].question]}>
+            {faqItems.map((item) => (
+              <AccordionItem key={item.question} value={item.question}>
+                <AccordionTrigger className="py-4 text-base">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 
@@ -379,12 +454,15 @@ export default function Home() {
             </div>
           </div>
           <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70">
-            <a className="transition hover:text-foreground" href="/admin">
+            <Link
+              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
+              href="/admin"
+            >
               Admin
-            </a>
+            </Link>
             <a
-              className="transition hover:text-foreground"
-              href="https://albab.dk"
+              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
+              href="https://www.albab.dk/"
               rel="noreferrer"
               target="_blank"
             >

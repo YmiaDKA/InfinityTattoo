@@ -1,14 +1,9 @@
 import Link from "next/link";
-import { ArrowLeftIcon, LockKeyholeIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 
 import { AdminWorkEditor } from "@/components/admin-work-editor";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type AdminPageProps = {
   searchParams: Promise<{
@@ -37,34 +32,26 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         {isUnlocked ? (
           <AdminWorkEditor />
         ) : (
-          <Card className="bg-card/70">
-            <CardHeader>
-              <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <LockKeyholeIcon className="size-5" />
-              </div>
-              <CardTitle className="font-display text-4xl">Admin</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form action="/admin" className="flex flex-col gap-4" method="get">
-                <label className="flex flex-col gap-2 text-sm font-medium">
-                  Entry code
-                  <input
-                    autoComplete="current-password"
-                    className="h-11 rounded-full border border-input bg-background/60 px-4 text-base outline-none transition focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-                    name="code"
-                    placeholder="Enter code"
-                    type="password"
-                  />
-                </label>
-                <button
-                  className={buttonVariants({ className: "w-fit rounded-full" })}
-                  type="submit"
-                >
-                  Open editor
-                </button>
-              </form>
-            </CardContent>
-          </Card>
+          <form
+            action="/admin"
+            className="mx-auto flex w-full max-w-sm items-center gap-3 pt-24"
+            method="get"
+          >
+            <label className="sr-only" htmlFor="admin-code">
+              Enter code
+            </label>
+            <Input
+              autoComplete="current-password"
+              className="h-12 rounded-full px-5 text-base"
+              id="admin-code"
+              name="code"
+              placeholder="Enter code"
+              type="password"
+            />
+            <Button className="h-12 rounded-full px-5" type="submit">
+              Enter
+            </Button>
+          </form>
         )}
       </div>
     </main>

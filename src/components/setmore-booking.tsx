@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export function SetmoreBooking() {
   return (
     <div
@@ -19,28 +17,6 @@ export function SetmoreBooking() {
           />
         </div>
       </div>
-      <input
-        aria-hidden="true"
-        className="peer sr-only"
-        id="setmore-cookie-hint-toggle"
-        tabIndex={-1}
-        type="checkbox"
-      />
-      <label
-        aria-label="Hide cookie hint"
-        className="absolute right-1 top-[58%] z-50 hidden w-52 -translate-y-1/2 cursor-pointer text-left opacity-95 drop-shadow-2xl transition hover:opacity-100 peer-checked:hidden lg:block"
-        htmlFor="setmore-cookie-hint-toggle"
-      >
-        <Image
-          alt="Accept cookies to use calendar"
-          className="pointer-events-none h-auto w-full"
-          height={536}
-          loading="eager"
-          src="/media/cookies.svg"
-          unoptimized
-          width={496}
-        />
-      </label>
     </div>
   );
 }

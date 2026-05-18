@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CalendarDaysIcon } from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,6 @@ export function SiteHeader() {
 
   useEffect(() => {
     let lastValue = false;
-    let deferredScrollCheck = 0;
 
     const updateScrollState = () => {
       const nextValue = window.scrollY > 36;
@@ -30,48 +30,44 @@ export function SiteHeader() {
       }
     };
 
-    const scheduleDeferredScrollState = () => {
-      window.clearTimeout(deferredScrollCheck);
-      deferredScrollCheck = window.setTimeout(updateScrollState, 180);
-    };
-
-    scheduleDeferredScrollState();
+    updateScrollState();
     window.addEventListener("scroll", updateScrollState, { passive: true });
     window.addEventListener("resize", updateScrollState);
-    window.addEventListener("hashchange", scheduleDeferredScrollState);
 
     return () => {
       window.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", updateScrollState);
-      window.removeEventListener("hashchange", scheduleDeferredScrollState);
-      window.clearTimeout(deferredScrollCheck);
     };
   }, []);
 
   return (
     <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 transition-[padding] duration-300 ease-out sm:px-8",
-        isScrolled && "pt-3"
-      )}
+      className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
       <nav
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-out sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
-            ? "max-w-[56rem] px-2.5 sm:px-3 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
+            ? "max-w-[56rem] px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"
         )}
         aria-label="Main navigation"
       >
-        <span
+        <motion.span
           aria-hidden="true"
+          animate={{
+            left: isScrolled ? 0 : "50%",
+            width: isScrolled ? "100%" : "15.5rem",
+            x: isScrolled ? "0%" : "-50%",
+          }}
           className={cn(
-            "pointer-events-none absolute top-1/2 z-0 hidden h-14 rounded-full border border-foreground/10 bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl transition-[left,width,transform,background-color] duration-300 ease-out md:block",
+            "pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 md:block",
             isScrolled
-              ? "left-0 w-full -translate-y-1/2 translate-x-0"
-              : "left-1/2 w-[15.5rem] -translate-x-1/2 -translate-y-1/2 bg-muted/40 shadow-none backdrop-blur-none"
+              ? "bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl"
+              : "bg-muted/40"
           )}
+          initial={false}
+          transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         />
         <Link
           className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
