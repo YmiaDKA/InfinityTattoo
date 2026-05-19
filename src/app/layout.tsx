@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     siteName: "Infinity Tattoo Studio",
     images: [
       {
-        url: "/media/hero-poster.png",
-        width: 1366,
-        height: 768,
+        url: "/media/hero-poster.jpeg",
+        width: 2782,
+        height: 1172,
         alt: "Infinity Tattoo Studio",
       },
     ],
