@@ -73,7 +73,12 @@ export function SiteHeader() {
           className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
           href="#home"
         >
-          <span className="relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground sm:size-11">
+          <span
+            className={cn(
+              "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
+              isScrolled && "-translate-x-1"
+            )}
+          >
             <Image
               src="/media/brand/infinity.svg"
               alt=""

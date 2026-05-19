@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { SetmoreBooking } from "@/components/setmore-booking";
+import { SetmoreCookieDismiss } from "@/components/setmore-cookie-dismiss";
 import { SiteHeader } from "@/components/site-header";
 import { InstagramIcon, TikTokIcon } from "@/components/social-icons";
 import {
@@ -137,7 +138,7 @@ export default function Home() {
           loop
           muted
           playsInline
-          poster="/media/hero-poster.png"
+          poster="/media/hero-poster.jpeg"
           preload="metadata"
         >
           <source src="/media/video/studio-reel.mp4#t=4" type="video/mp4" />
@@ -353,14 +354,7 @@ export default function Home() {
 
         <div id="setmore-booking" className="scroll-mt-28" />
 
-        <div className="relative">
-          <input
-            aria-hidden="true"
-            className="peer sr-only"
-            id="setmore-cookie-hint-toggle"
-            tabIndex={-1}
-            type="checkbox"
-          />
+        <SetmoreCookieDismiss>
           <div className="relative overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]">
             <BorderBeam
               borderWidth={1}
@@ -371,22 +365,7 @@ export default function Home() {
             />
             <SetmoreBooking />
           </div>
-          <label
-            aria-label="Hide cookie hint"
-            className="absolute left-[calc(100%+1.25rem)] top-[62%] z-50 hidden w-52 -translate-y-1/2 cursor-pointer text-left opacity-95 drop-shadow-2xl transition duration-150 ease-out hover:opacity-100 peer-checked:pointer-events-none peer-checked:scale-95 peer-checked:opacity-0 xl:block"
-            htmlFor="setmore-cookie-hint-toggle"
-          >
-            <Image
-              alt="Accept cookies to use calendar"
-              className="pointer-events-none h-auto w-full"
-              height={536}
-              loading="eager"
-              src="/media/cookies.svg"
-              unoptimized
-              width={496}
-            />
-          </label>
-        </div>
+        </SetmoreCookieDismiss>
 
         <div className="overflow-hidden rounded-3xl border bg-card/80 p-2">
           <iframe
