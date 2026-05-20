@@ -7,7 +7,6 @@ import {
   MapPinIcon,
   MoveUpRightIcon,
   PhoneIcon,
-  ShieldCheckIcon,
   StarIcon,
 } from "lucide-react";
 
@@ -24,12 +23,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { Separator } from "@/components/ui/separator";
 
@@ -65,33 +59,33 @@ const standards = [
     titleEn: "Custom designs",
     titleNo: "Skreddersydde design",
     textEn:
-      "Every tattoo is shaped around your idea, placement, body, and long-term wear.",
+      "Custom designs shaped around your idea, body placement, and long-term wear.",
     textNo:
-      "Hver tatovering formes rundt ideen din, plassering, kroppen og hvordan den skal holde seg over tid.",
+      "Skreddersydde design rundt ideen din, plassering og langvarig uttrykk.",
   },
   {
     titleEn: "High-quality realism",
     titleNo: "Realisme på høyt nivå",
     textEn:
-      "Strong focus on depth, contrast, portrait detail, and clean black-and-grey execution.",
+      "High-quality realism with depth, contrast, detail, and clean black-and-grey execution.",
     textNo:
-      "Sterkt fokus på dybde, kontrast, portrettdetaljer og ren black-and-grey utførelse.",
+      "Realisme på høyt nivå med dybde, kontrast og ren black-and-grey utførelse.",
   },
   {
     titleEn: "Safe studio",
     titleNo: "Trygt studio",
     textEn:
-      "Professional hygiene, clear aftercare, and a calm process from consultation to finish.",
+      "Safe studio with professional hygiene from the first consultation to aftercare.",
     textNo:
-      "Profesjonell hygiene, tydelig etterbehandling og en rolig prosess fra konsultasjon til ferdig tatovering.",
+      "Trygt studio med profesjonell hygiene fra konsultasjon til etterbehandling.",
   },
   {
     titleEn: "Clear communication",
     titleNo: "Tydelig kommunikasjon",
     textEn:
-      "You get a direct conversation about concept, sizing, references, and expectations.",
+      "Clear communication about concept, sizing, references, timing, and expectations.",
     textNo:
-      "Du får en direkte samtale om konsept, størrelse, referanser og forventninger.",
+      "Tydelig kommunikasjon om konsept, størrelse, referanser og forventninger.",
   },
 ];
 
@@ -284,6 +278,7 @@ export default function Home() {
       </section>
 
       <section
+        id="reviews"
         className="border-y bg-card/25 py-8 text-muted-foreground"
         aria-label="Client reviews"
       >
@@ -312,6 +307,18 @@ export default function Home() {
             </Card>
           ))}
         </Marquee>
+        <div className="mt-6 flex justify-center px-5">
+          <Button
+            className="rounded-full"
+            nativeButton={false}
+            render={<Link href="/reviews" />}
+            size="lg"
+            variant="outline"
+          >
+            Read all
+            <MoveUpRightIcon data-icon="inline-end" />
+          </Button>
+        </div>
       </section>
 
       <section
@@ -330,14 +337,32 @@ export default function Home() {
               />
             </p>
           </div>
-          <div className="relative min-h-64 overflow-hidden rounded-lg border bg-card">
-            <Image
-              src="/media/gallery-strip.png"
-              alt="Three black and grey realism tattoo examples"
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 56vw, 90vw"
-            />
+          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+            <Button
+              className="rounded-full"
+              nativeButton={false}
+              render={
+                <a
+                  href="https://www.instagram.com/infinitytattoo.lorenskog/"
+                  rel="noreferrer"
+                  target="_blank"
+                />
+              }
+              size="lg"
+              variant="outline"
+            >
+              <InstagramIcon data-icon="inline-start" />
+              Instagram
+            </Button>
+            <Button
+              className="rounded-full"
+              nativeButton={false}
+              render={<Link href="/work" />}
+              size="lg"
+            >
+              View all
+              <MoveUpRightIcon data-icon="inline-end" />
+            </Button>
           </div>
         </div>
 
@@ -411,24 +436,16 @@ export default function Home() {
             </div>
           </div>
 
-          <div
-            id="studio"
-            className="grid gap-4 lg:col-span-2 md:grid-cols-2 lg:grid-cols-4"
-          >
+          <div id="studio" className="grid gap-4 lg:col-span-2 md:grid-cols-2">
             {standards.map((item) => (
-              <Card className="bg-card/70" key={item.titleEn}>
-                <CardHeader>
-                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
-                  <CardTitle>
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="flex items-start gap-3" key={item.titleEn}>
+                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <CheckIcon className="size-4" />
+                </span>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  <LocalizedText en={item.textEn} no={item.textNo} />
+                </p>
+              </div>
             ))}
           </div>
         </div>
@@ -439,7 +456,7 @@ export default function Home() {
         className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
-          <LocalizedText en="Consultation" no="Konsultasjon" />
+          <LocalizedText en="Booking" no="Booking" />
         </h2>
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -472,7 +489,10 @@ export default function Home() {
             rel="noreferrer"
             target="_blank"
           >
-            <LocalizedText en="Open in new page" no="Åpne i ny side" />
+            <LocalizedText
+              en="Open booking in new page"
+              no="Åpne booking i ny side"
+            />
             <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
           </a>
         </div>
@@ -609,7 +629,7 @@ export default function Home() {
               rel="noreferrer"
               target="_blank"
             >
-              made by albab.dk
+              website by albab.dk
             </a>
           </div>
         </div>

@@ -12,10 +12,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { labelEn: "Work", labelNo: "Arbeid", href: "#work" },
-  { labelEn: "Artist", labelNo: "Artist", href: "#artist" },
-  { labelEn: "Contact", labelNo: "Kontakt", href: "#contact" },
-  { labelEn: "FAQ", labelNo: "FAQ", href: "#faq" },
+  { labelEn: "Work", labelNo: "Arbeid", href: "/#work" },
+  { labelEn: "Artist", labelNo: "Artist", href: "/#artist" },
+  { labelEn: "Contact", labelNo: "Kontakt", href: "/#contact" },
+  { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
 
 export function SiteHeader() {
@@ -59,22 +59,20 @@ export function SiteHeader() {
         <motion.span
           aria-hidden="true"
           animate={{
-            left: isScrolled ? 0 : "50%",
-            width: isScrolled ? "100%" : "29rem",
-            x: isScrolled ? "0%" : "-50%",
+            left: 0,
+            width: "100%",
+            x: "0%",
           }}
           className={cn(
-            "pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 md:block",
-            isScrolled
-              ? "bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl"
-              : "bg-muted/40"
+            "pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl",
+            isScrolled && "md:block"
           )}
           initial={false}
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         />
         <Link
           className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
-          href="#home"
+          href="/#home"
         >
           <span
             className={cn(
@@ -102,13 +100,13 @@ export function SiteHeader() {
 
         <div
           className={cn(
-            "relative z-10 hidden translate-y-0.5 items-center gap-1 rounded-full transition-[padding] duration-300 ease-out md:flex",
-            isScrolled ? "p-0" : "p-1"
+            "relative z-10 hidden h-12 items-center gap-1 rounded-full border border-foreground/10 px-1 transition-colors duration-300 md:flex",
+            isScrolled ? "border-transparent bg-transparent" : "bg-muted/40"
           )}
         >
           {navItems.map((item) => (
             <a
-              className="rounded-full px-4 py-2 text-sm text-muted-foreground transition hover:bg-background hover:text-foreground"
+              className="inline-flex h-10 items-center rounded-full px-5 text-sm text-muted-foreground transition hover:bg-background hover:text-foreground"
               href={item.href}
               key={item.href}
             >
@@ -124,10 +122,13 @@ export function SiteHeader() {
           <Button
             className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
-            render={<a href="#booking" />}
+            render={<Link href="/#booking" />}
             size="lg"
           >
-            <LocalizedText en="Book session" no="Book" />
+            <span className="hidden md:inline">
+              <LocalizedText en="Book session" no="Book" />
+            </span>
+            <span className="md:hidden">Book</span>
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
         </div>

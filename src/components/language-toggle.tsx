@@ -15,7 +15,7 @@ export function LanguageToggle() {
   return (
     <div
       aria-label="Choose language"
-      className="inline-flex shrink-0 items-center gap-0.5 rounded-full border border-foreground/10 bg-background/35 p-0.5 text-muted-foreground backdrop-blur"
+      className="inline-flex h-9 shrink-0 items-center gap-0.5 rounded-full border border-foreground/10 bg-background/35 p-1 text-muted-foreground backdrop-blur sm:h-10 md:h-11"
     >
       {languages.map((language) => {
         const isActive = activeLanguage === language;
@@ -24,7 +24,7 @@ export function LanguageToggle() {
           <button
             aria-pressed={isActive}
             className={cn(
-              "relative h-6 min-w-8 rounded-full px-2 text-[0.68rem] font-semibold leading-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+              "relative h-full min-w-9 rounded-full px-2 text-xs font-semibold leading-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:min-w-11",
               isActive && "text-foreground"
             )}
             key={language}
