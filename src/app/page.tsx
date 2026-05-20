@@ -269,7 +269,7 @@ export default function Home() {
               render={<a href="#booking" />}
               size="lg"
             >
-              <LocalizedText en="Book a session" no="Book time" />
+              <LocalizedText en="Book session" no="Book session" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button

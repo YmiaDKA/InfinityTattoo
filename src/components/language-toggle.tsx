@@ -29,7 +29,7 @@ export function LanguageToggle({ merged = false }: { merged?: boolean }) {
           <button
             aria-pressed={isActive}
             className={cn(
-              "relative h-full min-w-9 rounded-full px-2 text-xs font-semibold leading-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:min-w-11",
+              "relative h-full min-w-9 rounded-full px-2 text-xs font-semibold leading-none transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:min-w-11",
               isActive && "text-foreground"
             )}
             key={language}

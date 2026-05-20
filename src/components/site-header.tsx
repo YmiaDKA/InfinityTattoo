@@ -68,6 +68,9 @@ export function SiteHeader() {
     <header
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
+      <div className="absolute right-5 top-5 hidden md:block sm:right-8">
+        <LanguageToggle />
+      </div>
       <nav
         ref={navRef}
         className={cn(
@@ -129,7 +132,7 @@ export function SiteHeader() {
         >
           {navItems.map((item) => (
             <a
-              className="inline-flex h-10 items-center rounded-full px-5 text-sm text-muted-foreground transition hover:bg-background hover:text-foreground"
+              className="inline-flex h-10 items-center rounded-full px-5 text-sm text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
               href={item.href}
               key={item.href}
             >
@@ -139,19 +142,13 @@ export function SiteHeader() {
         </div>
 
         <div className="relative z-10 flex items-center gap-2 justify-self-end">
-          <div className="hidden md:block">
-            <LanguageToggle merged={isScrolled} />
-          </div>
           <Button
             className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:translate-x-1 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
             render={<Link href="/#booking" />}
             size="lg"
           >
-            <span className="hidden md:inline">
-              <LocalizedText en="Book session" no="Book" />
-            </span>
-            <span className="md:hidden">Book</span>
+            <LocalizedText en="Book time" no="Book time" />
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
         </div>
