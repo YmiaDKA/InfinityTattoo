@@ -95,7 +95,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="relative z-10 justify-self-center md:hidden">
-          <LanguageToggle />
+          <LanguageToggle merged={isScrolled} />
         </div>
 
         <div
@@ -117,10 +117,10 @@ export function SiteHeader() {
 
         <div className="relative z-10 flex items-center gap-2 justify-self-end">
           <div className="hidden md:block">
-            <LanguageToggle />
+            <LanguageToggle merged={isScrolled} />
           </div>
           <Button
-            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
+            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:translate-x-1 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
             render={<Link href="/#booking" />}
             size="lg"

@@ -165,60 +165,68 @@ const faqItems = [
 
 const aftercareItems = [
   {
-    questionEn: "Day 1-3",
-    questionNo: "Dag 1-3",
+    questionEn: "Days 1-3: the fresh wound phase",
+    questionNo: "Dag 1-3: ferskt sår",
     answerEn:
-      "Keep the tattoo protected and clean. Wash gently with clean hands, let it air dry, and follow the film or wrap instructions you were given.",
+      "Your tattoo is an open wound. Redness, swelling, and tenderness are normal. Wash your hands before touching it, remove the wrap after 2-4 hours, wash gently with fragrance-free soap, pat dry with clean paper towel, apply a very thin layer of aftercare balm, and wear loose soft clothing. Do not re-wrap, touch it with unwashed hands, soak it, use too much cream, expose it to direct sun, or let tight clothing rub against it.",
     answerNo:
-      "Hold tatoveringen beskyttet og ren. Vask forsiktig med rene hender, la den lufttørke, og følg instruksene du fikk for folie/plast.",
+      "Tatoveringen er et åpent sår. Rødhet, hevelse og ømhet er normalt. Vask hendene før du tar på den, fjern plasten etter 2-4 timer, vask forsiktig med parfymefri såpe, klapp tørr med rent papir, bruk et veldig tynt lag aftercare balm, og bruk myke løse klær. Ikke pakk den inn på nytt, ta på den med uvaskede hender, bløtlegg den, bruk for mye krem, utsett den for direkte sol, eller la stramme klær gnisse.",
   },
   {
-    questionEn: "Day 4-7",
-    questionNo: "Dag 4-7",
+    questionEn: "Days 4-7: itching and peeling",
+    questionNo: "Dag 4-7: kløe og flassing",
     answerEn:
-      "Start using a thin layer of aftercare cream when the skin feels dry. Rub it fully in so the skin can breathe.",
+      "The skin will begin to peel and flake like a sunburn. The itching can be intense, but this is healing. Continue washing twice daily, let flakes fall off naturally, tap gently if it itches, and stay hydrated. Do not pick, peel, scratch, use scented lotion, swim, use a sauna, or shave over the tattoo.",
     answerNo:
-      "Bruk et tynt lag aftercare-krem når huden føles tørr. Masser kremen helt inn, så huden får puste.",
+      "Huden begynner å flasse som etter solbrenthet. Kløen kan være sterk, men dette er healing. Fortsett å vaske to ganger daglig, la flass falle av naturlig, klapp forsiktig hvis det klør, og drikk nok vann. Ikke plukk, riv, klø, bruk parfymerte kremer, bad, bruk badstue, eller barber over tatoveringen.",
   },
   {
-    questionEn: "Week 2",
-    questionNo: "Uke 2",
+    questionEn: "Week 2: cloudy skin",
+    questionNo: "Uke 2: matt hud",
     answerEn:
-      "Peeling and itching is normal. Do not scratch, pick, or pull flakes. Keep clothing clean and loose over the tattoo.",
+      "The peeling has mostly stopped, but the tattoo may look dull or faded. This is a thin layer of dead skin over the new tattoo and it clears as the skin sheds. Continue moisturizing daily, keep it clean, be patient, and start applying SPF if exposed to light. Do not judge the healed result yet, scrub it, train hard over the area, or go into the sun without protection.",
     answerNo:
-      "Flassing og kløe er normalt. Ikke klø, plukk eller dra av flass. Bruk rene og løse klær over tatoveringen.",
+      "Flassingen har stort sett stoppet, men tatoveringen kan se matt eller blek ut. Det er et tynt lag død hud over den nye tatoveringen, og det forsvinner når huden slipper. Fortsett å fukte daglig, hold området rent, vær tålmodig, og bruk SPF hvis den eksponeres for lys. Ikke vurder sluttresultatet ennå, skrubb området, tren hardt over tatoveringen, eller gå i solen uten beskyttelse.",
   },
   {
-    questionEn: "Week 3-4",
-    questionNo: "Uke 3-4",
+    questionEn: "Weeks 3-4: surface healed",
+    questionNo: "Uke 3-4: overflaten er grodd",
     answerEn:
-      "The tattoo may look healed on top, but the skin is still settling. Avoid hard friction, heavy soaking, and rough training contact.",
+      "The outer skin is healed and the tattoo should look sharp again. The deeper layers can still take 3-6 months to settle fully. Keep moisturizing, apply SPF 50 outdoors, resume normal activities, and evaluate later if a touch-up is needed. Do not skip sunscreen, book a touch-up before it is fully healed, or stop moisturizing.",
     answerNo:
-      "Tatoveringen kan se grodd ut på overflaten, men huden stabiliserer seg fortsatt. Unngå hard friksjon, lang bløtlegging og røff treningskontakt.",
+      "Ytre hudlag er grodd og tatoveringen bør se skarp ut igjen. Dypere hudlag kan fortsatt bruke 3-6 måneder på å stabilisere seg helt. Fortsett å fukte, bruk SPF 50 ute, gå tilbake til normale aktiviteter, og vurder senere om touch-up trengs. Ikke dropp solkrem, book touch-up før den er helt grodd, eller slutt å fukte.",
   },
   {
-    questionEn: "Always avoid while healing",
-    questionNo: "Unngå mens den gror",
+    questionEn: "Recommended products",
+    questionNo: "Anbefalte produkter",
     answerEn:
-      "Avoid swimming, sauna, steam showers, direct sun, tanning beds, scratching, picking, and letting others touch the tattoo.",
+      "Use a tattoo aftercare balm in thin layers 2-3 times daily. Use mild fragrance-free soap from any pharmacy and avoid alcohol, heavy perfumes, or exfoliating agents. Once healed, SPF 50 is essential every time the tattoo is exposed to sunlight.",
     answerNo:
-      "Unngå bading, badstue, dampdusj, direkte sol, solarium, kløing, plukking og at andre tar på tatoveringen.",
+      "Bruk tattoo aftercare balm i tynne lag 2-3 ganger daglig. Bruk mild parfymefri såpe fra apotek, og unngå alkohol, sterke parfymer eller eksfolierende ingredienser. Når tatoveringen er grodd, er SPF 50 viktig hver gang den eksponeres for sollys.",
+  },
+  {
+    questionEn: "Always avoid",
+    questionNo: "Unngå alltid",
+    answerEn:
+      "Avoid swimming and soaking for at least 3 weeks, direct sunlight, sauna and steam, alcohol 24 hours before and during early healing, tight clothing, picking, and scratching. Soaking draws out ink, UV fades tattoos, heat irritates healing skin, and picking can cause scarring.",
+    answerNo:
+      "Unngå bading og bløtlegging i minst 3 uker, direkte sollys, badstue og damp, alkohol 24 timer før og tidlig i healing, stramme klær, plukking og kløing. Bløtlegging trekker ut blekk, UV bleker tatoveringer, varme irriterer huden, og plukking kan gi arr.",
   },
   {
     questionEn: "Long-term care",
     questionNo: "Langsiktig pleie",
     answerEn:
-      "Once healed, use sunscreen and keep the skin moisturized. Sun exposure fades contrast and detail over time.",
+      "Moisturize daily to keep skin hydrated and the tattoo vibrant. Use SPF 50 every time the tattoo is exposed to sunlight. Stay hydrated so the skin holds ink better. Touch-ups may be needed after years depending on sun exposure and skin type.",
     answerNo:
-      "Når tatoveringen er grodd, bruk solkrem og hold huden fuktet. Sol bleker kontrast og detaljer over tid.",
+      "Fukt huden daglig for å holde tatoveringen levende. Bruk SPF 50 hver gang tatoveringen eksponeres for sollys. Hold deg hydrert, slik at huden holder bedre på blekket. Touch-ups kan bli aktuelt etter flere år, avhengig av soleksponering og hudtype.",
   },
   {
-    questionEn: "Questions during healing?",
-    questionNo: "Spørsmål under healing?",
+    questionEn: "Signs of infection",
+    questionNo: "Tegn på infeksjon",
     answerEn:
-      "If anything feels unclear, contact the studio early. It is better to ask than to guess during the healing period.",
+      "Some redness and swelling in the first 2-3 days is normal. Contact a doctor if redness, swelling, or heat increases after day 3, if yellow or green discharge appears, if you get fever or chills, red streaks, severe worsening pain, or raised hard lumps under the skin. If anything feels unusual, message the studio early.",
     answerNo:
-      "Hvis noe er uklart, kontakt studioet tidlig. Det er bedre å spørre enn å gjette mens tatoveringen gror.",
+      "Noe rødhet og hevelse de første 2-3 dagene er normalt. Kontakt lege hvis rødhet, hevelse eller varme øker etter dag 3, hvis gul eller grønn væske kommer fra tatoveringen, hvis du får feber eller frysninger, røde striper, sterk økende smerte, eller harde hevelser under huden. Hvis noe føles uvanlig, kontakt studioet tidlig.",
   },
 ];
 
@@ -387,7 +395,7 @@ export default function Home() {
       </section>
 
       <section id="artist" className="border-y bg-card/35">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
+        <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
           <div className="relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
@@ -397,7 +405,7 @@ export default function Home() {
               sizes="(min-width: 1024px) 38vw, 92vw"
             />
           </div>
-          <div className="flex flex-col justify-center gap-6">
+          <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Badge variant="secondary" className="w-fit">
                 <LocalizedText en="The artist" no="Artisten" />
@@ -424,29 +432,29 @@ export default function Home() {
                   no: "Realisme først i utførelsen",
                 },
               ].map((item) => (
-                  <div className="flex items-center gap-3" key={item.en}>
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                      <CheckIcon className="size-4" />
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      <LocalizedText en={item.en} no={item.no} />
-                    </span>
-                  </div>
-                ))}
+                <div className="flex items-center gap-3" key={item.en}>
+                  <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <CheckIcon className="size-4" />
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    <LocalizedText en={item.en} no={item.no} />
+                  </span>
+                </div>
+              ))}
             </div>
-          </div>
 
-          <div id="studio" className="grid gap-4 lg:col-span-2 md:grid-cols-2">
-            {standards.map((item) => (
-              <div className="flex items-start gap-3" key={item.titleEn}>
-                <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <CheckIcon className="size-4" />
-                </span>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  <LocalizedText en={item.textEn} no={item.textNo} />
-                </p>
-              </div>
-            ))}
+            <div id="studio" className="grid gap-4 md:grid-cols-2">
+              {standards.map((item) => (
+                <div className="flex items-start gap-3" key={item.titleEn}>
+                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <CheckIcon className="size-4" />
+                  </span>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    <LocalizedText en={item.textEn} no={item.textNo} />
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

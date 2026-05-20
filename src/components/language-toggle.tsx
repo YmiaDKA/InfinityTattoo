@@ -5,7 +5,7 @@ import { setLanguage, useLanguage, type Language } from "@/lib/language-store";
 
 const languages: Language[] = ["NO", "EN"];
 
-export function LanguageToggle() {
+export function LanguageToggle({ merged = false }: { merged?: boolean }) {
   const activeLanguage = useLanguage();
 
   function chooseLanguage(language: Language) {
@@ -15,7 +15,12 @@ export function LanguageToggle() {
   return (
     <div
       aria-label="Choose language"
-      className="inline-flex h-9 shrink-0 items-center gap-0.5 rounded-full border border-foreground/10 bg-background/35 p-1 text-muted-foreground backdrop-blur sm:h-10 md:h-11"
+      className={cn(
+        "inline-flex h-9 shrink-0 items-center gap-0.5 rounded-full p-1 text-muted-foreground backdrop-blur transition-colors sm:h-10 md:h-11",
+        merged
+          ? "border border-transparent bg-transparent"
+          : "border border-foreground/10 bg-background/35"
+      )}
     >
       {languages.map((language) => {
         const isActive = activeLanguage === language;
@@ -34,7 +39,10 @@ export function LanguageToggle() {
             {isActive ? (
               <span
                 aria-hidden="true"
-                className="absolute inset-0 rounded-full bg-foreground/10"
+                className={cn(
+                  "absolute inset-0 rounded-full",
+                  merged ? "border border-background/35" : "bg-foreground/10"
+                )}
               />
             ) : null}
             <span className="relative z-10">{language}</span>
