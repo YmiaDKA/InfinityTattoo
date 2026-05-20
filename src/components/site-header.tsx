@@ -14,8 +14,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { labelEn: "Work", labelNo: "Arbeid", href: "#work" },
   { labelEn: "Artist", labelNo: "Artist", href: "#artist" },
-  { labelEn: "FAQ", labelNo: "FAQ", href: "#faq" },
   { labelEn: "Contact", labelNo: "Kontakt", href: "#contact" },
+  { labelEn: "FAQ", labelNo: "FAQ", href: "#faq" },
 ];
 
 export function SiteHeader() {
@@ -60,7 +60,7 @@ export function SiteHeader() {
           aria-hidden="true"
           animate={{
             left: isScrolled ? 0 : "50%",
-            width: isScrolled ? "100%" : "15.5rem",
+            width: isScrolled ? "100%" : "29rem",
             x: isScrolled ? "0%" : "-50%",
           }}
           className={cn(

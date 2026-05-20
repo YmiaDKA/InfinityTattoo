@@ -247,7 +247,6 @@ export default function Home() {
           <source src="/media/video/studio-reel.mp4#t=4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/35 via-background/45 to-background" />
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_75%_20%,var(--studio-red-soft),transparent_35%)]" />
 
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 pb-14 pt-32 sm:px-8 lg:pb-20">
           <div className="flex max-w-4xl flex-col gap-6">
@@ -534,7 +533,7 @@ export default function Home() {
             <h3 className="font-display text-3xl font-bold">
               <LocalizedText en="Aftercare" no="Etterbehandling" />
             </h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground">
               <LocalizedText
                 en="Follow the steps below through the healing period. If the artist gives you personal instructions, follow those first."
                 no="Følg stegene under gjennom healing-perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
@@ -547,10 +546,10 @@ export default function Home() {
           >
             {aftercareItems.map((item) => (
               <AccordionItem key={item.questionEn} value={item.questionEn}>
-                <AccordionTrigger className="py-4 text-base uppercase tracking-[0.16em] text-[color:var(--studio-red)]">
+                <AccordionTrigger className="py-4 text-base uppercase tracking-[0.16em] text-foreground">
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="text-foreground">
                   <LocalizedText en={item.answerEn} no={item.answerNo} />
                 </AccordionContent>
               </AccordionItem>
