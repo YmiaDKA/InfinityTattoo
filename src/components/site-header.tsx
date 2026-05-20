@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarDaysIcon } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { LanguageToggle } from "@/components/language-toggle";
 import { LocalizedText } from "@/components/localized-text";
@@ -20,9 +20,29 @@ const navItems = [
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [pillBounds, setPillBounds] = useState({ left: 0, width: 0 });
+  const navRef = useRef<HTMLElement>(null);
+  const navItemsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let lastValue = false;
+
+    const measurePill = () => {
+      const nav = navRef.current;
+      const items = navItemsRef.current;
+
+      if (!nav || !items) {
+        return;
+      }
+
+      const navRect = nav.getBoundingClientRect();
+      const itemRect = items.getBoundingClientRect();
+
+      setPillBounds({
+        left: itemRect.left - navRect.left,
+        width: itemRect.width,
+      });
+    };
 
     const updateScrollState = () => {
       const nextValue = window.scrollY > 36;
@@ -33,13 +53,14 @@ export function SiteHeader() {
       }
     };
 
+    measurePill();
     updateScrollState();
+    window.addEventListener("resize", measurePill);
     window.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
 
     return () => {
       window.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
+      window.removeEventListener("resize", measurePill);
     };
   }, []);
 
@@ -48,6 +69,7 @@ export function SiteHeader() {
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
       <nav
+        ref={navRef}
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
@@ -59,16 +81,19 @@ export function SiteHeader() {
         <motion.span
           aria-hidden="true"
           animate={{
-            left: 0,
-            width: "100%",
-            x: "0%",
+            backgroundColor: isScrolled
+              ? "color-mix(in oklch, var(--background) 45%, transparent)"
+              : "color-mix(in oklch, var(--muted) 40%, transparent)",
+            left: isScrolled ? 0 : pillBounds.left,
+            width: isScrolled ? "100%" : pillBounds.width,
           }}
-          className={cn(
-            "pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 bg-background/45 shadow-2xl shadow-black/20 backdrop-blur-2xl",
-            isScrolled && "md:block"
-          )}
+          className="pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 shadow-2xl shadow-black/20 backdrop-blur-2xl md:block"
           initial={false}
-          transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
+          transition={{
+            backgroundColor: { duration: 0.14 },
+            left: { type: "spring", duration: 0.42, bounce: 0.08 },
+            width: { type: "spring", duration: 0.42, bounce: 0.08 },
+          }}
         />
         <Link
           className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
@@ -99,10 +124,8 @@ export function SiteHeader() {
         </div>
 
         <div
-          className={cn(
-            "relative z-10 hidden h-12 items-center gap-1 rounded-full border border-foreground/10 px-1 transition-colors duration-300 md:flex",
-            isScrolled ? "border-transparent bg-transparent" : "bg-muted/40"
-          )}
+          ref={navItemsRef}
+          className="relative z-10 hidden h-12 items-center gap-1 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 md:flex"
         >
           {navItems.map((item) => (
             <a

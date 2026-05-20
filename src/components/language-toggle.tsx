@@ -41,7 +41,7 @@ export function LanguageToggle({ merged = false }: { merged?: boolean }) {
                 aria-hidden="true"
                 className={cn(
                   "absolute inset-0 rounded-full",
-                  merged ? "border border-background/35" : "bg-foreground/10"
+                  merged ? "border border-foreground/10" : "bg-foreground/10"
                 )}
               />
             ) : null}
