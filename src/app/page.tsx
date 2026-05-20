@@ -171,52 +171,60 @@ const faqItems = [
 
 const aftercareItems = [
   {
-    titleEn: "Day 1-3",
-    titleNo: "Dag 1-3",
-    textEn:
-      "Keep the tattoo clean, follow the wrapping instructions you were given, and wash gently with clean hands.",
-    textNo:
-      "Hold tatoveringen ren, følg instruksene du fikk om folie/plast, og vask forsiktig med rene hender.",
+    questionEn: "Day 1-3",
+    questionNo: "Dag 1-3",
+    answerEn:
+      "Keep the tattoo protected and clean. Wash gently with clean hands, let it air dry, and follow the film or wrap instructions you were given.",
+    answerNo:
+      "Hold tatoveringen beskyttet og ren. Vask forsiktig med rene hender, la den lufttørke, og følg instruksene du fikk for folie/plast.",
   },
   {
-    titleEn: "Day 4-7",
-    titleNo: "Dag 4-7",
-    textEn:
-      "Apply a thin layer of aftercare cream when needed. Do not over-moisturize, scratch, or pick at flakes.",
-    textNo:
-      "Påfør et tynt lag aftercare-krem ved behov. Ikke bruk for mye krem, og ikke klø eller plukk på flass.",
+    questionEn: "Day 4-7",
+    questionNo: "Dag 4-7",
+    answerEn:
+      "Start using a thin layer of aftercare cream when the skin feels dry. Rub it fully in so the skin can breathe.",
+    answerNo:
+      "Bruk et tynt lag aftercare-krem når huden føles tørr. Masser kremen helt inn, så huden får puste.",
   },
   {
-    titleEn: "Week 2",
-    titleNo: "Uke 2",
-    textEn:
-      "Light peeling and itching is normal. Let the skin heal naturally and keep clothing clean and loose over the area.",
-    textNo:
-      "Lett flassing og kløe er normalt. La huden gro naturlig og bruk rene, løse klær over området.",
+    questionEn: "Week 2",
+    questionNo: "Uke 2",
+    answerEn:
+      "Peeling and itching is normal. Do not scratch, pick, or pull flakes. Keep clothing clean and loose over the tattoo.",
+    answerNo:
+      "Flassing og kløe er normalt. Ikke klø, plukk eller dra av flass. Bruk rene og løse klær over tatoveringen.",
   },
   {
-    titleEn: "Week 3-4",
-    titleNo: "Uke 3-4",
-    textEn:
-      "The surface may look healed, but the skin is still settling. Avoid hard friction and keep caring for the area.",
-    textNo:
-      "Overflaten kan se grodd ut, men huden stabiliserer seg fortsatt. Unngå hard friksjon og fortsett å ta vare på området.",
+    questionEn: "Week 3-4",
+    questionNo: "Uke 3-4",
+    answerEn:
+      "The tattoo may look healed on top, but the skin is still settling. Avoid hard friction, heavy soaking, and rough training contact.",
+    answerNo:
+      "Tatoveringen kan se grodd ut på overflaten, men huden stabiliserer seg fortsatt. Unngå hard friksjon, lang bløtlegging og røff treningskontakt.",
   },
   {
-    titleEn: "Always avoid",
-    titleNo: "Unngå alltid",
-    textEn:
-      "Avoid swimming, sauna, direct sun, tanning beds, heavy soaking, and dirty gym surfaces while healing.",
-    textNo:
-      "Unngå bading, badstue, direkte sol, solarium, lang bløtlegging og urene treningsflater mens tatoveringen gror.",
+    questionEn: "Always avoid while healing",
+    questionNo: "Unngå mens den gror",
+    answerEn:
+      "Avoid swimming, sauna, steam showers, direct sun, tanning beds, scratching, picking, and letting others touch the tattoo.",
+    answerNo:
+      "Unngå bading, badstue, dampdusj, direkte sol, solarium, kløing, plukking og at andre tar på tatoveringen.",
   },
   {
-    titleEn: "Long-term care",
-    titleNo: "Langsiktig pleie",
-    textEn:
-      "Use sunscreen on healed tattoos and keep the skin moisturized to preserve contrast and detail.",
-    textNo:
-      "Bruk solkrem på grodde tatoveringer og hold huden fuktet for å bevare kontrast og detaljer.",
+    questionEn: "Long-term care",
+    questionNo: "Langsiktig pleie",
+    answerEn:
+      "Once healed, use sunscreen and keep the skin moisturized. Sun exposure fades contrast and detail over time.",
+    answerNo:
+      "Når tatoveringen er grodd, bruk solkrem og hold huden fuktet. Sol bleker kontrast og detaljer over tid.",
+  },
+  {
+    questionEn: "Questions during healing?",
+    questionNo: "Spørsmål under healing?",
+    answerEn:
+      "If anything feels unclear, contact the studio early. It is better to ask than to guess during the healing period.",
+    answerNo:
+      "Hvis noe er uklart, kontakt studioet tidlig. Det er bedre å spørre enn å gjette mens tatoveringen gror.",
   },
 ];
 
@@ -495,7 +503,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="rounded-3xl border bg-card/60 p-2">
+        <div id="faq" className="scroll-mt-28 rounded-3xl border bg-card/60 p-2">
           <div className="px-4 pt-4">
             <h3 className="font-display text-3xl font-bold">
               <LocalizedText en="FAQ" no="Ofte stilte spørsmål" />
@@ -518,34 +526,36 @@ export default function Home() {
           </Accordion>
         </div>
 
-        <div className="rounded-3xl border bg-card/60 p-6">
-          <div className="mb-6 flex flex-col gap-2">
+        <div
+          id="aftercare"
+          className="scroll-mt-28 rounded-3xl border bg-card/60 p-2"
+        >
+          <div className="px-4 pt-4">
             <h3 className="font-display text-3xl font-bold">
               <LocalizedText en="Aftercare" no="Etterbehandling" />
             </h3>
-            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
               <LocalizedText
-                en="First-pass guide from the aftercare sheet. Follow the personal instructions from your artist if they differ."
-                no="Første versjon basert på aftercare-arket. Følg de personlige instruksene fra artisten hvis de avviker."
+                en="Follow the steps below through the healing period. If the artist gives you personal instructions, follow those first."
+                no="Følg stegene under gjennom healing-perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
               />
             </p>
           </div>
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <Accordion
+            className="px-4 py-2"
+            defaultValue={[aftercareItems[0].questionEn]}
+          >
             {aftercareItems.map((item) => (
-              <Card className="bg-background/55" key={item.titleEn}>
-                <CardHeader>
-                  <CardTitle>
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </CardContent>
-              </Card>
+              <AccordionItem key={item.questionEn} value={item.questionEn}>
+                <AccordionTrigger className="py-4 text-base uppercase tracking-[0.16em] text-[color:var(--studio-red)]">
+                  <LocalizedText en={item.questionEn} no={item.questionNo} />
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  <LocalizedText en={item.answerEn} no={item.answerNo} />
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </section>
 
