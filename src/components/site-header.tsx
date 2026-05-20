@@ -6,6 +6,7 @@ import { CalendarDaysIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
+import { LanguageToggle } from "@/components/language-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -110,11 +111,14 @@ export function SiteHeader() {
           ))}
         </div>
 
-        <div className="relative z-10 justify-self-end">
+        <div className="relative z-10 flex items-center gap-2 justify-self-end">
+          <div className="hidden xl:block">
+            <LanguageToggle />
+          </div>
           <Button
             className="h-11 gap-2 rounded-full pl-4 !pr-4 text-sm sm:gap-2.5 sm:pl-7 sm:!pr-7"
             nativeButton={false}
-            render={<a href="#setmore-booking" />}
+            render={<a href="#booking" />}
             size="lg"
           >
             Book session

@@ -11,8 +11,7 @@ import {
   StarIcon,
 } from "lucide-react";
 
-import { SetmoreBooking } from "@/components/setmore-booking";
-import { SetmoreCookieDismiss } from "@/components/setmore-cookie-dismiss";
+import { LineworkBooking } from "@/components/linework-booking";
 import { SiteHeader } from "@/components/site-header";
 import { InstagramIcon, TikTokIcon } from "@/components/social-icons";
 import {
@@ -160,7 +159,7 @@ export default function Home() {
             <Button
               className="rounded-full"
               nativeButton={false}
-              render={<a href="#setmore-booking" />}
+              render={<a href="#booking" />}
               size="lg"
             >
               Book a session
@@ -326,7 +325,7 @@ export default function Home() {
           Consultation
         </h2>
 
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <a
             className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
@@ -350,22 +349,30 @@ export default function Home() {
             <MapPinIcon className="size-5 text-[color:var(--studio-red)]" />
             Skårersletta 48c
           </a>
+          <a
+            className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            href="https://booking.linework.com/infinity/tattoo"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Open in new page
+            <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
+          </a>
         </div>
 
-        <div id="setmore-booking" className="scroll-mt-28" />
-
-        <SetmoreCookieDismiss>
-          <div className="relative overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]">
-            <BorderBeam
-              borderWidth={1}
-              colorFrom="var(--studio-red)"
-              colorTo="var(--foreground)"
-              duration={9}
-              size={240}
-            />
-            <SetmoreBooking />
-          </div>
-        </SetmoreCookieDismiss>
+        <div
+          id="booking"
+          className="relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
+        >
+          <BorderBeam
+            borderWidth={1}
+            colorFrom="var(--studio-red)"
+            colorTo="var(--foreground)"
+            duration={9}
+            size={240}
+          />
+          <LineworkBooking />
+        </div>
 
         <div className="overflow-hidden rounded-3xl border bg-card/80 p-2">
           <iframe
