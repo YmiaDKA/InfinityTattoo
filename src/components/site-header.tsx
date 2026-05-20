@@ -7,13 +7,14 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 import { LanguageToggle } from "@/components/language-toggle";
+import { LocalizedText } from "@/components/localized-text";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Work", href: "#work" },
-  { label: "Artist", href: "#artist" },
-  { label: "Contact", href: "#contact" },
+  { labelEn: "Work", labelNo: "Arbeid", href: "#work" },
+  { labelEn: "Artist", labelNo: "Artist", href: "#artist" },
+  { labelEn: "Contact", labelNo: "Kontakt", href: "#contact" },
 ];
 
 export function SiteHeader() {
@@ -47,7 +48,7 @@ export function SiteHeader() {
     >
       <nav
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
             ? "max-w-[56rem] px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"
@@ -77,7 +78,7 @@ export function SiteHeader() {
           <span
             className={cn(
               "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
-              isScrolled && "-translate-x-1"
+              isScrolled && "max-md:translate-x-1 md:-translate-x-1"
             )}
           >
             <Image
@@ -94,6 +95,10 @@ export function SiteHeader() {
           </span>
         </Link>
 
+        <div className="relative z-10 justify-self-center md:hidden">
+          <LanguageToggle />
+        </div>
+
         <div
           className={cn(
             "relative z-10 hidden translate-y-0.5 items-center gap-1 rounded-full transition-[padding] duration-300 ease-out md:flex",
@@ -106,22 +111,22 @@ export function SiteHeader() {
               href={item.href}
               key={item.href}
             >
-              {item.label}
+              <LocalizedText en={item.labelEn} no={item.labelNo} />
             </a>
           ))}
         </div>
 
         <div className="relative z-10 flex items-center gap-2 justify-self-end">
-          <div className="hidden xl:block">
+          <div className="hidden md:block">
             <LanguageToggle />
           </div>
           <Button
-            className="h-11 gap-2 rounded-full pl-4 !pr-4 text-sm sm:gap-2.5 sm:pl-7 sm:!pr-7"
+            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
             render={<a href="#booking" />}
             size="lg"
           >
-            Book session
+            <LocalizedText en="Book session" no="Book" />
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
         </div>

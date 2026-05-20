@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { LineworkBooking } from "@/components/linework-booking";
+import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { InstagramIcon, TikTokIcon } from "@/components/social-icons";
 import {
@@ -61,20 +62,36 @@ const galleryImages = [
 
 const standards = [
   {
-    title: "Custom designs",
-    text: "Every tattoo is shaped around your idea, placement, body, and long-term wear.",
+    titleEn: "Custom designs",
+    titleNo: "Skreddersydde design",
+    textEn:
+      "Every tattoo is shaped around your idea, placement, body, and long-term wear.",
+    textNo:
+      "Hver tatovering formes rundt ideen din, plassering, kroppen og hvordan den skal holde seg over tid.",
   },
   {
-    title: "High-quality realism",
-    text: "Strong focus on depth, contrast, portrait detail, and clean black-and-grey execution.",
+    titleEn: "High-quality realism",
+    titleNo: "Realisme på høyt nivå",
+    textEn:
+      "Strong focus on depth, contrast, portrait detail, and clean black-and-grey execution.",
+    textNo:
+      "Sterkt fokus på dybde, kontrast, portrettdetaljer og ren black-and-grey utførelse.",
   },
   {
-    title: "Safe studio",
-    text: "Professional hygiene, clear aftercare, and a calm process from consultation to finish.",
+    titleEn: "Safe studio",
+    titleNo: "Trygt studio",
+    textEn:
+      "Professional hygiene, clear aftercare, and a calm process from consultation to finish.",
+    textNo:
+      "Profesjonell hygiene, tydelig etterbehandling og en rolig prosess fra konsultasjon til ferdig tatovering.",
   },
   {
-    title: "Clear communication",
-    text: "You get a direct conversation about concept, sizing, references, and expectations.",
+    titleEn: "Clear communication",
+    titleNo: "Tydelig kommunikasjon",
+    textEn:
+      "You get a direct conversation about concept, sizing, references, and expectations.",
+    textNo:
+      "Du får en direkte samtale om konsept, størrelse, referanser og forventninger.",
   },
 ];
 
@@ -103,24 +120,103 @@ const testimonials = [
 
 const faqItems = [
   {
-    question: "How do I book a consultation?",
-    answer:
+    questionEn: "How do I book a consultation?",
+    questionNo: "Hvordan booker jeg konsultasjon?",
+    answerEn:
       "Use the booking calendar above and choose a consultation length that fits your idea. You can share references and placement details during the consultation.",
+    answerNo:
+      "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Du kan dele referanser og plassering under konsultasjonen.",
   },
   {
-    question: "What should I bring?",
-    answer:
+    questionEn: "What should I bring?",
+    questionNo: "Hva bør jeg ha klart?",
+    answerEn:
       "Bring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.",
+    answerNo:
+      "Ha klare referansebilder, plassering, omtrent størrelse og detaljer som er viktige for designet.",
   },
   {
-    question: "Do you do custom designs?",
-    answer:
+    questionEn: "Do you do custom designs?",
+    questionNo: "Lager dere custom design?",
+    answerEn:
       "Yes. Most work is custom, built around your idea, body placement, and the long-term look of the tattoo.",
+    answerNo:
+      "Ja. Det meste lages custom rundt ideen din, plassering på kroppen og hvordan tatoveringen skal se ut over tid.",
   },
   {
-    question: "Where is the studio?",
-    answer:
+    questionEn: "How does pricing work?",
+    questionNo: "Hvordan fungerer pris?",
+    answerEn:
+      "Price depends on size, detail, placement, and time. You get a clearer estimate during the consultation.",
+    answerNo:
+      "Pris avhenger av størrelse, detaljnivå, plassering og tidsbruk. Du får et tydeligere estimat under konsultasjonen.",
+  },
+  {
+    questionEn: "Can I get tattooed if I have health concerns?",
+    questionNo: "Kan jeg tatovere meg hvis jeg har helsehensyn?",
+    answerEn:
+      "Tell the artist about allergies, medication, skin conditions, or health concerns before the appointment so the process can be handled safely.",
+    answerNo:
+      "Si fra om allergier, medisiner, hudtilstander eller helsehensyn før timen, slik at prosessen kan gjøres trygt.",
+  },
+  {
+    questionEn: "Where is the studio?",
+    questionNo: "Hvor ligger studioet?",
+    answerEn:
       "Infinity Tattoo is at Skårersletta 48c in Lørenskog. The map above opens the exact location.",
+    answerNo:
+      "Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. Kartet over åpner nøyaktig lokasjon.",
+  },
+];
+
+const aftercareItems = [
+  {
+    titleEn: "Day 1-3",
+    titleNo: "Dag 1-3",
+    textEn:
+      "Keep the tattoo clean, follow the wrapping instructions you were given, and wash gently with clean hands.",
+    textNo:
+      "Hold tatoveringen ren, følg instruksene du fikk om folie/plast, og vask forsiktig med rene hender.",
+  },
+  {
+    titleEn: "Day 4-7",
+    titleNo: "Dag 4-7",
+    textEn:
+      "Apply a thin layer of aftercare cream when needed. Do not over-moisturize, scratch, or pick at flakes.",
+    textNo:
+      "Påfør et tynt lag aftercare-krem ved behov. Ikke bruk for mye krem, og ikke klø eller plukk på flass.",
+  },
+  {
+    titleEn: "Week 2",
+    titleNo: "Uke 2",
+    textEn:
+      "Light peeling and itching is normal. Let the skin heal naturally and keep clothing clean and loose over the area.",
+    textNo:
+      "Lett flassing og kløe er normalt. La huden gro naturlig og bruk rene, løse klær over området.",
+  },
+  {
+    titleEn: "Week 3-4",
+    titleNo: "Uke 3-4",
+    textEn:
+      "The surface may look healed, but the skin is still settling. Avoid hard friction and keep caring for the area.",
+    textNo:
+      "Overflaten kan se grodd ut, men huden stabiliserer seg fortsatt. Unngå hard friksjon og fortsett å ta vare på området.",
+  },
+  {
+    titleEn: "Always avoid",
+    titleNo: "Unngå alltid",
+    textEn:
+      "Avoid swimming, sauna, direct sun, tanning beds, heavy soaking, and dirty gym surfaces while healing.",
+    textNo:
+      "Unngå bading, badstue, direkte sol, solarium, lang bløtlegging og urene treningsflater mens tatoveringen gror.",
+  },
+  {
+    titleEn: "Long-term care",
+    titleNo: "Langsiktig pleie",
+    textEn:
+      "Use sunscreen on healed tattoos and keep the skin moisturized to preserve contrast and detail.",
+    textNo:
+      "Bruk solkrem på grodde tatoveringer og hold huden fuktet for å bevare kontrast og detaljer.",
   },
 ];
 
@@ -151,8 +247,10 @@ export default function Home() {
               INFINITY TATTOO
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
-              Custom realistic tattoos in Lørenskog, built around precision,
-              detail, and a design that actually belongs on your skin.
+              <LocalizedText
+                en="Custom realistic tattoos in Lørenskog, built around precision, detail, and a design that actually belongs on your skin."
+                no="Custom realistiske tatoveringer i Lørenskog, bygget rundt presisjon, detaljer og et design som faktisk passer huden din."
+              />
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -162,7 +260,7 @@ export default function Home() {
               render={<a href="#booking" />}
               size="lg"
             >
-              Book a session
+              <LocalizedText en="Book a session" no="Book time" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button
@@ -171,7 +269,7 @@ export default function Home() {
               size="lg"
               variant="outline"
             >
-              View work
+              <LocalizedText en="View work" no="Se arbeid" />
               <MoveUpRightIcon data-icon="inline-end" />
             </Button>
           </div>
@@ -216,11 +314,13 @@ export default function Home() {
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
           <div className="flex flex-col gap-4">
             <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              Recent projects
+              <LocalizedText en="Recent projects" no="Nylige prosjekter" />
             </h2>
             <p className="text-base leading-7 text-muted-foreground">
-              A curated selection of custom and realistic tattoo work, focused
-              on detail, precision, and strong black-and-grey contrast.
+              <LocalizedText
+                en="A curated selection of custom and realistic tattoo work, focused on detail, precision, and strong black-and-grey contrast."
+                no="Et kuratert utvalg av custom og realistiske tatoveringer med fokus på detaljer, presisjon og sterk black-and-grey kontrast."
+              />
             </p>
           </div>
           <div className="relative min-h-64 overflow-hidden rounded-lg border bg-card">
@@ -268,31 +368,39 @@ export default function Home() {
           <div className="flex flex-col justify-center gap-6">
             <div className="flex flex-col gap-4">
               <Badge variant="secondary" className="w-fit">
-                The artist
+                <LocalizedText en="The artist" no="Artisten" />
               </Badge>
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
                 Filippos Hoxhaj
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
-                Driven by passion and precision, the artist and owner behind
-                Infinity Tattoo Studio creates custom tattoos that tell your
-                story. Every design is personal, every line intentional.
+                <LocalizedText
+                  en="Driven by passion and precision, the artist and owner behind Infinity Tattoo Studio creates custom tattoos that tell your story. Every design is personal, every line intentional."
+                  no="Drevet av lidenskap og presisjon lager artisten og eieren bak Infinity Tattoo Studio custom tatoveringer som forteller historien din. Hvert design er personlig, og hver linje er bevisst."
+                />
               </p>
             </div>
             <Separator />
             <div className="grid gap-4 sm:grid-cols-2">
-              {["Greece and Norway experience", "Realism-first execution"].map(
-                (item) => (
-                  <div className="flex items-center gap-3" key={item}>
+              {[
+                {
+                  en: "Greece and Norway experience",
+                  no: "Erfaring fra Hellas og Norge",
+                },
+                {
+                  en: "Realism-first execution",
+                  no: "Realisme først i utførelsen",
+                },
+              ].map((item) => (
+                  <div className="flex items-center gap-3" key={item.en}>
                     <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
                       <CheckIcon className="size-4" />
                     </span>
                     <span className="text-sm text-muted-foreground">
-                      {item}
+                      <LocalizedText en={item.en} no={item.no} />
                     </span>
                   </div>
-                )
-              )}
+                ))}
             </div>
           </div>
 
@@ -301,14 +409,16 @@ export default function Home() {
             className="grid gap-4 lg:col-span-2 md:grid-cols-2 lg:grid-cols-4"
           >
             {standards.map((item) => (
-              <Card className="bg-card/70" key={item.title}>
+              <Card className="bg-card/70" key={item.titleEn}>
                 <CardHeader>
                   <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
-                  <CardTitle>{item.title}</CardTitle>
+                  <CardTitle>
+                    <LocalizedText en={item.titleEn} no={item.titleNo} />
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm leading-6 text-muted-foreground">
-                    {item.text}
+                    <LocalizedText en={item.textEn} no={item.textNo} />
                   </p>
                 </CardContent>
               </Card>
@@ -322,7 +432,7 @@ export default function Home() {
         className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
-          Consultation
+          <LocalizedText en="Consultation" no="Konsultasjon" />
         </h2>
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
@@ -355,7 +465,7 @@ export default function Home() {
             rel="noreferrer"
             target="_blank"
           >
-            Open in new page
+            <LocalizedText en="Open in new page" no="Åpne i ny side" />
             <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
           </a>
         </div>
@@ -386,18 +496,56 @@ export default function Home() {
         </div>
 
         <div className="rounded-3xl border bg-card/60 p-2">
-          <Accordion className="px-4 py-2" defaultValue={[faqItems[0].question]}>
+          <div className="px-4 pt-4">
+            <h3 className="font-display text-3xl font-bold">
+              <LocalizedText en="FAQ" no="Ofte stilte spørsmål" />
+            </h3>
+          </div>
+          <Accordion
+            className="px-4 py-2"
+            defaultValue={[faqItems[0].questionEn]}
+          >
             {faqItems.map((item) => (
-              <AccordionItem key={item.question} value={item.question}>
+              <AccordionItem key={item.questionEn} value={item.questionEn}>
                 <AccordionTrigger className="py-4 text-base">
-                  {item.question}
+                  <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  {item.answer}
+                  <LocalizedText en={item.answerEn} no={item.answerNo} />
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+
+        <div className="rounded-3xl border bg-card/60 p-6">
+          <div className="mb-6 flex flex-col gap-2">
+            <h3 className="font-display text-3xl font-bold">
+              <LocalizedText en="Aftercare" no="Etterbehandling" />
+            </h3>
+            <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
+              <LocalizedText
+                en="First-pass guide from the aftercare sheet. Follow the personal instructions from your artist if they differ."
+                no="Første versjon basert på aftercare-arket. Følg de personlige instruksene fra artisten hvis de avviker."
+              />
+            </p>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {aftercareItems.map((item) => (
+              <Card className="bg-background/55" key={item.titleEn}>
+                <CardHeader>
+                  <CardTitle>
+                    <LocalizedText en={item.titleEn} no={item.titleNo} />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    <LocalizedText en={item.textEn} no={item.textNo} />
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

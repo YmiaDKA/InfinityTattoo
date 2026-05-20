@@ -1,37 +1,15 @@
 "use client";
 
-import { useState } from "react";
-
 import { cn } from "@/lib/utils";
+import { setLanguage, useLanguage, type Language } from "@/lib/language-store";
 
-const storageKey = "infinity-language";
-const languages = ["NO", "EN"] as const;
-
-type Language = (typeof languages)[number];
+const languages: Language[] = ["NO", "EN"];
 
 export function LanguageToggle() {
-  const [activeLanguage, setActiveLanguage] = useState<Language>(() => {
-    if (typeof window === "undefined") {
-      return "EN";
-    }
-
-    try {
-      const savedLanguage = window.localStorage.getItem(storageKey);
-      return savedLanguage === "NO" || savedLanguage === "EN"
-        ? savedLanguage
-        : "EN";
-    } catch {
-      return "EN";
-    }
-  });
+  const activeLanguage = useLanguage();
 
   function chooseLanguage(language: Language) {
-    setActiveLanguage(language);
-    try {
-      window.localStorage.setItem(storageKey, language);
-    } catch {
-      // Storage can be unavailable in restricted browser contexts.
-    }
+    setLanguage(language);
   }
 
   return (
