@@ -71,13 +71,13 @@ export function SiteHeader() {
     <header
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
-      <div className="absolute right-5 top-[30px] hidden md:block sm:right-8">
-        <LanguageToggle />
+      <div className="absolute right-5 top-6 hidden md:block sm:right-8">
+        <LanguageToggle large />
       </div>
       <nav
         ref={navRef}
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
             ? "max-w-[56rem] px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"

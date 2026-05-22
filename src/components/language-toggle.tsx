@@ -5,7 +5,13 @@ import { setLanguage, useLanguage, type Language } from "@/lib/language-store";
 
 const languages: Language[] = ["NO", "EN"];
 
-export function LanguageToggle({ merged = false }: { merged?: boolean }) {
+export function LanguageToggle({
+  large = false,
+  merged = false,
+}: {
+  large?: boolean;
+  merged?: boolean;
+}) {
   const activeLanguage = useLanguage();
 
   function chooseLanguage(language: Language) {
@@ -17,6 +23,7 @@ export function LanguageToggle({ merged = false }: { merged?: boolean }) {
       aria-label="Choose language"
       className={cn(
         "inline-flex h-9 shrink-0 items-center gap-0.5 rounded-full p-1 text-muted-foreground backdrop-blur transition-colors sm:h-10 md:h-11",
+        large && "h-14 sm:h-14 md:h-14",
         merged
           ? "border border-transparent bg-transparent"
           : "border border-foreground/10 bg-background/35"
@@ -30,6 +37,7 @@ export function LanguageToggle({ merged = false }: { merged?: boolean }) {
             aria-pressed={isActive}
             className={cn(
               "relative h-full min-w-9 rounded-full px-2 text-xs font-semibold leading-none transition-colors hover:bg-muted/50 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none md:min-w-11",
+              large && "md:min-w-14",
               isActive && "text-foreground"
             )}
             key={language}
