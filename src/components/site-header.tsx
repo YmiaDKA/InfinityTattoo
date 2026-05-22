@@ -20,7 +20,10 @@ const navItems = [
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [pillBounds, setPillBounds] = useState({ left: 0, width: 0 });
+  const [pillBounds, setPillBounds] = useState<{
+    left: number;
+    width: number;
+  } | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const navItemsRef = useRef<HTMLDivElement>(null);
 
@@ -68,36 +71,38 @@ export function SiteHeader() {
     <header
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
-      <div className="absolute right-5 top-5 hidden md:block sm:right-8">
+      <div className="absolute right-5 top-[30px] hidden md:block sm:right-8">
         <LanguageToggle />
       </div>
       <nav
         ref={navRef}
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 overflow-hidden rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full transition-[max-width,padding] duration-300 ease-[cubic-bezier(0.77,0,0.175,1)] sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
             ? "max-w-[56rem] px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"
         )}
         aria-label="Main navigation"
       >
-        <motion.span
-          aria-hidden="true"
-          animate={{
-            backgroundColor: isScrolled
-              ? "color-mix(in oklch, var(--background) 45%, transparent)"
-              : "color-mix(in oklch, var(--muted) 40%, transparent)",
-            left: isScrolled ? 0 : pillBounds.left,
-            width: isScrolled ? "100%" : pillBounds.width,
-          }}
-          className="pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 shadow-2xl shadow-black/20 backdrop-blur-2xl md:block"
-          initial={false}
-          transition={{
-            backgroundColor: { duration: 0.14 },
-            left: { type: "spring", duration: 0.42, bounce: 0.08 },
-            width: { type: "spring", duration: 0.42, bounce: 0.08 },
-          }}
-        />
+        {pillBounds ? (
+          <motion.span
+            aria-hidden="true"
+            animate={{
+              backgroundColor: isScrolled
+                ? "color-mix(in oklch, var(--background) 45%, transparent)"
+                : "color-mix(in oklch, var(--muted) 40%, transparent)",
+              left: isScrolled ? 0 : pillBounds.left,
+              width: isScrolled ? "100%" : pillBounds.width,
+            }}
+            className="pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 shadow-2xl shadow-black/20 backdrop-blur-2xl md:block"
+            initial={false}
+            transition={{
+              backgroundColor: { duration: 0.14 },
+              left: { type: "spring", duration: 0.42, bounce: 0.08 },
+              width: { type: "spring", duration: 0.42, bounce: 0.08 },
+            }}
+          />
+        ) : null}
         <Link
           className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
           href="/#home"
@@ -148,7 +153,7 @@ export function SiteHeader() {
             render={<Link href="/#booking" />}
             size="lg"
           >
-            <LocalizedText en="Book time" no="Book time" />
+            <LocalizedText en="Book session" no="Book time" />
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
         </div>
