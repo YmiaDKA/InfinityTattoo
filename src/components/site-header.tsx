@@ -21,6 +21,8 @@ const navItems = [
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [pillBounds, setPillBounds] = useState<{
+    expandedLeft: number;
+    expandedWidth: number;
     left: number;
     width: number;
   } | null>(null);
@@ -40,8 +42,13 @@ export function SiteHeader() {
 
       const navRect = nav.getBoundingClientRect();
       const itemRect = items.getBoundingClientRect();
+      const canExpand = itemRect.width > 0;
+      const expandedWidth = canExpand ? Math.min(navRect.width, 896) : navRect.width;
+      const expandedLeft = canExpand ? (navRect.width - expandedWidth) / 2 : 0;
 
       setPillBounds({
+        expandedLeft,
+        expandedWidth,
         left: itemRect.left - navRect.left,
         width: itemRect.width,
       });
@@ -79,7 +86,7 @@ export function SiteHeader() {
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
-            ? "max-w-[56rem] px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
+            ? "max-md:px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"
         )}
         aria-label="Main navigation"
@@ -91,8 +98,8 @@ export function SiteHeader() {
               backgroundColor: isScrolled
                 ? "color-mix(in oklch, var(--background) 45%, transparent)"
                 : "color-mix(in oklch, var(--muted) 40%, transparent)",
-              left: isScrolled ? 0 : pillBounds.left,
-              width: isScrolled ? "100%" : pillBounds.width,
+              left: isScrolled ? pillBounds.expandedLeft : pillBounds.left,
+              width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
             }}
             className="pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 shadow-2xl shadow-black/20 backdrop-blur-2xl md:block"
             initial={false}
@@ -103,29 +110,36 @@ export function SiteHeader() {
             }}
           />
         ) : null}
-        <Link
-          className="relative z-10 flex min-w-0 items-center gap-2 justify-self-start leading-none sm:gap-2.5"
-          href="/#home"
+        <motion.div
+          animate={{ x: isScrolled ? (pillBounds?.expandedLeft ?? 0) : 0 }}
+          className="relative z-10 min-w-0 justify-self-start"
+          initial={false}
+          transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
-          <span
-            className={cn(
-              "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
-              isScrolled && "max-md:translate-x-1 md:-translate-x-1"
-            )}
+          <Link
+            className="flex min-w-0 items-center gap-2 leading-none sm:gap-2.5"
+            href="/#home"
           >
-            <Image
-              src="/media/brand/infinity.svg"
-              alt=""
-              fill
-              className="object-cover"
-              sizes="44px"
-              priority
-            />
-          </span>
-          <span className="truncate text-sm font-semibold leading-none text-foreground sm:text-base">
-            Infinity Tattoo
-          </span>
-        </Link>
+            <span
+              className={cn(
+                "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
+                isScrolled && "max-md:translate-x-1 md:-translate-x-1"
+              )}
+            >
+              <Image
+                src="/media/brand/infinity.svg"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="44px"
+                priority
+              />
+            </span>
+            <span className="truncate text-sm font-semibold leading-none text-foreground sm:text-base">
+              Infinity Tattoo
+            </span>
+          </Link>
+        </motion.div>
 
         <div className="relative z-10 justify-self-center md:hidden">
           <LanguageToggle merged={isScrolled} />
@@ -146,7 +160,12 @@ export function SiteHeader() {
           ))}
         </div>
 
-        <div className="relative z-10 flex items-center gap-2 justify-self-end">
+        <motion.div
+          animate={{ x: isScrolled ? -(pillBounds?.expandedLeft ?? 0) : 0 }}
+          className="relative z-10 flex items-center gap-2 justify-self-end"
+          initial={false}
+          transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
+        >
           <Button
             className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:translate-x-1 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
@@ -156,7 +175,7 @@ export function SiteHeader() {
             <LocalizedText en="Book session" no="Book time" />
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
-        </div>
+        </motion.div>
       </nav>
     </header>
   );
