@@ -19,6 +19,7 @@ const navItems = [
 ];
 
 const expandedContentInset = 6;
+const expandedLogoOffset = 3;
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,7 +116,9 @@ export function SiteHeader() {
         <motion.div
           animate={{
             x: isScrolled
-              ? (pillBounds?.expandedLeft ?? 0) + expandedContentInset
+              ? (pillBounds?.expandedLeft ?? 0) +
+                expandedContentInset +
+                expandedLogoOffset
               : 0,
           }}
           className="relative z-10 min-w-0 justify-self-start"
