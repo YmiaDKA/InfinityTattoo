@@ -18,7 +18,7 @@ const navItems = [
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
 
-const expandedContentInset = 16;
+const expandedContentInset = 6;
 
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
