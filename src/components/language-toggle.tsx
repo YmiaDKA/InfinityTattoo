@@ -24,7 +24,7 @@ export function LanguageToggle({
       className={cn(
         "inline-flex h-9 shrink-0 items-center gap-0.5 rounded-full p-1 text-muted-foreground backdrop-blur transition-colors sm:h-10 md:h-11",
         large && "h-14 sm:h-14 md:h-14",
-        merged
+        merged || large
           ? "border border-transparent bg-transparent"
           : "border border-foreground/10 bg-background/35"
       )}

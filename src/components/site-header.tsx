@@ -18,6 +18,8 @@ const navItems = [
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
 
+const expandedContentInset = 16;
+
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [pillBounds, setPillBounds] = useState<{
@@ -111,7 +113,11 @@ export function SiteHeader() {
           />
         ) : null}
         <motion.div
-          animate={{ x: isScrolled ? (pillBounds?.expandedLeft ?? 0) : 0 }}
+          animate={{
+            x: isScrolled
+              ? (pillBounds?.expandedLeft ?? 0) + expandedContentInset
+              : 0,
+          }}
           className="relative z-10 min-w-0 justify-self-start"
           initial={false}
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
@@ -161,13 +167,17 @@ export function SiteHeader() {
         </div>
 
         <motion.div
-          animate={{ x: isScrolled ? -(pillBounds?.expandedLeft ?? 0) : 0 }}
+          animate={{
+            x: isScrolled
+              ? -((pillBounds?.expandedLeft ?? 0) + expandedContentInset)
+              : 0,
+          }}
           className="relative z-10 flex items-center gap-2 justify-self-end"
           initial={false}
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
           <Button
-            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:translate-x-1 md:gap-2.5 md:pl-7 md:!pr-7"
+            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
             render={<Link href="/#booking" />}
             size="lg"
