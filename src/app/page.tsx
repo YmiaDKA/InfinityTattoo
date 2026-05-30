@@ -633,6 +633,14 @@ export default function Home() {
             </Link>
             <a
               className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
+              href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Org nr 936 727 670
+            </a>
+            <a
+              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.albab.dk/"
               rel="noreferrer"
               target="_blank"
