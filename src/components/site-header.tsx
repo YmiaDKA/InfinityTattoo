@@ -22,6 +22,7 @@ const expandedContentInset = 6;
 const expandedLogoOffset = 3;
 
 export function SiteHeader() {
+  const [isDesktop, setIsDesktop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [pillBounds, setPillBounds] = useState<{
     expandedLeft: number;
@@ -34,6 +35,10 @@ export function SiteHeader() {
 
   useEffect(() => {
     let lastValue = false;
+
+    const updateViewport = () => {
+      setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+    };
 
     const measurePill = () => {
       const nav = navRef.current;
@@ -67,13 +72,16 @@ export function SiteHeader() {
     };
 
     measurePill();
+    updateViewport();
     updateScrollState();
     window.addEventListener("resize", measurePill);
+    window.addEventListener("resize", updateViewport);
     window.addEventListener("scroll", updateScrollState, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", measurePill);
+      window.removeEventListener("resize", updateViewport);
     };
   }, []);
 
@@ -89,7 +97,7 @@ export function SiteHeader() {
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
-            ? "max-md:px-2.5 max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
+            ? "max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
             : "px-0"
         )}
         aria-label="Main navigation"
@@ -115,7 +123,7 @@ export function SiteHeader() {
         ) : null}
         <motion.div
           animate={{
-            x: isScrolled
+            x: isScrolled && isDesktop
               ? (pillBounds?.expandedLeft ?? 0) +
                 expandedContentInset +
                 expandedLogoOffset
@@ -132,7 +140,7 @@ export function SiteHeader() {
             <span
               className={cn(
                 "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
-                isScrolled && "max-md:translate-x-1 md:-translate-x-1"
+                isScrolled && "md:-translate-x-1"
               )}
             >
               <Image
@@ -171,7 +179,7 @@ export function SiteHeader() {
 
         <motion.div
           animate={{
-            x: isScrolled
+            x: isScrolled && isDesktop
               ? -((pillBounds?.expandedLeft ?? 0) + expandedContentInset)
               : 0,
           }}
@@ -185,7 +193,10 @@ export function SiteHeader() {
             render={<Link href="/#booking" />}
             size="lg"
           >
-            <LocalizedText en="Book session" no="Book time" />
+            <span className="md:hidden">Book</span>
+            <span className="hidden md:inline">
+              <LocalizedText en="Book session" no="Book time" />
+            </span>
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
         </motion.div>
