@@ -337,7 +337,7 @@ export default function Home() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover transition duration-500 group-hover:scale-105"
+                className="object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
             </div>

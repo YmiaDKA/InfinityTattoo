@@ -15,9 +15,6 @@ export default function WorkPage() {
           <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
             Work
           </h1>
-          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-            A wider look at the tattoo images currently available on the site.
-          </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -30,7 +27,7 @@ export default function WorkPage() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover transition duration-500 group-hover:scale-105"
+                className="object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
             </div>
