@@ -4,37 +4,7 @@ import { MoveUpRightIcon } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
-
-const galleryImages = [
-  {
-    src: "/media/gallery/work-01.jpg",
-    alt: "Black and grey realistic tattoo on chest",
-  },
-  {
-    src: "/media/gallery/work-02.jpg",
-    alt: "Detailed realistic tattoo work",
-  },
-  {
-    src: "/media/gallery/work-03.jpg",
-    alt: "Realistic tattoo portrait detail",
-  },
-  {
-    src: "/media/gallery/work-04.jpg",
-    alt: "Black and grey tattoo sleeve detail",
-  },
-  {
-    src: "/media/gallery/work-05.jpg",
-    alt: "Detailed custom tattoo composition",
-  },
-  {
-    src: "/media/gallery/work-06.jpg",
-    alt: "Realism tattoo shading and texture",
-  },
-  {
-    src: "/media/gallery/realism-arm.png",
-    alt: "Realism tattoo on arm",
-  },
-];
+import { galleryImages } from "@/lib/site-data";
 
 export default function WorkPage() {
   return (

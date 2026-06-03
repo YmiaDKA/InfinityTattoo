@@ -26,33 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { Separator } from "@/components/ui/separator";
-
-const galleryImages = [
-  {
-    src: "/media/gallery/work-01.jpg",
-    alt: "Black and grey realistic tattoo on chest",
-  },
-  {
-    src: "/media/gallery/work-02.jpg",
-    alt: "Detailed realistic tattoo work",
-  },
-  {
-    src: "/media/gallery/work-03.jpg",
-    alt: "Realistic tattoo portrait detail",
-  },
-  {
-    src: "/media/gallery/work-04.jpg",
-    alt: "Black and grey tattoo sleeve detail",
-  },
-  {
-    src: "/media/gallery/work-05.jpg",
-    alt: "Detailed custom tattoo composition",
-  },
-  {
-    src: "/media/gallery/work-06.jpg",
-    alt: "Realism tattoo shading and texture",
-  },
-];
+import { featuredGalleryImages, testimonials } from "@/lib/site-data";
 
 const standards = [
   {
@@ -86,29 +60,6 @@ const standards = [
       "Clear communication about concept, sizing, references, timing, and expectations.",
     textNo:
       "Tydelig kommunikasjon om konsept, størrelse, referanser og forventninger.",
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "Very happy with the result and the full experience. Comfortable session, visible passion, and strong attention to detail.",
-    name: "Kristi Rouko",
-  },
-  {
-    quote:
-      "Clean studio, welcoming energy, chill vibe, and a tattoo that turned out better than expected.",
-    name: "Areti Anastasi",
-  },
-  {
-    quote:
-      "Clean and welcoming studio with a great vibe. The artist listens, gives advice, and makes the process comfortable.",
-    name: "Petros Tzegias",
-  },
-  {
-    quote:
-      "Excellent communication from the start, with time spent understanding the idea and helping shape the right design.",
-    name: "Hlias Hysos",
   },
 ];
 
@@ -293,10 +244,10 @@ export default function Home() {
         <Marquee pauseOnHover repeat={3} className="[--duration:48s]">
           {testimonials.map((testimonial) => (
             <Card
-              className="mx-2 w-[21rem] bg-background/70 sm:w-[28rem]"
+              className="mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
               key={testimonial.name}
             >
-              <CardContent className="flex min-h-44 flex-col gap-5 pt-5">
+              <CardContent className="flex min-h-40 flex-col gap-4 px-5 py-4">
                 <div className="flex gap-1 text-[color:var(--studio-red)]">
                   {Array.from({ length: 5 }).map((_, index) => (
                     <StarIcon
@@ -305,7 +256,7 @@ export default function Home() {
                     />
                   ))}
                 </div>
-                <p className="text-base leading-7 text-foreground">
+                <p className="text-base leading-6 text-foreground">
                   &quot;{testimonial.quote}&quot;
                 </p>
                 <p className="mt-auto text-sm font-semibold text-muted-foreground">
@@ -375,7 +326,7 @@ export default function Home() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {galleryImages.map((image, index) => (
+          {featuredGalleryImages.map((image, index) => (
             <div
               className={`group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
                 index > 2 ? "hidden sm:block" : ""
