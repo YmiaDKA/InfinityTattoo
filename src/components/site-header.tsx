@@ -20,16 +20,22 @@ const navItems = [
 
 const expandedContentInset = 6;
 const expandedLogoOffset = 3;
+const mobileExpandedContentInset = 14;
 
 export function SiteHeader() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [pillBounds, setPillBounds] = useState<{
+    expandedHeight: number;
     expandedLeft: number;
+    expandedTop: number;
     expandedWidth: number;
+    height: number;
     left: number;
+    top: number;
     width: number;
   } | null>(null);
+  const mobilePickerRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const navItemsRef = useRef<HTMLDivElement>(null);
 
@@ -42,23 +48,37 @@ export function SiteHeader() {
 
     const measurePill = () => {
       const nav = navRef.current;
+      const mobilePicker = mobilePickerRef.current;
       const items = navItemsRef.current;
 
-      if (!nav || !items) {
+      if (!nav || !items || !mobilePicker) {
         return;
       }
 
+      const nextIsDesktop = window.matchMedia("(min-width: 768px)").matches;
       const navRect = nav.getBoundingClientRect();
       const itemRect = items.getBoundingClientRect();
-      const canExpand = itemRect.width > 0;
-      const expandedWidth = canExpand ? Math.min(navRect.width, 896) : navRect.width;
-      const expandedLeft = canExpand ? (navRect.width - expandedWidth) / 2 : 0;
+      const mobileRect = mobilePicker.getBoundingClientRect();
+      const canExpand = nextIsDesktop ? itemRect.width > 0 : mobileRect.width > 0;
+      const expandedWidth = nextIsDesktop
+        ? Math.min(navRect.width, 896)
+        : navRect.width;
+      const expandedLeft = nextIsDesktop
+        ? (navRect.width - expandedWidth) / 2
+        : 0;
+      const expandedHeight = nextIsDesktop ? 56 : navRect.height;
+      const expandedTop = nextIsDesktop ? (navRect.height - expandedHeight) / 2 : 0;
+      const collapsedRect = nextIsDesktop ? itemRect : mobileRect;
 
       setPillBounds({
+        expandedHeight,
         expandedLeft,
+        expandedTop,
         expandedWidth,
-        left: itemRect.left - navRect.left,
-        width: itemRect.width,
+        height: canExpand ? collapsedRect.height : expandedHeight,
+        left: canExpand ? collapsedRect.left - navRect.left : expandedLeft,
+        top: canExpand ? collapsedRect.top - navRect.top : expandedTop,
+        width: canExpand ? collapsedRect.width : expandedWidth,
       });
     };
 
@@ -97,7 +117,7 @@ export function SiteHeader() {
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
           isScrolled
-            ? "max-md:border max-md:border-foreground/10 max-md:bg-background/45 max-md:shadow-2xl max-md:shadow-black/20 max-md:backdrop-blur-2xl"
+            ? "max-md:shadow-2xl max-md:shadow-black/20"
             : "px-0"
         )}
         aria-label="Main navigation"
@@ -108,25 +128,37 @@ export function SiteHeader() {
             animate={{
               backgroundColor: isScrolled
                 ? "color-mix(in oklch, var(--background) 45%, transparent)"
-                : "color-mix(in oklch, var(--muted) 40%, transparent)",
+                : isDesktop
+                  ? "color-mix(in oklch, var(--muted) 40%, transparent)"
+                  : "transparent",
+              borderColor: isScrolled || isDesktop
+                ? "color-mix(in oklch, var(--foreground) 10%, transparent)"
+                : "transparent",
+              height: isScrolled ? pillBounds.expandedHeight : pillBounds.height,
               left: isScrolled ? pillBounds.expandedLeft : pillBounds.left,
+              top: isScrolled ? pillBounds.expandedTop : pillBounds.top,
               width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
             }}
-            className="pointer-events-none absolute top-1/2 z-0 hidden h-14 -translate-y-1/2 rounded-full border border-foreground/10 shadow-2xl shadow-black/20 backdrop-blur-2xl md:block"
+            className="pointer-events-none absolute z-0 block rounded-full border shadow-2xl shadow-black/20 backdrop-blur-2xl"
             initial={false}
             transition={{
               backgroundColor: { duration: 0.14 },
+              borderColor: { duration: 0.1 },
+              height: { type: "spring", duration: 0.42, bounce: 0.08 },
               left: { type: "spring", duration: 0.42, bounce: 0.08 },
+              top: { type: "spring", duration: 0.42, bounce: 0.08 },
               width: { type: "spring", duration: 0.42, bounce: 0.08 },
             }}
           />
         ) : null}
         <motion.div
           animate={{
-            x: isScrolled && isDesktop
-              ? (pillBounds?.expandedLeft ?? 0) +
-                expandedContentInset +
-                expandedLogoOffset
+            x: isScrolled
+              ? isDesktop
+                ? (pillBounds?.expandedLeft ?? 0) +
+                  expandedContentInset +
+                  expandedLogoOffset
+                : mobileExpandedContentInset
               : 0,
           }}
           className="relative z-10 min-w-0 justify-self-start"
@@ -158,8 +190,11 @@ export function SiteHeader() {
           </Link>
         </motion.div>
 
-        <div className="relative z-10 justify-self-center md:hidden">
-          <LanguageToggle merged={isScrolled} />
+        <div
+          ref={mobilePickerRef}
+          className="relative z-10 justify-self-center md:hidden"
+        >
+          <LanguageToggle />
         </div>
 
         <div
@@ -179,8 +214,10 @@ export function SiteHeader() {
 
         <motion.div
           animate={{
-            x: isScrolled && isDesktop
-              ? -((pillBounds?.expandedLeft ?? 0) + expandedContentInset)
+            x: isScrolled
+              ? isDesktop
+                ? -((pillBounds?.expandedLeft ?? 0) + expandedContentInset)
+                : -mobileExpandedContentInset
               : 0,
           }}
           className="relative z-10 flex items-center gap-2 justify-self-end"
@@ -188,7 +225,7 @@ export function SiteHeader() {
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
           <Button
-            className="h-9 gap-1.5 rounded-full pl-3 !pr-3 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
+            className="h-9 gap-0.5 rounded-full pl-2 !pr-2 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
             render={<Link href="/#booking" />}
             size="lg"
