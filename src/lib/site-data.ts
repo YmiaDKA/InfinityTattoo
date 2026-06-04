@@ -45,7 +45,7 @@ export const galleryImages = [
   },
   {
     src: "/media/gallery/infinity/infinity-12.jpg",
-    alt: "Wide tattoo studio artwork detail",
+    alt: "Black and grey tattoo from Infinity Tattoo",
   },
   {
     src: "/media/gallery/infinity/infinity-13.jpg",

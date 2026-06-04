@@ -112,6 +112,15 @@ const faqItems = [
     answerNo:
       "Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. Kartet over åpner nøyaktig lokasjon.",
   },
+  {
+    questionEn: "Where can I park?",
+    questionNo: "Hvor kan jeg parkere?",
+    answerEn:
+      "You can park at Triaden Lørenskog Storsenter, either inside or outside. The outside parking is closer and easier to access, with 2 hours free parking. From Skårersletta 70 it is about a 4 minute walk to the studio.",
+    answerNo:
+      "Du kan parkere på Triaden Lørenskog Storsenter, enten inne eller ute. Uteparkeringen er nærmere og enklere å komme til, med 2 timer gratis parkering. Fra Skårersletta 70 er det omtrent 4 minutter å gå til studioet.",
+    parkingLink: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
+  },
 ];
 
 const aftercareItems = [
@@ -497,7 +506,28 @@ export default function Home() {
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  <LocalizedText en={item.answerEn} no={item.answerNo} />
+                  {"parkingLink" in item ? (
+                    <p>
+                      <LocalizedText
+                        en="You can park at Triaden Lørenskog Storsenter, either inside or outside. The outside parking is closer and easier to access, with 2 hours free parking. From "
+                        no="Du kan parkere på Triaden Lørenskog Storsenter, enten inne eller ute. Uteparkeringen er nærmere og enklere å komme til, med 2 timer gratis parkering. Fra "
+                      />
+                      <a
+                        className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                        href={item.parkingLink}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Skårersletta 70
+                      </a>
+                      <LocalizedText
+                        en=" it is about a 4 minute walk to the studio."
+                        no=" er det omtrent 4 minutter å gå til studioet."
+                      />
+                    </p>
+                  ) : (
+                    <LocalizedText en={item.answerEn} no={item.answerNo} />
+                  )}
                 </AccordionContent>
               </AccordionItem>
             ))}
