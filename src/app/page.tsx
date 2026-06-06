@@ -12,6 +12,7 @@ import {
 
 import { LineworkBooking } from "@/components/linework-booking";
 import { LocalizedText } from "@/components/localized-text";
+import { PanoramaViewer } from "@/components/panorama-viewer";
 import { SiteHeader } from "@/components/site-header";
 import { InstagramIcon, TikTokIcon } from "@/components/social-icons";
 import {
@@ -567,6 +568,12 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="px-5 pb-10 sm:px-8">
+        <div className="mx-auto w-full max-w-[68rem]">
+          <PanoramaViewer />
+        </div>
+      </section>
+
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
           <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
@@ -605,13 +612,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70">
-            <Link
-              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
-              href="/admin"
-            >
-              Admin
-            </Link>
+          <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70 max-sm:pl-10">
             <a
               className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"
