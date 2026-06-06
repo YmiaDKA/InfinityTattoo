@@ -8,7 +8,7 @@ export function LineworkBooking() {
         className="h-[46rem] w-full border-0 bg-background sm:h-[50rem] lg:h-[52rem]"
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
-        src="https://booking.linework.com/infinity/tattoo"
+        src="https://booking.linework.com/infinity"
         title="Linework booking"
       />
     </div>

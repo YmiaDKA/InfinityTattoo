@@ -470,7 +470,7 @@ export default function Home() {
           </a>
           <a
             className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
-            href="https://booking.linework.com/infinity/tattoo"
+            href="https://booking.linework.com/infinity"
             rel="noreferrer"
             target="_blank"
           >
