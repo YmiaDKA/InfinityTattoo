@@ -110,6 +110,78 @@ const faqItems: FaqItem[] = [
       "Pris avhenger av størrelse, detaljnivå, plassering og tidsbruk. Du får et tydeligere estimat under konsultasjonen.",
   },
   {
+    questionEn: "How long does a tattoo session take?",
+    questionNo: "How long does a tattoo session take?",
+    answerEn:
+      "Session length depends on the size and complexity of the piece. A small tattoo can take 1-2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5-6 hours each. We'll give you a clear time estimate during your consultation.",
+    answerNo:
+      "Session length depends on the size and complexity of the piece. A small tattoo can take 1-2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5-6 hours each. We'll give you a clear time estimate during your consultation.",
+  },
+  {
+    questionEn: "Do you do touch-ups?",
+    questionNo: "Do you do touch-ups?",
+    answerEn:
+      "Yes. If your tattoo needs a touch-up after healing, contact us within 1 month of your session. Touch-ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
+    answerNo:
+      "Yes. If your tattoo needs a touch-up after healing, contact us within 1 month of your session. Touch-ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
+  },
+  {
+    questionEn: "Do you require a deposit?",
+    questionNo: "Do you require a deposit?",
+    answerEn:
+      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.",
+    answerNo:
+      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.",
+  },
+  {
+    questionEn: "What happens if I need to reschedule?",
+    questionNo: "What happens if I need to reschedule?",
+    answerEn:
+      "Life happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.",
+    answerNo:
+      "Life happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.",
+  },
+  {
+    questionEn: "What if I want to cancel completely?",
+    questionNo: "What if I want to cancel completely?",
+    answerEn:
+      "If you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
+    answerNo:
+      "If you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
+  },
+  {
+    questionEn: "I've never had a tattoo before, where do I start?",
+    questionNo: "I've never had a tattoo before, where do I start?",
+    answerEn:
+      "Start by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
+    answerNo:
+      "Start by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
+  },
+  {
+    questionEn: "Does getting a tattoo hurt?",
+    questionNo: "Does getting a tattoo hurt?",
+    answerEn:
+      "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.",
+    answerNo:
+      "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.",
+  },
+  {
+    questionEn: "What are the least painful places to get tattooed?",
+    questionNo: "What are the least painful places to get tattooed?",
+    answerEn:
+      "The outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
+    answerNo:
+      "The outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
+  },
+  {
+    questionEn: "Aftercare - Long term",
+    questionNo: "Aftercare - Long term",
+    answerEn:
+      "Once fully healed, usually after 3-4 weeks, always apply SPF sunscreen over your tattoo when exposed to sunlight. Sun is the number one enemy of tattoo longevity, especially for black & grey realism. Keep your skin moisturized regularly and your tattoo will stay sharp and contrasted for years.",
+    answerNo:
+      "Once fully healed, usually after 3-4 weeks, always apply SPF sunscreen over your tattoo when exposed to sunlight. Sun is the number one enemy of tattoo longevity, especially for black & grey realism. Keep your skin moisturized regularly and your tattoo will stay sharp and contrasted for years.",
+  },
+  {
     questionEn: "Can I get tattooed if I have health concerns?",
     questionNo: "Kan jeg tatovere meg hvis jeg har helsehensyn?",
     answerEn:
