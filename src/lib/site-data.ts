@@ -1,5 +1,17 @@
 export const galleryImages = [
   {
+    src: "/media/gallery/infinity/infinity-12.jpg",
+    alt: "Black and grey tattoo from Infinity Tattoo",
+  },
+  {
+    src: "/media/gallery/infinity/infinity-14.jpg",
+    alt: "Custom tattoo composition",
+  },
+  {
+    src: "/media/gallery/infinity/infinity-09.jpg",
+    alt: "Hercules black and grey tattoo",
+  },
+  {
     src: "/media/gallery/infinity/infinity-01.jpg",
     alt: "Back tattoo before cover-up session",
   },
@@ -32,10 +44,6 @@ export const galleryImages = [
     alt: "Detailed tattoo composition on skin",
   },
   {
-    src: "/media/gallery/infinity/infinity-09.jpg",
-    alt: "Hercules black and grey tattoo",
-  },
-  {
     src: "/media/gallery/infinity/infinity-10.jpg",
     alt: "Detailed realism tattoo portrait",
   },
@@ -44,16 +52,8 @@ export const galleryImages = [
     alt: "Black and grey tattoo detail",
   },
   {
-    src: "/media/gallery/infinity/infinity-12.jpg",
-    alt: "Black and grey tattoo from Infinity Tattoo",
-  },
-  {
     src: "/media/gallery/infinity/infinity-13.jpg",
     alt: "Black and grey leg tattoo",
-  },
-  {
-    src: "/media/gallery/infinity/infinity-14.jpg",
-    alt: "Custom tattoo composition",
   },
   {
     src: "/media/gallery/infinity/infinity-15.jpg",
