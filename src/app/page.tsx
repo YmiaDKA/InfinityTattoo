@@ -392,7 +392,7 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Driven by passion and precision, the artist and owner behind Infinity Tattoo Studio creates custom tattoos that tell your story. Every design is personal, every line intentional."
+                  en="Filippos is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
                   no="Drevet av lidenskap og presisjon lager artisten og eieren bak Infinity Tattoo Studio custom tatoveringer som forteller historien din. Hvert design er personlig, og hver linje er bevisst."
                 />
               </p>
