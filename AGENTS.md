@@ -12,7 +12,9 @@ This is the website for Infinity Tattoo in Lørenskog.
 
 ## Workflow
 
-Always sync/pull the latest repo before making edits.
+At the start of every Codex editing session:
+1. Use the Browser and Build Web Apps plugins.
+2. Sync/pull the latest repo before making edits.
 
 For normal website edits:
 1. Make the requested change.

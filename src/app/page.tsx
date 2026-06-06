@@ -64,7 +64,19 @@ const standards = [
   },
 ];
 
-const faqItems = [
+type FaqItem = {
+  questionEn: string;
+  questionNo: string;
+  answerEn: string;
+  answerNo: string;
+  locationLink?: string;
+  parkingLinks?: {
+    freshFitness: string;
+    triaden: string;
+  };
+};
+
+const faqItems: FaqItem[] = [
   {
     questionEn: "How do I book a consultation?",
     questionNo: "Hvordan booker jeg konsultasjon?",
@@ -112,15 +124,19 @@ const faqItems = [
       "Infinity Tattoo is at Skårersletta 48c in Lørenskog. The map above opens the exact location.",
     answerNo:
       "Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. Kartet over åpner nøyaktig lokasjon.",
+    locationLink: "https://maps.app.goo.gl/z7rXGVEJVXESGa8E7",
   },
   {
     questionEn: "Where can I park?",
     questionNo: "Hvor kan jeg parkere?",
     answerEn:
-      "You can park at Triaden Lørenskog Storsenter, either inside or outside. The outside parking is closer and easier to access, with 2 hours free parking. From Skårersletta 70 it is about a 4 minute walk to the studio.",
+      "You can park for 2 hours free near the studio at Fresh Fitness, Skårersletta 60, or Triaden Senter Uteparkering, Skårersletta 70.",
     answerNo:
-      "Du kan parkere på Triaden Lørenskog Storsenter, enten inne eller ute. Uteparkeringen er nærmere og enklere å komme til, med 2 timer gratis parkering. Fra Skårersletta 70 er det omtrent 4 minutter å gå til studioet.",
-    parkingLink: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
+      "Du kan parkere gratis i 2 timer nær studioet ved Fresh Fitness, Skårersletta 60, eller Triaden Senter Uteparkering, Skårersletta 70.",
+    parkingLinks: {
+      freshFitness: "https://maps.app.goo.gl/MixgmVqLpSrBzwrU9",
+      triaden: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
+    },
   },
 ];
 
@@ -507,23 +523,64 @@ export default function Home() {
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  {"parkingLink" in item ? (
+                  {item.parkingLinks ? (
+                    <div className="space-y-4">
+                      <p>
+                        <LocalizedText
+                          en="You can park for 2 hours free near the studio at these locations:"
+                          no="Du kan parkere gratis i 2 timer nær studioet på disse stedene:"
+                        />
+                      </p>
+                      <ul className="space-y-2">
+                        <li>
+                          Fresh Fitness,{" "}
+                          <a
+                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                            href={item.parkingLinks.freshFitness}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            Skårersletta 60
+                          </a>{" "}
+                          <LocalizedText en="(2 min walk)" no="(2 min gange)" />
+                        </li>
+                        <li>
+                          Triaden Senter Uteparkering,{" "}
+                          <a
+                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                            href={item.parkingLinks.triaden}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            Skårersletta 70
+                          </a>{" "}
+                          <LocalizedText en="(4 min walk)" no="(4 min gange)" />
+                        </li>
+                      </ul>
+                      <p>
+                        <LocalizedText
+                          en="You can move your car between sessions for free or pay 23 kr per 30 minutes."
+                          no="Du kan flytte bilen mellom øktene for å parkere gratis, eller betale 23 kr per 30 minutter."
+                        />
+                      </p>
+                    </div>
+                  ) : item.locationLink ? (
                     <p>
                       <LocalizedText
-                        en="You can park at Triaden Lørenskog Storsenter, either inside or outside. The outside parking is closer and easier to access, with 2 hours free parking. From "
-                        no="Du kan parkere på Triaden Lørenskog Storsenter, enten inne eller ute. Uteparkeringen er nærmere og enklere å komme til, med 2 timer gratis parkering. Fra "
+                        en="Infinity Tattoo is at "
+                        no="Infinity Tattoo ligger på "
                       />
                       <a
                         className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
-                        href={item.parkingLink}
+                        href={item.locationLink}
                         rel="noreferrer"
                         target="_blank"
                       >
-                        Skårersletta 70
+                        Skårersletta 48c
                       </a>
                       <LocalizedText
-                        en=" it is about a 4 minute walk to the studio."
-                        no=" er det omtrent 4 minutter å gå til studioet."
+                        en=" in Lørenskog. The map above opens the exact location."
+                        no=" i Lørenskog. Kartet over åpner nøyaktig lokasjon."
                       />
                     </p>
                   ) : (
