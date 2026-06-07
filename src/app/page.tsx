@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   CalendarDaysIcon,
   CheckIcon,
+  GiftIcon,
   MailIcon,
   MapPinIcon,
   MoveUpRightIcon,
@@ -600,6 +601,95 @@ export default function Home() {
             />
             <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
           </a>
+        </div>
+
+        <div
+          id="gift-cards"
+          className="motion-reveal grid overflow-hidden border-y border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
+        >
+          <div className="flex flex-col gap-5">
+            <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <GiftIcon className="size-5" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="font-display text-4xl font-bold sm:text-5xl">
+                <LocalizedText en="Gift cards" no="Gavekort" />
+              </h3>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                <LocalizedText
+                  en="Give someone a custom tattoo experience at Infinity Tattoo. Gift cards can be bought online and used toward tattoo work at the studio."
+                  no="Gi noen en custom tatoveringsopplevelse hos Infinity Tattoo. Gavekort kan kjøpes online og brukes mot tatoveringsarbeid i studioet."
+                />
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={
+                  <a
+                    href="https://giftcard.linework.com/infinity-tattoo-studio-"
+                    rel="noreferrer"
+                    target="_blank"
+                  />
+                }
+                size="lg"
+              >
+                <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
+                <MoveUpRightIcon data-icon="inline-end" />
+              </Button>
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={<a href="#faq" />}
+                size="lg"
+                variant="outline"
+              >
+                <LocalizedText en="Read FAQ" no="Les FAQ" />
+                <MoveUpRightIcon data-icon="inline-end" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="motion-lift mt-8 overflow-hidden rounded-lg border bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
+            <div className="relative min-h-72 overflow-hidden rounded-md border bg-card p-6 sm:min-h-80">
+              <Image
+                src="/media/gallery/infinity/infinity-12.jpg"
+                alt=""
+                fill
+                className="object-cover opacity-35 grayscale"
+                sizes="(min-width: 1024px) 42vw, 92vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-background via-background/76 to-background/20" />
+              <div className="relative flex min-h-60 flex-col justify-between sm:min-h-72">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="relative flex size-12 overflow-hidden rounded-full bg-foreground">
+                    <Image
+                      src="/media/brand/infinity.svg"
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                    />
+                  </span>
+                  <span className="text-right text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
+                    Infinity Tattoo
+                  </span>
+                </div>
+                <div>
+                  <p className="font-display text-4xl font-bold leading-none text-foreground sm:text-5xl">
+                    <LocalizedText en="Gift Card" no="Gavekort" />
+                  </p>
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
+                    <LocalizedText
+                      en="For custom realism, black & grey work, and serious tattoo projects."
+                      no="For custom realisme, black & grey arbeid og seriøse tatoveringsprosjekter."
+                    />
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
