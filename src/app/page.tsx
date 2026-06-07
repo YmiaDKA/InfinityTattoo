@@ -448,8 +448,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="artist" className="motion-reveal border-y bg-card/35">
-        <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
+      <section id="artist" className="motion-reveal border-t bg-card/35">
+        <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
           <div className="motion-lift group relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
@@ -467,7 +467,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="flex h-full flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Badge variant="secondary" className="w-fit">
                 <LocalizedText en="Artist & owner" no="Artist og eier" />
@@ -482,7 +482,7 @@ export default function Home() {
                 />
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="mt-auto grid gap-3 sm:grid-cols-3">
               {artistSpecialties.map((item) => (
                 <div
                   className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
@@ -580,10 +580,10 @@ export default function Home() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="motion-lift-subtle overflow-hidden rounded-3xl border bg-card/80 p-2">
+          <div className="motion-lift-subtle overflow-hidden rounded-3xl">
             <iframe
               aria-label="Infinity Tattoo location on Google Maps"
-              className="h-[25rem] w-full rounded-2xl border-0"
+              className="block h-[25rem] w-full rounded-3xl border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               scrolling="no"
@@ -712,7 +712,7 @@ export default function Home() {
 
         <div
           id="gift-cards"
-          className="motion-reveal grid overflow-hidden border-y border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
+          className="grid overflow-hidden border-t border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
         >
           <div className="flex flex-col gap-5">
             <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">

@@ -59,7 +59,7 @@ export function PanoramaViewer() {
     >
       <motion.div
         ref={panoramaRef}
-        className="absolute inset-y-0 left-0 w-[225%] cursor-grab select-none active:cursor-grabbing sm:w-[170%] lg:w-[130%]"
+        className="absolute inset-y-0 left-0 aspect-[750/274] cursor-grab select-none active:cursor-grabbing"
         drag="x"
         dragConstraints={{ left: -overflow, right: 0 }}
         dragElastic={0.06}
