@@ -64,6 +64,30 @@ const standards = [
   },
 ];
 
+const artistSpecialties = [
+  {
+    titleEn: "Large-scale realism",
+    titleNo: "Realisme i stor skala",
+    textEn: "Sleeves, portraits, and statement pieces built with depth and contrast.",
+    textNo:
+      "Sleeves, portretter og større prosjekter bygget med dybde og kontrast.",
+  },
+  {
+    titleEn: "Custom only",
+    titleNo: "Kun custom",
+    textEn: "Every design is shaped around your idea, placement, and long-term wear.",
+    textNo:
+      "Hvert design formes rundt ideen din, plassering og langvarig uttrykk.",
+  },
+  {
+    titleEn: "Black & grey focus",
+    titleNo: "Black & grey fokus",
+    textEn: "Clean contrast, smooth shading, and structure made to hold over time.",
+    textNo:
+      "Ren kontrast, myk shading og struktur som er laget for å holde over tid.",
+  },
+];
+
 type FaqItem = {
   questionEn: string;
   questionNo: string;
@@ -449,26 +473,49 @@ export default function Home() {
           <div className="motion-lift group relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
-              alt="Filippos Hoxhaj, artist and owner of Infinity Tattoo Studio"
+              alt="Filip, artist and owner of Infinity Tattoo Studio"
               fill
               className="motion-media object-cover object-[50%_18%]"
               sizes="(min-width: 1024px) 38vw, 92vw"
             />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/80 to-transparent px-5 pb-5 pt-20">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
+                Custom realism / black & grey
+              </p>
+              <p className="mt-2 font-display text-2xl font-bold text-foreground">
+                Designed by Filip
+              </p>
+            </div>
           </div>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <Badge variant="secondary" className="w-fit">
-                <LocalizedText en="The artist" no="Artisten" />
+                <LocalizedText en="Artist & owner" no="Artist og eier" />
               </Badge>
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                Filippos Hoxhaj
+                Filip
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filippos is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Drevet av lidenskap og presisjon lager artisten og eieren bak Infinity Tattoo Studio custom tatoveringer som forteller historien din. Hvert design er personlig, og hver linje er bevisst."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {artistSpecialties.map((item) => (
+                <div
+                  className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                  key={item.titleEn}
+                >
+                  <p className="font-display text-lg font-bold text-foreground">
+                    <LocalizedText en={item.titleEn} no={item.titleNo} />
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    <LocalizedText en={item.textEn} no={item.textNo} />
+                  </p>
+                </div>
+              ))}
             </div>
             <Separator />
             <div className="grid gap-4 sm:grid-cols-2">
