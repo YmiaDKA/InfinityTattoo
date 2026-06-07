@@ -52,7 +52,7 @@ export function PanoramaViewer() {
     <div
       ref={containerRef}
       aria-label="Draggable panoramic view of Infinity Tattoo Studio"
-      className="relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[32rem]"
+      className="motion-lift motion-panorama relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[32rem]"
       onKeyDown={handleKeyDown}
       role="group"
       tabIndex={0}
@@ -70,7 +70,7 @@ export function PanoramaViewer() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt="Panoramic interior view of Infinity Tattoo Studio"
-          className="pointer-events-none size-full object-cover"
+          className="motion-panorama-media pointer-events-none size-full object-cover"
           draggable={false}
           src="/media/studio-panorama.jpg"
         />

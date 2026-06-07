@@ -136,3 +136,181 @@
     }
   }
 }
+
+@layer components {
+  .motion-hero-media {
+    animation: studio-hero-drift 24s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  .motion-rise {
+    animation: studio-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .motion-delay-1 {
+    animation-delay: 90ms;
+  }
+
+  .motion-delay-2 {
+    animation-delay: 180ms;
+  }
+
+  .motion-delay-3 {
+    animation-delay: 270ms;
+  }
+
+  .motion-reveal {
+    animation: studio-reveal both;
+    animation-range: entry 8% cover 28%;
+    animation-timeline: view();
+  }
+
+  .motion-stagger > *:nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  .motion-stagger > *:nth-child(3) {
+    animation-delay: 140ms;
+  }
+
+  .motion-stagger > *:nth-child(4) {
+    animation-delay: 200ms;
+  }
+
+  .motion-stagger > *:nth-child(5) {
+    animation-delay: 260ms;
+  }
+
+  .motion-stagger > *:nth-child(6) {
+    animation-delay: 320ms;
+  }
+
+  .motion-lift,
+  .motion-lift-subtle {
+    transition:
+      transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 420ms ease,
+      background-color 420ms ease,
+      box-shadow 420ms ease,
+      color 420ms ease;
+    will-change: transform;
+  }
+
+  .motion-lift:hover {
+    border-color: color-mix(in oklch, var(--studio-red) 48%, var(--border));
+    box-shadow: 0 1.35rem 3.5rem rgb(0 0 0 / 32%);
+    transform: translateY(-0.32rem);
+  }
+
+  .motion-lift-subtle:hover {
+    border-color: color-mix(in oklch, var(--studio-red) 36%, var(--border));
+    transform: translateY(-0.16rem);
+  }
+
+  .motion-media {
+    filter: grayscale(1);
+    transition:
+      filter 700ms ease,
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, filter;
+  }
+
+  .group:hover .motion-media {
+    filter: grayscale(0);
+    transform: scale(1.065);
+  }
+
+  .motion-panorama-media {
+    animation: studio-panorama-breathe 22s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  .motion-panorama:hover .motion-panorama-media,
+  .motion-panorama:focus-within .motion-panorama-media {
+    animation-play-state: paused;
+  }
+
+  [data-icon="inline-end"],
+  [data-icon="inline-start"] {
+    transition: transform 300ms ease;
+  }
+
+  .group\/button:hover [data-icon="inline-end"],
+  a:hover [data-icon="inline-end"] {
+    transform: translate(0.12rem, -0.12rem);
+  }
+
+  .group\/button:hover [data-icon="inline-start"],
+  a:hover [data-icon="inline-start"] {
+    transform: translateX(-0.1rem);
+  }
+
+  @supports not (animation-timeline: view()) {
+    .motion-reveal {
+      animation: studio-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+}
+
+@keyframes studio-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes studio-reveal {
+  from {
+    opacity: 0.18;
+    transform: translateY(2rem) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes studio-hero-drift {
+  from {
+    transform: scale(1.02) translate3d(-0.6rem, 0, 0);
+  }
+
+  to {
+    transform: scale(1.08) translate3d(0.6rem, -0.4rem, 0);
+  }
+}
+
+@keyframes studio-panorama-breathe {
+  from {
+    filter: contrast(1.02) saturate(0.94);
+    transform: scale(1);
+  }
+
+  to {
+    filter: contrast(1.08) saturate(1);
+    transform: scale(1.035);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .motion-reveal,
+  .motion-rise {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

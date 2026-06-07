@@ -288,7 +288,7 @@ export default function Home() {
         <video
           aria-label="Infinity Tattoo Studio reel"
           autoPlay
-          className="absolute inset-0 -z-20 size-full object-cover opacity-70"
+          className="motion-hero-media absolute inset-0 -z-20 size-full object-cover opacity-70"
           loop
           muted
           playsInline
@@ -301,19 +301,19 @@ export default function Home() {
 
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 pb-14 pt-32 sm:px-8 lg:pb-20">
           <div className="flex max-w-4xl flex-col gap-6">
-            <h1 className="font-display text-5xl font-bold leading-none text-foreground sm:text-7xl lg:text-8xl">
+            <h1 className="motion-rise motion-delay-1 font-display text-5xl font-bold leading-none text-foreground sm:text-7xl lg:text-8xl">
               INFINITY TATTOO
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+            <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
               <LocalizedText
                 en="Custom realistic tattoos in Lørenskog, built around precision, detail, and a design that actually belongs on your skin."
                 no="Custom realistiske tatoveringer i Lørenskog, bygget rundt presisjon, detaljer og et design som faktisk passer huden din."
               />
             </p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="motion-rise motion-delay-3 flex flex-col gap-3 sm:flex-row">
             <Button
-              className="rounded-full"
+              className="motion-lift-subtle rounded-full"
               nativeButton={false}
               render={<a href="#booking" />}
               size="lg"
@@ -322,6 +322,7 @@ export default function Home() {
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button
+              className="motion-lift-subtle"
               nativeButton={false}
               render={<a href="#work" />}
               size="lg"
@@ -336,13 +337,13 @@ export default function Home() {
 
       <section
         id="reviews"
-        className="border-y bg-card/25 py-8 text-muted-foreground"
+        className="motion-reveal border-y bg-card/25 py-8 text-muted-foreground"
         aria-label="Client reviews"
       >
         <Marquee pauseOnHover repeat={3} className="[--duration:48s]">
           {testimonials.map((testimonial) => (
             <Card
-              className="mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
+              className="motion-lift-subtle mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
               key={testimonial.name}
             >
               <CardContent className="flex min-h-40 flex-col gap-4 px-5 py-4">
@@ -366,7 +367,7 @@ export default function Home() {
         </Marquee>
         <div className="mt-6 flex justify-center px-5">
           <Button
-            className="rounded-full"
+            className="motion-lift-subtle rounded-full"
             nativeButton={false}
             render={<Link href="/reviews" />}
             size="lg"
@@ -380,7 +381,7 @@ export default function Home() {
 
       <section
         id="work"
-        className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28"
+        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28"
       >
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
           <div className="flex flex-col gap-4">
@@ -396,7 +397,7 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap items-center gap-3 lg:justify-end">
             <Button
-              className="rounded-full"
+              className="motion-lift-subtle rounded-full"
               nativeButton={false}
               render={
                 <a
@@ -412,7 +413,7 @@ export default function Home() {
               Instagram
             </Button>
             <Button
-              className="rounded-full"
+              className="motion-lift-subtle rounded-full"
               nativeButton={false}
               render={<Link href="/work" />}
               size="lg"
@@ -423,10 +424,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredGalleryImages.map((image, index) => (
             <div
-              className={`group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
+              className={`motion-lift motion-reveal group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
                 index > 2 ? "hidden sm:block" : ""
               }`}
               key={image.src}
@@ -435,7 +436,7 @@ export default function Home() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
+                className="motion-media object-cover"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
             </div>
@@ -443,14 +444,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="artist" className="border-y bg-card/35">
+      <section id="artist" className="motion-reveal border-y bg-card/35">
         <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
-          <div className="relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
+          <div className="motion-lift group relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
               alt="Filippos Hoxhaj, artist and owner of Infinity Tattoo Studio"
               fill
-              className="object-cover object-[50%_18%]"
+              className="motion-media object-cover object-[50%_18%]"
               sizes="(min-width: 1024px) 38vw, 92vw"
             />
           </div>
@@ -481,7 +482,7 @@ export default function Home() {
                   no: "Realisme først i utførelsen",
                 },
               ].map((item) => (
-                <div className="flex items-center gap-3" key={item.en}>
+                <div className="motion-lift-subtle flex items-center gap-3" key={item.en}>
                   <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     <CheckIcon className="size-4" />
                   </span>
@@ -494,7 +495,7 @@ export default function Home() {
 
             <div id="studio" className="grid gap-4 md:grid-cols-2">
               {standards.map((item) => (
-                <div className="flex items-start gap-3" key={item.titleEn}>
+                <div className="motion-lift-subtle flex items-start gap-3" key={item.titleEn}>
                   <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                     <CheckIcon className="size-4" />
                   </span>
@@ -510,7 +511,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
+        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
           <LocalizedText en="Booking" no="Booking" />
@@ -518,21 +519,21 @@ export default function Home() {
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <a
-            className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
           >
             <MailIcon className="size-5 text-[color:var(--studio-red)]" />
             infinitytattoo99@gmail.com
           </a>
           <a
-            className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="tel:+4740344775"
           >
             <PhoneIcon className="size-5 text-[color:var(--studio-red)]" />
             +47 40 34 47 75
           </a>
           <a
-            className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="https://www.google.com/maps/search/?api=1&query=Sk%C3%A5rersletta%2048c%2C%20L%C3%B8renskog"
             rel="noreferrer"
             target="_blank"
@@ -541,7 +542,7 @@ export default function Home() {
             Skårersletta 48c
           </a>
           <a
-            className="flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="https://booking.linework.com/infinity"
             rel="noreferrer"
             target="_blank"
@@ -556,7 +557,7 @@ export default function Home() {
 
         <div
           id="booking"
-          className="relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
+          className="motion-lift-subtle relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
         >
           <BorderBeam
             borderWidth={1}
@@ -568,7 +569,7 @@ export default function Home() {
           <LineworkBooking />
         </div>
 
-        <div className="overflow-hidden rounded-3xl border bg-card/80 p-2">
+        <div className="motion-lift-subtle overflow-hidden rounded-3xl border bg-card/80 p-2">
           <iframe
             aria-label="Infinity Tattoo location on Google Maps"
             className="h-[25rem] w-full rounded-2xl border-0"
@@ -579,7 +580,7 @@ export default function Home() {
           />
         </div>
 
-        <div id="faq" className="scroll-mt-28 rounded-3xl border bg-card/60 p-2">
+        <div id="faq" className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2">
           <div className="px-4 pt-4">
             <h3 className="font-display text-3xl font-bold">
               <LocalizedText en="FAQ" no="Ofte stilte spørsmål" />
@@ -666,7 +667,7 @@ export default function Home() {
 
         <div
           id="aftercare"
-          className="scroll-mt-28 rounded-3xl border bg-card/60 p-2"
+          className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2"
         >
           <div className="px-4 pt-4">
             <h3 className="font-display text-3xl font-bold">
@@ -697,7 +698,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 pb-10 sm:px-8">
+      <section className="motion-reveal px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
           <PanoramaViewer />
         </div>
@@ -705,7 +706,7 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
+          <div className="motion-lift-subtle flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-foreground">
               <span className="relative flex size-10 overflow-hidden rounded-full bg-foreground">
                 <Image
@@ -721,7 +722,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4">
               <a
                 aria-label="Instagram"
-                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
+                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
                 href="https://www.instagram.com/infinitytattoo.lorenskog/"
                 rel="noreferrer"
                 target="_blank"
@@ -731,7 +732,7 @@ export default function Home() {
               </a>
               <a
                 aria-label="Tiktok"
-                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
+                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
                 href="https://www.tiktok.com/@infinitytattoostudio"
                 rel="noreferrer"
                 target="_blank"
