@@ -27,43 +27,7 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
-import { Separator } from "@/components/ui/separator";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
-
-const standards = [
-  {
-    titleEn: "Custom designs",
-    titleNo: "Skreddersydde design",
-    textEn:
-      "Custom designs shaped around your idea, body placement, and long-term wear.",
-    textNo:
-      "Skreddersydde design rundt ideen din, plassering og langvarig uttrykk.",
-  },
-  {
-    titleEn: "High-quality realism",
-    titleNo: "Realisme på høyt nivå",
-    textEn:
-      "High-quality realism with depth, contrast, detail, and clean black-and-grey execution.",
-    textNo:
-      "Realisme på høyt nivå med dybde, kontrast og ren black-and-grey utførelse.",
-  },
-  {
-    titleEn: "Safe studio",
-    titleNo: "Trygt studio",
-    textEn:
-      "Safe studio with professional hygiene from the first consultation to aftercare.",
-    textNo:
-      "Trygt studio med profesjonell hygiene fra konsultasjon til etterbehandling.",
-  },
-  {
-    titleEn: "Clear communication",
-    titleNo: "Tydelig kommunikasjon",
-    textEn:
-      "Clear communication about concept, sizing, references, timing, and expectations.",
-    textNo:
-      "Tydelig kommunikasjon om konsept, størrelse, referanser og forventninger.",
-  },
-];
 
 const artistSpecialties = [
   {
@@ -86,6 +50,21 @@ const artistSpecialties = [
     textEn: "Clean contrast, smooth shading, and structure made to hold over time.",
     textNo:
       "Ren kontrast, myk shading og struktur som er laget for å holde over tid.",
+  },
+];
+
+const artistHighlights = [
+  {
+    en: "Greece and Norway experience",
+    no: "Erfaring fra Hellas og Norge",
+  },
+  {
+    en: "Safe studio with professional hygiene from consultation to aftercare",
+    no: "Trygt studio med profesjonell hygiene fra konsultasjon til etterbehandling",
+  },
+  {
+    en: "Clear communication about concept, sizing, references, timing, and expectations",
+    no: "Tydelig kommunikasjon om konsept, størrelse, referanser, tid og forventninger",
   },
 ];
 
@@ -518,41 +497,24 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <Separator />
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[
-                {
-                  en: "Greece and Norway experience",
-                  no: "Erfaring fra Hellas og Norge",
-                },
-                {
-                  en: "Realism-first execution",
-                  no: "Realisme først i utførelsen",
-                },
-              ].map((item) => (
-                <div className="motion-lift-subtle flex items-center gap-3" key={item.en}>
-                  <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <CheckIcon className="size-4" />
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    <LocalizedText en={item.en} no={item.no} />
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div id="studio" className="grid gap-4 md:grid-cols-2">
-              {standards.map((item) => (
-                <div className="motion-lift-subtle flex items-start gap-3" key={item.titleEn}>
-                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <CheckIcon className="size-4" />
-                  </span>
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </div>
-              ))}
-            </div>
+          </div>
+          <div
+            id="studio"
+            className="grid gap-5 border-t border-border/70 pt-8 lg:col-span-2 lg:grid-cols-3"
+          >
+            {artistHighlights.map((item) => (
+              <div
+                className="motion-lift-subtle flex items-start gap-3"
+                key={item.en}
+              >
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <CheckIcon className="size-4" />
+                </span>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  <LocalizedText en={item.en} no={item.no} />
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -604,95 +566,6 @@ export default function Home() {
         </div>
 
         <div
-          id="gift-cards"
-          className="motion-reveal grid overflow-hidden border-y border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
-        >
-          <div className="flex flex-col gap-5">
-            <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <GiftIcon className="size-5" />
-            </div>
-            <div className="flex flex-col gap-3">
-              <h3 className="font-display text-4xl font-bold sm:text-5xl">
-                <LocalizedText en="Gift cards" no="Gavekort" />
-              </h3>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-                <LocalizedText
-                  en="Give someone a custom tattoo experience at Infinity Tattoo. Gift cards can be bought online and used toward tattoo work at the studio."
-                  no="Gi noen en custom tatoveringsopplevelse hos Infinity Tattoo. Gavekort kan kjøpes online og brukes mot tatoveringsarbeid i studioet."
-                />
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                className="motion-lift-subtle rounded-full"
-                nativeButton={false}
-                render={
-                  <a
-                    href="https://giftcard.linework.com/infinity-tattoo-studio-"
-                    rel="noreferrer"
-                    target="_blank"
-                  />
-                }
-                size="lg"
-              >
-                <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
-                <MoveUpRightIcon data-icon="inline-end" />
-              </Button>
-              <Button
-                className="motion-lift-subtle rounded-full"
-                nativeButton={false}
-                render={<a href="#faq" />}
-                size="lg"
-                variant="outline"
-              >
-                <LocalizedText en="Read FAQ" no="Les FAQ" />
-                <MoveUpRightIcon data-icon="inline-end" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="motion-lift mt-8 overflow-hidden rounded-lg border bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
-            <div className="relative min-h-72 overflow-hidden rounded-md border bg-card p-6 sm:min-h-80">
-              <Image
-                src="/media/gallery/infinity/infinity-12.jpg"
-                alt=""
-                fill
-                className="object-cover opacity-35 grayscale"
-                sizes="(min-width: 1024px) 42vw, 92vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-background via-background/76 to-background/20" />
-              <div className="relative flex min-h-60 flex-col justify-between sm:min-h-72">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="relative flex size-12 overflow-hidden rounded-full bg-foreground">
-                    <Image
-                      src="/media/brand/infinity.svg"
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="48px"
-                    />
-                  </span>
-                  <span className="text-right text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
-                    Infinity Tattoo
-                  </span>
-                </div>
-                <div>
-                  <p className="font-display text-4xl font-bold leading-none text-foreground sm:text-5xl">
-                    <LocalizedText en="Gift Card" no="Gavekort" />
-                  </p>
-                  <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
-                    <LocalizedText
-                      en="For custom realism, black & grey work, and serious tattoo projects."
-                      no="For custom realisme, black & grey arbeid og seriøse tatoveringsprosjekter."
-                    />
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
           id="booking"
           className="motion-lift-subtle relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
         >
@@ -706,15 +579,18 @@ export default function Home() {
           <LineworkBooking />
         </div>
 
-        <div className="motion-lift-subtle overflow-hidden rounded-3xl border bg-card/80 p-2">
-          <iframe
-            aria-label="Infinity Tattoo location on Google Maps"
-            className="h-[25rem] w-full rounded-2xl border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            scrolling="no"
-            src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
-          />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="motion-lift-subtle overflow-hidden rounded-3xl border bg-card/80 p-2">
+            <iframe
+              aria-label="Infinity Tattoo location on Google Maps"
+              className="h-[25rem] w-full rounded-2xl border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              scrolling="no"
+              src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
+            />
+          </div>
+          <PanoramaViewer />
         </div>
 
         <div id="faq" className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2">
@@ -833,11 +709,94 @@ export default function Home() {
             ))}
           </Accordion>
         </div>
-      </section>
 
-      <section className="motion-reveal px-5 pb-10 sm:px-8">
-        <div className="mx-auto w-full max-w-[68rem]">
-          <PanoramaViewer />
+        <div
+          id="gift-cards"
+          className="motion-reveal grid overflow-hidden border-y border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
+        >
+          <div className="flex flex-col gap-5">
+            <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <GiftIcon className="size-5" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="font-display text-4xl font-bold sm:text-5xl">
+                <LocalizedText en="Gift cards" no="Gavekort" />
+              </h3>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                <LocalizedText
+                  en="Give someone a custom tattoo experience at Infinity Tattoo. Gift cards can be bought online and used toward tattoo work at the studio."
+                  no="Gi noen en custom tatoveringsopplevelse hos Infinity Tattoo. Gavekort kan kjøpes online og brukes mot tatoveringsarbeid i studioet."
+                />
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={
+                  <a
+                    href="https://giftcard.linework.com/infinity-tattoo-studio-"
+                    rel="noreferrer"
+                    target="_blank"
+                  />
+                }
+                size="lg"
+              >
+                <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
+                <MoveUpRightIcon data-icon="inline-end" />
+              </Button>
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={<a href="#faq" />}
+                size="lg"
+                variant="outline"
+              >
+                <LocalizedText en="Read FAQ" no="Les FAQ" />
+                <MoveUpRightIcon data-icon="inline-end" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="motion-lift mt-8 overflow-hidden rounded-lg border bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
+            <div className="relative min-h-72 overflow-hidden rounded-md border bg-card p-6 sm:min-h-80">
+              <Image
+                src="/media/gallery/infinity/infinity-12.jpg"
+                alt=""
+                fill
+                className="object-cover opacity-35 grayscale"
+                sizes="(min-width: 1024px) 42vw, 92vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-background via-background/76 to-background/20" />
+              <div className="relative flex min-h-60 flex-col justify-between sm:min-h-72">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="relative flex size-12 overflow-hidden rounded-full bg-foreground">
+                    <Image
+                      src="/media/brand/infinity.svg"
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                    />
+                  </span>
+                  <span className="text-right text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
+                    Infinity Tattoo
+                  </span>
+                </div>
+                <div>
+                  <p className="font-display text-4xl font-bold leading-none text-foreground sm:text-5xl">
+                    <LocalizedText en="Gift Card" no="Gavekort" />
+                  </p>
+                  <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
+                    <LocalizedText
+                      en="For custom realism, black & grey work, and serious tattoo projects."
+                      no="For custom realisme, black & grey arbeid og seriøse tatoveringsprosjekter."
+                    />
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

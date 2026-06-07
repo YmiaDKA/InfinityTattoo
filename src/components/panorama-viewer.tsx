@@ -52,7 +52,7 @@ export function PanoramaViewer() {
     <div
       ref={containerRef}
       aria-label="Draggable panoramic view of Infinity Tattoo Studio"
-      className="motion-lift motion-panorama relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[32rem]"
+      className="motion-lift motion-panorama relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[25rem]"
       onKeyDown={handleKeyDown}
       role="group"
       tabIndex={0}
