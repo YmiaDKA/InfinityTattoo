@@ -19,13 +19,16 @@ export default function ReviewsPage() {
 
         <div className="motion-stagger grid gap-3 md:grid-cols-2">
           {testimonials.map((review) => (
-            <Card className="motion-lift motion-reveal bg-card/70" key={review.name}>
+            <Card
+              className="motion-lift motion-reveal bg-card/70"
+              key={`${review.name}-${review.date}`}
+            >
               <CardContent className="flex min-h-44 flex-col gap-4 px-5 py-4">
                 <div className="flex gap-1 text-[color:var(--studio-red)]">
-                  {Array.from({ length: 5 }).map((_, index) => (
+                  {Array.from({ length: review.rating }).map((_, index) => (
                     <StarIcon
                       className="size-4 fill-current"
-                      key={`${review.name}-${index}`}
+                      key={`${review.name}-${review.date}-${index}`}
                     />
                   ))}
                 </div>

@@ -348,18 +348,18 @@ export default function Home() {
           {testimonials.map((testimonial) => (
             <Card
               className="motion-lift-subtle mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
-              key={testimonial.name}
+              key={`${testimonial.name}-${testimonial.date}`}
             >
               <CardContent className="flex min-h-40 flex-col gap-4 px-5 py-4">
                 <div className="flex gap-1 text-[color:var(--studio-red)]">
-                  {Array.from({ length: 5 }).map((_, index) => (
+                  {Array.from({ length: testimonial.rating }).map((_, index) => (
                     <StarIcon
                       className="size-4 fill-current"
-                      key={`${testimonial.name}-${index}`}
+                      key={`${testimonial.name}-${testimonial.date}-${index}`}
                     />
                   ))}
                 </div>
-                <p className="text-base leading-6 text-foreground">
+                <p className="line-clamp-5 text-base leading-6 text-foreground">
                   &quot;{testimonial.quote}&quot;
                 </p>
                 <p className="mt-auto text-sm font-semibold text-muted-foreground">

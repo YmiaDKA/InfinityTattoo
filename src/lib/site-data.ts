@@ -1,3 +1,12 @@
+import reviews from "@/data/reviews.json";
+
+export type Testimonial = {
+  name: string;
+  rating: number;
+  quote: string;
+  date: string;
+};
+
 export const galleryImages = [
   {
     src: "/media/gallery/infinity/infinity-12.jpg",
@@ -67,25 +76,4 @@ export const galleryImages = [
 
 export const featuredGalleryImages = galleryImages.slice(0, 6);
 
-export const testimonials = [
-  {
-    quote:
-      "Very happy with the result and the full experience. Comfortable session, visible passion, and strong attention to detail.",
-    name: "Kristi Rouko",
-  },
-  {
-    quote:
-      "Clean studio, welcoming energy, chill vibe, and a tattoo that turned out better than expected.",
-    name: "Areti Anastasi",
-  },
-  {
-    quote:
-      "Clean and welcoming studio with a great vibe. The artist listens, gives advice, and makes the process comfortable.",
-    name: "Petros Tzegias",
-  },
-  {
-    quote:
-      "Excellent communication from the start, with time spent understanding the idea and helping shape the right design.",
-    name: "Hlias Hysos",
-  },
-];
+export const testimonials: Testimonial[] = reviews;
