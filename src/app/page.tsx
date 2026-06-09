@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
+import { toothGemPrices } from "@/lib/tooth-gems";
 
 const artistSpecialties = [
   {
@@ -66,62 +67,6 @@ const artistHighlights = [
   {
     en: "Clear communication about concept, sizing, references, timing, and expectations",
     no: "Tydelig kommunikasjon om konsept, størrelse, referanser, tid og forventninger",
-  },
-];
-
-const toothGemPrices = [
-  {
-    titleEn: "1 gem",
-    titleNo: "1 gem",
-    price: "300,-",
-    textEn: "Clean single crystal placement.",
-    textNo: "Ren plassering av en enkel krystall.",
-  },
-  {
-    titleEn: "2 gems",
-    titleNo: "2 gems",
-    price: "500,-",
-    textEn: "Balanced sparkle for a subtle pair.",
-    textNo: "Balansert sparkle med to gems.",
-  },
-  {
-    titleEn: "Extra gems",
-    titleNo: "Ekstra gems",
-    price: "100,-",
-    textEn: "Per extra gem after the first two.",
-    textNo: "Per ekstra gem etter de to første.",
-  },
-];
-
-const toothGemDesigns = [
-  {
-    titleEn: "Standard design",
-    titleNo: "Standard design",
-    price: "800,-",
-    textEn: "Butterfly, flower, cherry, frame, or cross.",
-    textNo: "Sommerfugl, blomst, cherry, frame eller kors.",
-  },
-  {
-    titleEn: "Disco",
-    titleNo: "Disco",
-    price: "1000,-",
-    textEn: "A brighter, high-shine tooth gem design.",
-    textNo: "Et mer markant design med ekstra shine.",
-  },
-  {
-    titleEn: "18k gold",
-    titleNo: "18k gold",
-    price: "1200,-",
-    textEn: "Order item with a 500 kr deposit.",
-    textNo: "Bestillingsvare med 500 kr deposit.",
-  },
-  {
-    titleEn: "Custom design",
-    titleNo: "Custom design",
-    priceEn: "By agreement",
-    priceNo: "Etter avtale",
-    textEn: "Contact us for design and price.",
-    textNo: "Ta kontakt for design og pris.",
   },
 ];
 
@@ -586,27 +531,26 @@ export default function Home() {
       </section>
 
       <section id="tooth-gems" className="motion-reveal border-y bg-background">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-28">
-          <div className="flex flex-col gap-7">
-            <div className="flex flex-col gap-4">
-              <Badge variant="secondary" className="w-fit gap-2">
-                <SparklesIcon className="size-4 text-[color:var(--studio-red)]" />
-                <LocalizedText en="Separate service" no="Egen service" />
-              </Badge>
-              <div className="flex flex-col gap-4">
-                <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                  <LocalizedText en="Tooth gems" no="Tooth gems" />
-                </h2>
-                <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-                  <LocalizedText
-                    en="A premium cosmetic jewelry service at Infinity Tattoo Studio. Small crystal details, clean placement, and custom designs made to feel intentional without mixing the look with tattoo work."
-                    no="En premium kosmetisk smykkeservice hos Infinity Tattoo Studio. Små krystalldetaljer, ren plassering og custom design laget for å føles gjennomført uten at uttrykket blandes med tatovering."
-                  />
-                </p>
-              </div>
+        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-16">
+          <div className="flex items-start gap-4">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <SparklesIcon className="size-5" />
+            </span>
+            <div className="flex flex-col gap-3">
+              <h2 className="font-display text-3xl font-bold sm:text-4xl">
+                <LocalizedText en="Tooth gems" no="Tooth gems" />
+              </h2>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                <LocalizedText
+                  en="A separate cosmetic jewelry service with clean crystal placement and custom design options."
+                  no="En egen kosmetisk smykkeservice med ren krystallplassering og mulighet for custom design."
+                />
+              </p>
             </div>
+          </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+          <div className="flex flex-col gap-4 lg:items-end">
+            <div className="grid w-full gap-3 sm:grid-cols-3 lg:max-w-xl">
               {toothGemPrices.map((item) => (
                 <div
                   className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-4"
@@ -615,77 +559,22 @@ export default function Home() {
                   <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
                     <LocalizedText en={item.titleEn} no={item.titleNo} />
                   </p>
-                  <p className="mt-3 font-display text-3xl font-bold text-foreground">
+                  <p className="mt-2 font-display text-2xl font-bold text-foreground">
                     {item.price}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
                 </div>
               ))}
             </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                className="motion-lift-subtle rounded-full"
-                nativeButton={false}
-                render={<a href="#booking" />}
-                size="lg"
-              >
-                <LocalizedText en="Book tooth gems" no="Book tooth gems" />
-                <CalendarDaysIcon data-icon="inline-end" />
-              </Button>
-              <Button
-                className="motion-lift-subtle rounded-full"
-                nativeButton={false}
-                render={
-                  <a href="mailto:infinitytattoo99@gmail.com?subject=Tooth%20gems%20custom%20design" />
-                }
-                size="lg"
-                variant="outline"
-              >
-                <LocalizedText en="Custom design" no="Custom design" />
-                <MoveUpRightIcon data-icon="inline-end" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-5">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {toothGemDesigns.map((item) => (
-                <div
-                  className="motion-lift-subtle rounded-lg border bg-card/55 p-5"
-                  key={item.titleEn}
-                >
-                  <div className="flex min-h-20 flex-col justify-between gap-3">
-                    <p className="font-display text-xl font-bold text-foreground">
-                      <LocalizedText en={item.titleEn} no={item.titleNo} />
-                    </p>
-                    <p className="font-display text-3xl font-bold text-[color:var(--studio-red)]">
-                      <LocalizedText
-                        en={item.priceEn ?? item.price}
-                        no={item.priceNo ?? item.price}
-                      />
-                    </p>
-                  </div>
-                  <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="motion-lift-subtle grid gap-4 rounded-lg border border-border/70 bg-card/35 p-5 sm:grid-cols-[auto_1fr] sm:items-center">
-              <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <SparklesIcon className="size-5" />
-              </div>
-              <p className="text-base leading-7 text-muted-foreground">
-                <LocalizedText
-                  en="Fresh tooth gem photos are coming soon. Until then, the prices and booking options are listed clearly here."
-                  no="Nye tooth gem-bilder kommer snart. Inntil videre ligger priser og bookingvalg tydelig her."
-                />
-              </p>
-            </div>
+            <Button
+              className="motion-lift-subtle rounded-full"
+              nativeButton={false}
+              render={<Link href="/tooth-gems" />}
+              size="lg"
+              variant="outline"
+            >
+              <LocalizedText en="Read more" no="Les mer" />
+              <MoveUpRightIcon data-icon="inline-end" />
+            </Button>
           </div>
         </div>
       </section>
