@@ -675,25 +675,16 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="motion-lift group relative aspect-[3/4] overflow-hidden rounded-lg border bg-card">
-                <Image
-                  src="/media/tooth-gems/tooth-gems-prices.png"
-                  alt="Tooth gems price list"
-                  fill
-                  className="motion-media object-cover object-top"
-                  sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 92vw"
-                />
+            <div className="motion-lift-subtle grid gap-4 rounded-lg border border-border/70 bg-card/35 p-5 sm:grid-cols-[auto_1fr] sm:items-center">
+              <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <SparklesIcon className="size-5" />
               </div>
-              <div className="motion-lift group relative aspect-[3/4] overflow-hidden rounded-lg border bg-card">
-                <Image
-                  src="/media/tooth-gems/tooth-gems-standard-designs.png"
-                  alt="Tooth gems standard designs price list"
-                  fill
-                  className="motion-media object-cover object-top"
-                  sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 92vw"
+              <p className="text-base leading-7 text-muted-foreground">
+                <LocalizedText
+                  en="Fresh tooth gem photos are coming soon. Until then, the prices and booking options are listed clearly here."
+                  no="Nye tooth gem-bilder kommer snart. Inntil videre ligger priser og bookingvalg tydelig her."
                 />
-              </div>
+              </p>
             </div>
           </div>
         </div>
