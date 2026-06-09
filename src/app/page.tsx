@@ -344,7 +344,11 @@ export default function Home() {
         className="motion-reveal border-y bg-card/25 py-8 text-muted-foreground"
         aria-label="Client reviews"
       >
-        <Marquee pauseOnHover repeat={3} className="[--duration:48s]">
+        <Marquee
+          pauseOnHover
+          repeat={3}
+          className="[--duration:600s] sm:[--duration:800s]"
+        >
           {testimonials.map((testimonial) => (
             <Card
               className="motion-lift-subtle mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
