@@ -364,7 +364,12 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="line-clamp-5 text-base leading-6 text-foreground">
-                  &quot;{testimonial.quote}&quot;
+                  &quot;
+                  <LocalizedText
+                    en={testimonial.quoteEn}
+                    no={testimonial.quoteNo}
+                  />
+                  &quot;
                 </p>
                 <p className="mt-auto text-sm font-semibold text-muted-foreground">
                   {testimonial.name}

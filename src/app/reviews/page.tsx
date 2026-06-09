@@ -1,6 +1,7 @@
 import { MoveUpRightIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 
+import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,7 +33,11 @@ export default function ReviewsPage() {
                     />
                   ))}
                 </div>
-                <p className="text-base leading-6">&quot;{review.quote}&quot;</p>
+                <p className="text-base leading-6">
+                  &quot;
+                  <LocalizedText en={review.quoteEn} no={review.quoteNo} />
+                  &quot;
+                </p>
                 <p className="mt-auto text-sm font-semibold text-muted-foreground">
                   {review.name}
                 </p>

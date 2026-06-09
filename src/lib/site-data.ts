@@ -3,7 +3,8 @@ import reviews from "@/data/reviews.json";
 export type Testimonial = {
   name: string;
   rating: number;
-  quote: string;
+  quoteEn: string;
+  quoteNo: string;
   date: string;
 };
 
