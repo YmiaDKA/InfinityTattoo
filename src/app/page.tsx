@@ -74,22 +74,22 @@ const artistHighlights: Array<{
     icon: SparklesIcon,
     titleEn: "Greece + Norway",
     titleNo: "Hellas + Norge",
-    textEn: "Experience across both Greece and Norway.",
-    textNo: "Erfaring fra både Hellas og Norge.",
+    textEn: "Experience in Greece and Norway.",
+    textNo: "Erfaring fra Hellas og Norge.",
   },
   {
     icon: ShieldCheckIcon,
     titleEn: "Safe studio",
     titleNo: "Trygt studio",
-    textEn: "Professional hygiene from consultation through aftercare.",
-    textNo: "Profesjonell hygiene fra konsultasjon til etterbehandling.",
+    textEn: "Professional hygiene throughout your session.",
+    textNo: "Profesjonell hygiene gjennom hele behandlingen.",
   },
   {
     icon: MessagesSquareIcon,
     titleEn: "Clear communication",
     titleNo: "Tydelig kommunikasjon",
-    textEn: "Concept, sizing, references, timing, and expectations stay clear.",
-    textNo: "Konsept, størrelse, referanser, tid og forventninger er tydelige.",
+    textEn: "Clear plans for design, size, timing, and expectations.",
+    textNo: "Tydelige planer for design, størrelse, tid og forventninger.",
   },
 ];
 
@@ -459,7 +459,7 @@ export default function Home() {
         <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredGalleryImages.map((image, index) => (
             <div
-              className={`motion-reveal relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
+              className={`motion-lift motion-reveal group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
                 index > 2 ? "hidden sm:block" : ""
               }`}
               key={image.src}
@@ -468,7 +468,7 @@ export default function Home() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover"
+                className="motion-media object-cover"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
             </div>
@@ -495,10 +495,10 @@ export default function Home() {
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
                 Filip
               </h2>
-              <p className="line-clamp-2 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+              <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Custom black-and-grey realism tattoos in Lørenskog, shaped around your idea, body, and long-term wear."
-                  no="Custom black-and-grey realisme i Lørenskog, formet rundt ideen din, kroppen din og hvordan tatoveringen skal holde over tid."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
@@ -866,7 +866,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4">
               <a
                 aria-label="Instagram"
-                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4"
+                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
                 href="https://www.instagram.com/infinitytattoo.lorenskog/"
                 rel="noreferrer"
                 target="_blank"
@@ -876,7 +876,7 @@ export default function Home() {
               </a>
               <a
                 aria-label="Tiktok"
-                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4"
+                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
                 href="https://www.tiktok.com/@infinitytattoostudio"
                 rel="noreferrer"
                 target="_blank"
@@ -888,7 +888,7 @@ export default function Home() {
           </div>
           <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70 max-sm:pl-10">
             <a
-              className="relative z-10 inline-flex h-8 items-center"
+              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"
               rel="noreferrer"
               target="_blank"
@@ -896,7 +896,7 @@ export default function Home() {
               Org nr 936 727 670
             </a>
             <a
-              className="relative z-10 inline-flex h-8 items-center"
+              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.albab.dk/"
               rel="noreferrer"
               target="_blank"
