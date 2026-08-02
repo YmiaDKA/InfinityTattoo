@@ -126,25 +126,17 @@ export function SiteHeader() {
         {pillBounds ? (
           <motion.span
             aria-hidden="true"
+            data-desktop={isDesktop ? "true" : "false"}
+            data-scrolled={isScrolled ? "true" : "false"}
             animate={{
-              backgroundColor: isScrolled
-                ? "color-mix(in oklch, var(--background) 45%, transparent)"
-                : isDesktop
-                  ? "color-mix(in oklch, var(--muted) 40%, transparent)"
-                  : "transparent",
-              borderColor: isScrolled || isDesktop
-                ? "color-mix(in oklch, var(--foreground) 10%, transparent)"
-                : "transparent",
               height: isScrolled ? pillBounds.expandedHeight : pillBounds.height,
               left: isScrolled ? pillBounds.expandedLeft : pillBounds.left,
               top: isScrolled ? pillBounds.expandedTop : pillBounds.top,
               width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
             }}
-            className="pointer-events-none absolute z-0 block rounded-full border shadow-2xl shadow-black/20 backdrop-blur-2xl"
+            className="header-pill-surface pointer-events-none absolute z-0 block rounded-full border shadow-2xl shadow-black/20 backdrop-blur-2xl"
             initial={false}
             transition={{
-              backgroundColor: { duration: 0.14 },
-              borderColor: { duration: 0.1 },
               height: { type: "spring", duration: 0.42, bounce: 0.08 },
               left: { type: "spring", duration: 0.42, bounce: 0.08 },
               top: { type: "spring", duration: 0.42, bounce: 0.08 },

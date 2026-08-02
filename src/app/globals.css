@@ -138,6 +138,24 @@
 }
 
 @layer components {
+  .header-pill-surface {
+    background-color: transparent;
+    border-color: transparent;
+    transition:
+      background-color 140ms ease,
+      border-color 100ms ease;
+  }
+
+  .header-pill-surface[data-desktop="true"],
+  .header-pill-surface[data-scrolled="true"] {
+    background-color: color-mix(in oklch, var(--muted) 40%, transparent);
+    border-color: color-mix(in oklch, var(--foreground) 10%, transparent);
+  }
+
+  .header-pill-surface[data-scrolled="true"] {
+    background-color: color-mix(in oklch, var(--background) 45%, transparent);
+  }
+
   .motion-hero-media {
     animation: studio-hero-drift 24s ease-in-out infinite alternate;
     transform-origin: center;
@@ -193,7 +211,6 @@
       background-color 420ms ease,
       box-shadow 420ms ease,
       color 420ms ease;
-    will-change: transform;
   }
 
   .motion-lift:hover {
@@ -212,7 +229,6 @@
     transition:
       filter 700ms ease,
       transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform, filter;
   }
 
   .group:hover .motion-media {

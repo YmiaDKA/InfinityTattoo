@@ -2,14 +2,19 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarDaysIcon,
-  CheckIcon,
+  ContrastIcon,
   GiftIcon,
+  Maximize2Icon,
   MailIcon,
   MapPinIcon,
+  MessagesSquareIcon,
   MoveUpRightIcon,
+  PaletteIcon,
   PhoneIcon,
+  ShieldCheckIcon,
   SparklesIcon,
   StarIcon,
+  type LucideIcon,
 } from "lucide-react";
 
 import { LineworkBooking } from "@/components/linework-booking";
@@ -33,6 +38,7 @@ import { toothGemPrices } from "@/lib/tooth-gems";
 
 const artistSpecialties = [
   {
+    icon: Maximize2Icon,
     titleEn: "Large-scale realism",
     titleNo: "Realisme i stor skala",
     textEn: "Sleeves, portraits, and statement pieces built with depth and contrast.",
@@ -40,6 +46,7 @@ const artistSpecialties = [
       "Sleeves, portretter og større prosjekter bygget med dybde og kontrast.",
   },
   {
+    icon: PaletteIcon,
     titleEn: "Custom only",
     titleNo: "Kun custom",
     textEn: "Every design is shaped around your idea, placement, and long-term wear.",
@@ -47,6 +54,7 @@ const artistSpecialties = [
       "Hvert design formes rundt ideen din, plassering og langvarig uttrykk.",
   },
   {
+    icon: ContrastIcon,
     titleEn: "Black & grey focus",
     titleNo: "Black & grey fokus",
     textEn: "Clean contrast, smooth shading, and structure made to hold over time.",
@@ -55,20 +63,37 @@ const artistSpecialties = [
   },
 ];
 
-const artistHighlights = [
+const artistHighlights: Array<{
+  icon: LucideIcon;
+  titleEn: string;
+  titleNo: string;
+  textEn: string;
+  textNo: string;
+}> = [
   {
-    en: "Greece and Norway experience",
-    no: "Erfaring fra Hellas og Norge",
+    icon: SparklesIcon,
+    titleEn: "Greece + Norway",
+    titleNo: "Hellas + Norge",
+    textEn: "Experience across both Greece and Norway.",
+    textNo: "Erfaring fra både Hellas og Norge.",
   },
   {
-    en: "Safe studio with professional hygiene from consultation to aftercare",
-    no: "Trygt studio med profesjonell hygiene fra konsultasjon til etterbehandling",
+    icon: ShieldCheckIcon,
+    titleEn: "Safe studio",
+    titleNo: "Trygt studio",
+    textEn: "Professional hygiene from consultation through aftercare.",
+    textNo: "Profesjonell hygiene fra konsultasjon til etterbehandling.",
   },
   {
-    en: "Clear communication about concept, sizing, references, timing, and expectations",
-    no: "Tydelig kommunikasjon om konsept, størrelse, referanser, tid og forventninger",
+    icon: MessagesSquareIcon,
+    titleEn: "Clear communication",
+    titleNo: "Tydelig kommunikasjon",
+    textEn: "Concept, sizing, references, timing, and expectations stay clear.",
+    textNo: "Konsept, størrelse, referanser, tid og forventninger er tydelige.",
   },
 ];
+
+const artistPoints = [...artistSpecialties, ...artistHighlights];
 
 type FaqItem = {
   questionEn: string;
@@ -348,7 +373,7 @@ export default function Home() {
       >
         <Marquee
           pauseOnHover
-          repeat={3}
+          repeat={2}
           className="[--duration:600s] sm:[--duration:800s]"
         >
           {testimonials.map((testimonial) => (
@@ -398,18 +423,10 @@ export default function Home() {
         id="work"
         className="motion-reveal mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28"
       >
-        <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-          <div className="flex flex-col gap-4">
-            <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText en="Recent projects" no="Nylige prosjekter" />
-            </h2>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="A curated selection of custom and realistic tattoo work, focused on detail, precision, and strong black-and-grey contrast."
-                no="Et kuratert utvalg av custom og realistiske tatoveringer med fokus på detaljer, presisjon og sterk black-and-grey kontrast."
-              />
-            </p>
-          </div>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">
+            <LocalizedText en="Recent projects" no="Nylige prosjekter" />
+          </h2>
           <div className="flex flex-wrap items-center gap-3 lg:justify-end">
             <Button
               className="motion-lift-subtle rounded-full"
@@ -442,7 +459,7 @@ export default function Home() {
         <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredGalleryImages.map((image, index) => (
             <div
-              className={`motion-lift motion-reveal group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
+              className={`motion-reveal relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
                 index > 2 ? "hidden sm:block" : ""
               }`}
               key={image.src}
@@ -451,7 +468,7 @@ export default function Home() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="motion-media object-cover"
+                className="object-cover"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
             </div>
@@ -459,73 +476,55 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="artist" className="motion-reveal border-t bg-card/35">
+      <section id="artist" className="motion-reveal bg-card/35">
         <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
-          <div className="motion-lift group relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
+          <div className="relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
               alt="Filip, artist and owner of Infinity Tattoo Studio"
               fill
-              className="motion-media object-cover object-[50%_18%]"
+              className="object-cover object-[50%_18%]"
               sizes="(min-width: 1024px) 38vw, 92vw"
             />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/80 to-transparent px-5 pb-5 pt-20">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
-                Custom realism / black & grey
-              </p>
-              <p className="mt-2 font-display text-2xl font-bold text-foreground">
-                Designed by Filip
-              </p>
-            </div>
           </div>
-          <div className="flex h-full flex-col gap-6">
-            <div className="flex flex-col gap-4">
+          <div className="flex min-h-[34rem] flex-col gap-6">
+            <div className="flex flex-col gap-3">
               <Badge variant="secondary" className="w-fit">
                 <LocalizedText en="Artist & owner" no="Artist og eier" />
               </Badge>
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
                 Filip
               </h2>
-              <p className="text-lg leading-8 text-muted-foreground">
+              <p className="line-clamp-2 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
                 <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
+                  en="Custom black-and-grey realism tattoos in Lørenskog, shaped around your idea, body, and long-term wear."
+                  no="Custom black-and-grey realisme i Lørenskog, formet rundt ideen din, kroppen din og hvordan tatoveringen skal holde over tid."
                 />
               </p>
             </div>
-            <div className="mt-auto grid gap-3 sm:grid-cols-3">
-              {artistSpecialties.map((item) => (
-                <div
-                  className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
-                  key={item.titleEn}
-                >
-                  <p className="font-display text-lg font-bold text-foreground">
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </div>
-              ))}
+            <div
+              id="studio"
+              className="mt-auto grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {artistPoints.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    className="flex h-full flex-col rounded-lg border border-border/70 bg-background/35 p-4"
+                    key={item.titleEn}
+                  >
+                    <Icon className="size-5 text-[color:var(--studio-red)]" />
+                    <p className="mt-4 font-display text-lg font-bold text-foreground">
+                      <LocalizedText en={item.titleEn} no={item.titleNo} />
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      <LocalizedText en={item.textEn} no={item.textNo} />
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-          </div>
-          <div
-            id="studio"
-            className="grid gap-5 border-t border-border/70 pt-8 lg:col-span-2 lg:grid-cols-3"
-          >
-            {artistHighlights.map((item) => (
-              <div
-                className="motion-lift-subtle flex items-start gap-3"
-                key={item.en}
-              >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  <CheckIcon className="size-4" />
-                </span>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  <LocalizedText en={item.en} no={item.no} />
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -653,126 +652,128 @@ export default function Home() {
           <PanoramaViewer />
         </div>
 
-        <div id="faq" className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2">
-          <div className="px-4 pt-4">
-            <h3 className="font-display text-3xl font-bold">
-              <LocalizedText en="FAQ" no="Ofte stilte spørsmål" />
-            </h3>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div id="faq" className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2">
+            <div className="px-4 pt-4">
+              <h3 className="font-display text-3xl font-bold">
+                <LocalizedText en="FAQ" no="Ofte stilte spørsmål" />
+              </h3>
+            </div>
+            <Accordion
+              className="px-4 py-2"
+              defaultValue={[faqItems[0].questionEn]}
+            >
+              {faqItems.map((item) => (
+                <AccordionItem key={item.questionEn} value={item.questionEn}>
+                  <AccordionTrigger className="py-4 text-base">
+                    <LocalizedText en={item.questionEn} no={item.questionNo} />
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {item.parkingLinks ? (
+                      <div className="space-y-4">
+                        <p>
+                          <LocalizedText
+                            en="You can park for 2 hours free near the studio at these locations:"
+                            no="Du kan parkere gratis i 2 timer nær studioet på disse stedene:"
+                          />
+                        </p>
+                        <ul className="space-y-2">
+                          <li>
+                            Fresh Fitness,{" "}
+                            <a
+                              className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                              href={item.parkingLinks.freshFitness}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              Skårersletta 60
+                            </a>{" "}
+                            <LocalizedText en="(2 min walk)" no="(2 min gange)" />
+                          </li>
+                          <li>
+                            Triaden Senter Uteparkering,{" "}
+                            <a
+                              className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                              href={item.parkingLinks.triaden}
+                              rel="noreferrer"
+                              target="_blank"
+                            >
+                              Skårersletta 70
+                            </a>{" "}
+                            <LocalizedText en="(4 min walk)" no="(4 min gange)" />
+                          </li>
+                        </ul>
+                        <p>
+                          <LocalizedText
+                            en="You can move your car between sessions for free or pay 23 kr per 30 minutes."
+                            no="Du kan flytte bilen mellom øktene for å parkere gratis, eller betale 23 kr per 30 minutter."
+                          />
+                        </p>
+                      </div>
+                    ) : item.locationLink ? (
+                      <p>
+                        <LocalizedText
+                          en="Infinity Tattoo is at "
+                          no="Infinity Tattoo ligger på "
+                        />
+                        <a
+                          className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                          href={item.locationLink}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          Skårersletta 48c
+                        </a>
+                        <LocalizedText
+                          en=" in Lørenskog. The map above opens the exact location."
+                          no=" i Lørenskog. Kartet over åpner nøyaktig lokasjon."
+                        />
+                      </p>
+                    ) : (
+                      <LocalizedText en={item.answerEn} no={item.answerNo} />
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
-          <Accordion
-            className="px-4 py-2"
-            defaultValue={[faqItems[0].questionEn]}
-          >
-            {faqItems.map((item) => (
-              <AccordionItem key={item.questionEn} value={item.questionEn}>
-                <AccordionTrigger className="py-4 text-base">
-                  <LocalizedText en={item.questionEn} no={item.questionNo} />
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {item.parkingLinks ? (
-                    <div className="space-y-4">
-                      <p>
-                        <LocalizedText
-                          en="You can park for 2 hours free near the studio at these locations:"
-                          no="Du kan parkere gratis i 2 timer nær studioet på disse stedene:"
-                        />
-                      </p>
-                      <ul className="space-y-2">
-                        <li>
-                          Fresh Fitness,{" "}
-                          <a
-                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
-                            href={item.parkingLinks.freshFitness}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            Skårersletta 60
-                          </a>{" "}
-                          <LocalizedText en="(2 min walk)" no="(2 min gange)" />
-                        </li>
-                        <li>
-                          Triaden Senter Uteparkering,{" "}
-                          <a
-                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
-                            href={item.parkingLinks.triaden}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
-                            Skårersletta 70
-                          </a>{" "}
-                          <LocalizedText en="(4 min walk)" no="(4 min gange)" />
-                        </li>
-                      </ul>
-                      <p>
-                        <LocalizedText
-                          en="You can move your car between sessions for free or pay 23 kr per 30 minutes."
-                          no="Du kan flytte bilen mellom øktene for å parkere gratis, eller betale 23 kr per 30 minutter."
-                        />
-                      </p>
-                    </div>
-                  ) : item.locationLink ? (
-                    <p>
-                      <LocalizedText
-                        en="Infinity Tattoo is at "
-                        no="Infinity Tattoo ligger på "
-                      />
-                      <a
-                        className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
-                        href={item.locationLink}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        Skårersletta 48c
-                      </a>
-                      <LocalizedText
-                        en=" in Lørenskog. The map above opens the exact location."
-                        no=" i Lørenskog. Kartet over åpner nøyaktig lokasjon."
-                      />
-                    </p>
-                  ) : (
-                    <LocalizedText en={item.answerEn} no={item.answerNo} />
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
 
-        <div
-          id="aftercare"
-          className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2"
-        >
-          <div className="px-4 pt-4">
-            <h3 className="font-display text-3xl font-bold">
-              <LocalizedText en="Aftercare" no="Etterbehandling" />
-            </h3>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground">
-              <LocalizedText
-                en="Follow the steps below through the healing period. If the artist gives you personal instructions, follow those first."
-                no="Følg stegene under gjennom healing-perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
-              />
-            </p>
-          </div>
-          <Accordion
-            className="px-4 py-2"
-            defaultValue={[aftercareItems[0].questionEn]}
+          <div
+            id="aftercare"
+            className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2"
           >
-            {aftercareItems.map((item) => (
-              <AccordionItem key={item.questionEn} value={item.questionEn}>
-                <AccordionTrigger className="py-4 text-base uppercase tracking-[0.16em] text-foreground">
-                  <LocalizedText en={item.questionEn} no={item.questionNo} />
-                </AccordionTrigger>
-                <AccordionContent className="text-foreground">
-                  <LocalizedText en={item.answerEn} no={item.answerNo} />
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            <div className="px-4 pt-4">
+              <h3 className="font-display text-3xl font-bold">
+                <LocalizedText en="Aftercare" no="Etterbehandling" />
+              </h3>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground">
+                <LocalizedText
+                  en="Follow the steps below through the healing period. If the artist gives you personal instructions, follow those first."
+                  no="Følg stegene under gjennom healing-perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
+                />
+              </p>
+            </div>
+            <Accordion
+              className="px-4 py-2"
+              defaultValue={[aftercareItems[0].questionEn]}
+            >
+              {aftercareItems.map((item) => (
+                <AccordionItem key={item.questionEn} value={item.questionEn}>
+                  <AccordionTrigger className="py-4 text-base uppercase tracking-[0.16em] text-foreground">
+                    <LocalizedText en={item.questionEn} no={item.questionNo} />
+                  </AccordionTrigger>
+                  <AccordionContent className="text-foreground">
+                    <LocalizedText en={item.answerEn} no={item.answerNo} />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
         </div>
 
         <div
           id="gift-cards"
-          className="grid overflow-hidden border-t border-border/70 py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
+          className="grid overflow-hidden py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
         >
           <div className="flex flex-col gap-5">
             <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -805,20 +806,10 @@ export default function Home() {
                 <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
                 <MoveUpRightIcon data-icon="inline-end" />
               </Button>
-              <Button
-                className="motion-lift-subtle rounded-full"
-                nativeButton={false}
-                render={<a href="#faq" />}
-                size="lg"
-                variant="outline"
-              >
-                <LocalizedText en="Read FAQ" no="Les FAQ" />
-                <MoveUpRightIcon data-icon="inline-end" />
-              </Button>
             </div>
           </div>
 
-          <div className="motion-lift mt-8 overflow-hidden rounded-lg border bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
+          <div className="mt-8 overflow-hidden rounded-lg bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
             <div className="relative min-h-72 overflow-hidden rounded-md border bg-card p-6 sm:min-h-80">
               <Image
                 src="/media/gallery/infinity/infinity-12.jpg"
@@ -830,17 +821,14 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-br from-background via-background/76 to-background/20" />
               <div className="relative flex min-h-60 flex-col justify-between sm:min-h-72">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="relative flex size-12 overflow-hidden rounded-full bg-foreground">
+                  <span className="relative flex size-16 overflow-hidden rounded-full bg-foreground">
                     <Image
                       src="/media/brand/infinity.svg"
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="48px"
+                      sizes="64px"
                     />
-                  </span>
-                  <span className="text-right text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
-                    Infinity Tattoo
                   </span>
                 </div>
                 <div>
@@ -862,7 +850,7 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <div className="motion-lift-subtle flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 text-foreground">
               <span className="relative flex size-10 overflow-hidden rounded-full bg-foreground">
                 <Image
@@ -878,7 +866,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4">
               <a
                 aria-label="Instagram"
-                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
+                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4"
                 href="https://www.instagram.com/infinitytattoo.lorenskog/"
                 rel="noreferrer"
                 target="_blank"
@@ -888,7 +876,7 @@ export default function Home() {
               </a>
               <a
                 aria-label="Tiktok"
-                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
+                className="inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4"
                 href="https://www.tiktok.com/@infinitytattoostudio"
                 rel="noreferrer"
                 target="_blank"
@@ -900,7 +888,7 @@ export default function Home() {
           </div>
           <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70 max-sm:pl-10">
             <a
-              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
+              className="relative z-10 inline-flex h-8 items-center"
               href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"
               rel="noreferrer"
               target="_blank"
@@ -908,7 +896,7 @@ export default function Home() {
               Org nr 936 727 670
             </a>
             <a
-              className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
+              className="relative z-10 inline-flex h-8 items-center"
               href="https://www.albab.dk/"
               rel="noreferrer"
               target="_blank"
