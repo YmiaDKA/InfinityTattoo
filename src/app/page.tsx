@@ -534,20 +534,18 @@ export default function Home() {
       </section>
 
       <section id="tooth-gems" className="motion-reveal border-y bg-background">
-        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-16">
-          <div className="flex items-start gap-4">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:gap-10 lg:py-16">
+          <div className="flex items-center gap-4 lg:shrink-0">
             <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
               <SparklesIcon className="size-5" />
             </span>
-            <div className="flex flex-col gap-3">
-              <h2 className="font-display text-3xl font-bold sm:text-4xl">
-                <LocalizedText en="Tooth gems" no="Tooth gems" />
-              </h2>
-            </div>
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">
+              <LocalizedText en="Tooth gems" no="Tooth gems" />
+            </h2>
           </div>
 
-          <div className="flex flex-col gap-4 lg:items-end">
-            <div className="grid w-full gap-3 sm:grid-cols-3 lg:max-w-xl">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-1">
+            <div className="grid w-full gap-3 sm:min-w-0 sm:flex-1 sm:grid-cols-3">
               {toothGemPrices.map((item) => (
                 <div
                   className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-4"
@@ -563,7 +561,7 @@ export default function Home() {
               ))}
             </div>
             <Button
-              className="motion-lift-subtle rounded-full"
+              className="motion-lift-subtle shrink-0 self-center rounded-full sm:self-auto"
               nativeButton={false}
               render={<Link href="/tooth-gems" />}
               size="lg"
@@ -769,7 +767,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div id="gift-cards" className="py-8 lg:py-10">
+        <div id="gift-cards" className="pb-4 pt-8 lg:pb-6 lg:pt-10">
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
             <div className="gift-card-collage relative mx-auto aspect-[1.5] w-[60%]">
               <div className="gift-card-piece gift-card-piece-purple">
@@ -809,14 +807,14 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="mt-4 flex flex-col items-center gap-3">
+            <div className="mt-8 flex flex-col items-center gap-3">
               <h3 className="font-display text-4xl font-bold sm:text-5xl">
                 <LocalizedText en="Gift cards" no="Gavekort" />
               </h3>
               <p className="whitespace-nowrap text-sm leading-6 text-muted-foreground">
                 <LocalizedText
-                  en="Give someone a little piece of Infinity."
-                  no="Gi noen en liten bit av Infinity."
+                  en="For the tattoo they've been waiting for."
+                  no="Til tatoveringen de har ventet på."
                 />
               </p>
               <Button
