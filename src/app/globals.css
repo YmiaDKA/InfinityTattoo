@@ -194,7 +194,7 @@
   .gift-card-piece-gold {
     top: 22%;
     left: 0;
-    z-index: 3;
+    z-index: 4;
     width: 55%;
     aspect-ratio: 462 / 325;
   }
@@ -202,16 +202,16 @@
   .gift-card-piece-blue {
     top: 48%;
     left: 25%;
-    z-index: 2;
+    z-index: 3;
     width: 54%;
     aspect-ratio: 440 / 290;
   }
 
-  .gift-card-piece-grey {
+  .gift-card-piece-black {
     top: 10%;
     right: 0;
-    z-index: 4;
-    width: 49%;
+    z-index: 2;
+    width: 55%;
     aspect-ratio: 506 / 448;
   }
 
@@ -227,7 +227,7 @@
     transform: translateY(5%);
   }
 
-  .gift-card-collage:hover .gift-card-piece-grey {
+  .gift-card-collage:hover .gift-card-piece-black {
     transform: translateX(5%);
   }
 

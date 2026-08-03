@@ -78,8 +78,8 @@ const artistHighlights: Array<{
   },
   {
     icon: ShieldCheckIcon,
-    titleEn: "Safe studio",
-    titleNo: "Trygt studio",
+    titleEn: "Safe & hygienic studio",
+    titleNo: "Trygt og hygienisk studio",
     textEn: "Professional hygiene throughout your session.",
     textNo: "Profesjonell hygiene gjennom hele behandlingen.",
   },
@@ -477,7 +477,7 @@ export default function Home() {
 
       <section id="artist" className="motion-reveal bg-card/35">
         <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
-          <div className="relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
+          <div className="relative min-h-[30rem] overflow-hidden rounded-lg border bg-card">
             <Image
               src="/media/artist/filippos.jpg"
               alt="Filip, artist and owner of Infinity Tattoo Studio"
@@ -486,7 +486,7 @@ export default function Home() {
               sizes="(min-width: 1024px) 38vw, 92vw"
             />
           </div>
-          <div className="flex min-h-[34rem] flex-col gap-6">
+          <div className="flex min-h-[30rem] flex-col gap-6">
             <div className="flex flex-col gap-3">
               <Badge variant="secondary" className="w-fit">
                 <LocalizedText en="Artist & owner" no="Artist og eier" />
@@ -503,23 +503,28 @@ export default function Home() {
             </div>
             <div
               id="studio"
-              className="mt-auto grid auto-rows-fr gap-3 sm:grid-cols-2 lg:grid-cols-3"
+              className="mt-auto grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
             >
-              {artistPoints.map((item) => {
+              {artistPoints.map((item, index) => {
                 const Icon = item.icon;
+                const isHighlight = index >= artistSpecialties.length;
 
                 return (
                   <div
-                    className="flex h-full flex-col rounded-lg border border-border/70 bg-background/35 p-4"
+                    className={`flex h-full flex-col rounded-lg border border-border/70 bg-background/35 ${isHighlight ? "justify-center p-3" : "p-4"}`}
                     key={item.titleEn}
                   >
                     <Icon className="size-5 text-[color:var(--studio-red)]" />
-                    <p className="mt-4 font-display text-lg font-bold text-foreground">
+                    <p
+                      className={`${isHighlight ? "mt-2" : "mt-4"} font-display text-lg font-bold text-foreground`}
+                    >
                       <LocalizedText en={item.titleEn} no={item.titleNo} />
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                      <LocalizedText en={item.textEn} no={item.textNo} />
-                    </p>
+                    {!isHighlight && (
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        <LocalizedText en={item.textEn} no={item.textNo} />
+                      </p>
+                    )}
                   </div>
                 );
               })}
@@ -538,12 +543,6 @@ export default function Home() {
               <h2 className="font-display text-3xl font-bold sm:text-4xl">
                 <LocalizedText en="Tooth gems" no="Tooth gems" />
               </h2>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-                <LocalizedText
-                  en="A separate cosmetic jewelry service with clean crystal placement and custom design options."
-                  no="En egen kosmetisk smykkeservice med ren krystallplassering og mulighet for custom design."
-                />
-              </p>
             </div>
           </div>
 
@@ -772,7 +771,7 @@ export default function Home() {
 
         <div id="gift-cards" className="py-8 lg:py-10">
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-            <div className="gift-card-collage relative aspect-[1.5] w-full">
+            <div className="gift-card-collage relative mx-auto aspect-[1.5] w-[60%]">
               <div className="gift-card-piece gift-card-piece-purple">
                 <Image
                   src="/media/gift-cards/gift-purple.png"
@@ -800,10 +799,10 @@ export default function Home() {
                   sizes="(min-width: 1024px) 560px, 55vw"
                 />
               </div>
-              <div className="gift-card-piece gift-card-piece-grey">
+              <div className="gift-card-piece gift-card-piece-black">
                 <Image
                   src="/media/gift-cards/gift-grey.png"
-                  alt="Grey Infinity Tattoo gift card"
+                  alt="Black Infinity Tattoo gift card"
                   fill
                   className="object-contain"
                   sizes="(min-width: 1024px) 500px, 50vw"
@@ -816,8 +815,8 @@ export default function Home() {
               </h3>
               <p className="whitespace-nowrap text-sm leading-6 text-muted-foreground">
                 <LocalizedText
-                  en="A gift card for custom tattoo work."
-                  no="Gavekort på custom tatovering."
+                  en="Give someone a little piece of Infinity."
+                  no="Gi noen en liten bit av Infinity."
                 />
               </p>
               <Button
