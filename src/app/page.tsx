@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   CalendarDaysIcon,
   ContrastIcon,
-  GiftIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -771,26 +770,56 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          id="gift-cards"
-          className="grid overflow-hidden py-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10 lg:py-10"
-        >
-          <div className="flex flex-col gap-5">
-            <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <GiftIcon className="size-5" />
+        <div id="gift-cards" className="py-8 lg:py-10">
+          <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+            <div className="gift-card-collage relative aspect-[1.5] w-full">
+              <div className="gift-card-piece gift-card-piece-purple">
+                <Image
+                  src="/media/gift-cards/gift-purple.png"
+                  alt="Purple Infinity Tattoo gift card"
+                  fill
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 520px, 52vw"
+                />
+              </div>
+              <div className="gift-card-piece gift-card-piece-gold">
+                <Image
+                  src="/media/gift-cards/gift-gold.png"
+                  alt="Gold Infinity Tattoo gift card"
+                  fill
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 560px, 55vw"
+                />
+              </div>
+              <div className="gift-card-piece gift-card-piece-blue">
+                <Image
+                  src="/media/gift-cards/gift-blue.png"
+                  alt="Blue Infinity Tattoo gift card"
+                  fill
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 560px, 55vw"
+                />
+              </div>
+              <div className="gift-card-piece gift-card-piece-grey">
+                <Image
+                  src="/media/gift-cards/gift-grey.png"
+                  alt="Grey Infinity Tattoo gift card"
+                  fill
+                  className="object-contain"
+                  sizes="(min-width: 1024px) 500px, 50vw"
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="mt-4 flex flex-col items-center gap-3">
               <h3 className="font-display text-4xl font-bold sm:text-5xl">
                 <LocalizedText en="Gift cards" no="Gavekort" />
               </h3>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+              <p className="whitespace-nowrap text-sm leading-6 text-muted-foreground">
                 <LocalizedText
-                  en="Give someone a custom tattoo experience at Infinity Tattoo. Gift cards can be bought online and used toward tattoo work at the studio."
-                  no="Gi noen en custom tatoveringsopplevelse hos Infinity Tattoo. Gavekort kan kjøpes online og brukes mot tatoveringsarbeid i studioet."
+                  en="A gift card for custom tattoo work."
+                  no="Gavekort på custom tatovering."
                 />
               </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 className="motion-lift-subtle rounded-full"
                 nativeButton={false}
@@ -806,43 +835,6 @@ export default function Home() {
                 <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
                 <MoveUpRightIcon data-icon="inline-end" />
               </Button>
-            </div>
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-lg bg-background/45 p-5 shadow-2xl shadow-black/25 lg:mt-0">
-            <div className="relative min-h-72 overflow-hidden rounded-md border bg-card p-6 sm:min-h-80">
-              <Image
-                src="/media/gallery/infinity/infinity-12.jpg"
-                alt=""
-                fill
-                className="object-cover opacity-35 grayscale"
-                sizes="(min-width: 1024px) 42vw, 92vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-background via-background/76 to-background/20" />
-              <div className="relative flex min-h-60 flex-col justify-between sm:min-h-72">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="relative flex size-16 overflow-hidden rounded-full bg-foreground">
-                    <Image
-                      src="/media/brand/infinity.svg"
-                      alt=""
-                      fill
-                      className="object-cover"
-                      sizes="64px"
-                    />
-                  </span>
-                </div>
-                <div>
-                  <p className="font-display text-4xl font-bold leading-none text-foreground sm:text-5xl">
-                    <LocalizedText en="Gift Card" no="Gavekort" />
-                  </p>
-                  <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
-                    <LocalizedText
-                      en="For custom realism, black & grey work, and serious tattoo projects."
-                      no="For custom realisme, black & grey arbeid og seriøse tatoveringsprosjekter."
-                    />
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
