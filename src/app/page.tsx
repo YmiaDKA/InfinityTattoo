@@ -94,6 +94,59 @@ const artistHighlights: Array<{
 
 const artistPoints = [...artistSpecialties, ...artistHighlights];
 
+const serviceAreas = [
+  {
+    area: "Lørenskog",
+    textEn:
+      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, consultations, and tooth gems.",
+    textNo:
+      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, konsultasjoner og tooth gems.",
+  },
+  {
+    area: "Strømmen",
+    textEn:
+      "A short trip from Strømmen for clients who want detailed custom tattoo work without going into central Oslo.",
+    textNo:
+      "Kort vei fra Strømmen for kunder som vil ha detaljert custom tatovering uten å dra inn til Oslo sentrum.",
+  },
+  {
+    area: "Lillestrøm",
+    textEn:
+      "Clients from Lillestrøm are welcome for larger pieces, sleeves, portraits, cover-up planning, and consultations.",
+    textNo:
+      "Kunder fra Lillestrøm er velkommen for større prosjekter, sleeves, portretter, cover-up planlegging og konsultasjoner.",
+  },
+  {
+    area: "Oslo",
+    textEn:
+      "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
+    textNo:
+      "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
+  },
+];
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HealthAndBeautyBusiness",
+  name: "Infinity Tattoo Studio",
+  image: "https://infinitytattoo.no/media/hero-poster.jpeg",
+  url: "https://infinitytattoo.no/",
+  telephone: "+4740344775",
+  email: "infinitytattoo99@gmail.com",
+  priceRange: "NOK",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Skårersletta 48c",
+    addressLocality: "Lørenskog",
+    addressCountry: "NO",
+  },
+  areaServed: ["Lørenskog", "Strømmen", "Lillestrøm", "Oslo"],
+  sameAs: [
+    "https://www.instagram.com/infinitytattoo.lorenskog/",
+    "https://www.tiktok.com/@infinitytattoostudio",
+  ],
+};
+
 type FaqItem = {
   questionEn: string;
   questionNo: string;
@@ -312,6 +365,12 @@ const aftercareItems = [
 export default function Home() {
   return (
     <main id="home" className="min-h-screen overflow-hidden bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessJsonLd),
+        }}
+      />
       <SiteHeader />
 
       <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden">
@@ -336,8 +395,8 @@ export default function Home() {
             </h1>
             <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
               <LocalizedText
-                en="Custom realistic tattoos in Lørenskog, built around precision, detail, and a design that actually belongs on your skin."
-                no="Custom realistiske tatoveringer i Lørenskog, bygget rundt presisjon, detaljer og et design som faktisk passer huden din."
+                en="Custom realistic tattoos in Lørenskog, close to Strømmen and Lillestrøm, for clients who want precision, detail, and a design that actually belongs on their skin."
+                no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen og Lillestrøm, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din."
               />
             </p>
           </div>
@@ -578,6 +637,35 @@ export default function Home() {
         id="contact"
         className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
+        <div className="motion-reveal grid gap-6 border-b border-border/70 pb-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div className="flex flex-col gap-3">
+            <h2 className="font-display text-4xl font-bold sm:text-5xl">
+              <LocalizedText en="Tattoo studio near you" no="Tatoveringsstudio nær deg" />
+            </h2>
+            <p className="max-w-xl text-base leading-7 text-muted-foreground">
+              <LocalizedText
+                en="Infinity Tattoo is based in Lørenskog and is easy to reach from Strømmen, Lillestrøm, and Oslo."
+                no="Infinity Tattoo ligger i Lørenskog og er lett å komme til fra Strømmen, Lillestrøm og Oslo."
+              />
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {serviceAreas.map((item) => (
+              <div
+                className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-5"
+                key={item.area}
+              >
+                <p className="font-display text-2xl font-bold text-foreground">
+                  {item.area}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  <LocalizedText en={item.textEn} no={item.textNo} />
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
           <LocalizedText en="Booking" no="Booking" />
         </h2>
