@@ -1,11 +1,21 @@
 import { MoveUpRightIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { testimonials } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Anmeldelser | Infinity Tattoo Lørenskog",
+  description:
+    "Les kundeanmeldelser for Infinity Tattoo i Lørenskog, et tatoveringsstudio for custom realisme, black and grey og større prosjekter.",
+  alternates: {
+    canonical: "https://infinitytattoo.no/reviews",
+  },
+};
 
 export default function ReviewsPage() {
   return (

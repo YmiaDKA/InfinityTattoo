@@ -1,10 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MoveUpRightIcon } from "lucide-react";
+import type { Metadata } from "next";
 
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { galleryImages } from "@/lib/site-data";
+
+export const metadata: Metadata = {
+  title: "Arbeid | Realistisk tatovering Lørenskog",
+  description:
+    "Se custom realisme, black and grey tatoveringer, portretter, sleeves og større prosjekter fra Infinity Tattoo i Lørenskog.",
+  alternates: {
+    canonical: "https://infinitytattoo.no/work",
+  },
+};
 
 export default function WorkPage() {
   return (

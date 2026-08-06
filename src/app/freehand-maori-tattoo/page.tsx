@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Freehand Maori Tattoo Norway | Infinity Tattoo",
+  title: "Freehand Maori Tatovering Norge | Infinity Tattoo",
   description:
-    "Large-scale freehand Maori and Polynesian-inspired tattoo work in Lørenskog, minutes from Strømmen and Lillestrøm, with clients welcome from Oslo.",
+    "Freehand Maori tatovering og Polynesian-inspirert tattoo i stor skala i Lørenskog, minutter fra Strømmen og Lillestrøm.",
   alternates: {
     canonical: "https://infinitytattoo.no/freehand-maori-tattoo",
   },
@@ -70,7 +70,7 @@ export default function FreehandMaoriTattooPage() {
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
-              Freehand Maori tattoo
+              Freehand Maori tatovering
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText

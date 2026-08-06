@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 export type Language = "NO" | "EN";
 
 const storageKey = "infinity-language";
-const defaultLanguage: Language = "EN";
+const defaultLanguage: Language = "NO";
 const listeners = new Set<() => void>();
 let currentLanguage: Language = defaultLanguage;
 

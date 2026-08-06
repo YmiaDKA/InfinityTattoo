@@ -8,9 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toothGemDesigns, toothGemPrices } from "@/lib/tooth-gems";
 
 export const metadata = {
-  title: "Tooth gems | Infinity Tattoo",
+  title: "Tooth gems og tannsmykker | Infinity Tattoo Lørenskog",
   description:
-    "Tooth gems at Infinity Tattoo Studio in Lørenskog. Crystal placement, standard designs, disco, 18k gold, and custom tooth gem design options.",
+    "Tooth gems og tannsmykker hos Infinity Tattoo i Lørenskog. Krystallplassering, standard designs, disco, 18k gold og custom design.",
+  alternates: {
+    canonical: "https://infinitytattoo.no/tooth-gems",
+  },
 };
 
 export default function ToothGemsPage() {

@@ -19,9 +19,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Infinity Tattoo Studio | Tattoo Lørenskog, Strømmen & Lillestrøm",
+  title: "Infinity Tattoo Studio | Tatovering Lørenskog, Strømmen og Lillestrøm",
   description:
-    "Custom realistic tattoo work in Lørenskog, minutes from Strømmen and Lillestrøm, with clients welcome from Oslo.",
+    "Custom realistisk tatovering i Lørenskog, minutter fra Strømmen og Lillestrøm, for kunder fra Oslo og Romerike.",
   keywords: [
     "Infinity Tattoo",
     "tatovering Lørenskog",
@@ -30,6 +30,15 @@ export const metadata: Metadata = {
     "tattoo Strømmen",
     "tattoo Lillestrøm",
     "tattoo Oslo",
+    "tatovering Oslo",
+    "tatovering Strømmen",
+    "tatovering Lillestrøm",
+    "realistisk tatovering",
+    "black and grey tatovering",
+    "portrett tatovering",
+    "sleeve tatovering",
+    "Maori tatovering",
+    "Maori tatovering Norge",
     "realistic tattoo Norway",
     "black and grey tattoo",
     "portrait tattoo",
@@ -50,9 +59,9 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL("https://infinitytattoo.no"),
   openGraph: {
-    title: "Infinity Tattoo Studio | Lørenskog",
+    title: "Infinity Tattoo Studio | Tatovering Lørenskog",
     description:
-      "Custom realistic tattoo work and one-on-one consultations in Lørenskog, minutes from Strømmen and Lillestrøm, with clients from Oslo welcome.",
+      "Custom realistisk tatovering og konsultasjoner i Lørenskog, minutter fra Strømmen og Lillestrøm, for kunder fra Oslo og Romerike.",
     url: "https://infinitytattoo.no/",
     siteName: "Infinity Tattoo Studio",
     images: [
@@ -73,7 +82,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="no"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
