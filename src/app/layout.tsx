@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Infinity Tattoo Studio | Tattoo Lørenskog, Strømmen & Lillestrøm",
   description:
-    "Custom realistic tattoo work in Lørenskog, close to Strømmen and Lillestrøm, with clients welcome from Oslo.",
+    "Custom realistic tattoo work in Lørenskog with easy access from Strømmen, Lillestrøm, and Oslo.",
   alternates: {
     canonical: "https://infinitytattoo.no/",
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Infinity Tattoo Studio | Lørenskog",
     description:
-      "Custom realistic tattoo work, clean execution, and one-on-one consultations in Lørenskog near Strømmen, Lillestrøm, and Oslo.",
+      "Custom realistic tattoo work and one-on-one consultations in Lørenskog, easy to reach from Strømmen, Lillestrøm, and Oslo.",
     url: "https://infinitytattoo.no/",
     siteName: "Infinity Tattoo Studio",
     images: [

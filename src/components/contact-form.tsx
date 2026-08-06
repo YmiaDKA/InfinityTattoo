@@ -26,14 +26,28 @@ export function ContactForm() {
     const lastName = String(formData.get("lastName") ?? "");
     const phone = String(formData.get("phone") ?? "");
     const email = String(formData.get("email") ?? "");
-    const message = String(formData.get("message") ?? "");
+    const idea = String(formData.get("idea") ?? "");
+    const placement = String(formData.get("placement") ?? "");
+    const size = String(formData.get("size") ?? "");
+    const style = String(formData.get("style") ?? "");
+    const firstTattoo = String(formData.get("firstTattoo") ?? "");
+    const timing = String(formData.get("timing") ?? "");
+    const budget = String(formData.get("budget") ?? "");
 
     const body = [
       `Name: ${firstName} ${lastName}`.trim(),
       `Phone: ${phone}`,
       `Email: ${email}`,
       "",
-      message,
+      `Idea: ${idea}`,
+      `Placement: ${placement}`,
+      `Approx size: ${size}`,
+      `Style: ${style}`,
+      `First tattoo: ${firstTattoo}`,
+      `Timing: ${timing}`,
+      `Budget: ${budget}`,
+      "",
+      "Reference photos can be attached to this email before sending.",
     ].join("\n");
 
     window.location.href = `mailto:${emailAddress}?subject=${encodeURIComponent(
@@ -66,19 +80,58 @@ export function ContactForm() {
           </Field>
         </div>
         <Field>
-          <FieldLabel htmlFor="message">Idea</FieldLabel>
+          <FieldLabel htmlFor="idea">Tattoo idea</FieldLabel>
           <Textarea
-            id="message"
-            name="message"
-            placeholder="Placement, style, size, reference idea..."
+            id="idea"
+            name="idea"
+            placeholder="Describe the idea, meaning, subject, or reference direction..."
             required
             rows={5}
           />
-          <FieldDescription>
-            The form opens your email app so the studio receives the request
-            directly.
-          </FieldDescription>
         </Field>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field>
+            <FieldLabel htmlFor="placement">Placement</FieldLabel>
+            <Input
+              id="placement"
+              name="placement"
+              placeholder="Forearm, sleeve, chest, back..."
+              required
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="size">Approx size</FieldLabel>
+            <Input id="size" name="size" placeholder="10 cm, half sleeve..." />
+          </Field>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field>
+            <FieldLabel htmlFor="style">Style</FieldLabel>
+            <Input
+              id="style"
+              name="style"
+              placeholder="Black & grey, realism, portrait..."
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="firstTattoo">First tattoo?</FieldLabel>
+            <Input id="firstTattoo" name="firstTattoo" placeholder="Yes / no" />
+          </Field>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field>
+            <FieldLabel htmlFor="timing">When do you want to start?</FieldLabel>
+            <Input id="timing" name="timing" placeholder="As soon as possible..." />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="budget">Budget range</FieldLabel>
+            <Input id="budget" name="budget" placeholder="Optional" />
+          </Field>
+        </div>
+        <FieldDescription>
+          The form opens your email app so you can attach reference photos before
+          sending.
+        </FieldDescription>
       </FieldGroup>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

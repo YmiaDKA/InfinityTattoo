@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   CalendarDaysIcon,
   ContrastIcon,
+  ClipboardListIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -16,6 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { ContactForm } from "@/components/contact-form";
 import { LineworkBooking } from "@/components/linework-booking";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
@@ -122,6 +124,33 @@ const serviceAreas = [
       "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
     textNo:
       "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
+  },
+];
+
+const consultationSteps = [
+  {
+    titleEn: "Send the idea",
+    titleNo: "Send ideen",
+    textEn:
+      "Share the subject, placement, rough size, style, timing, and any references you already have.",
+    textNo:
+      "Del motiv, plassering, omtrent størrelse, stil, timing og referanser du allerede har.",
+  },
+  {
+    titleEn: "Filip reviews it",
+    titleNo: "Filip vurderer den",
+    textEn:
+      "You get clear feedback on what works, what needs adjustment, and whether a consultation is needed.",
+    textNo:
+      "Du får tydelig feedback på hva som fungerer, hva som bør justeres og om konsultasjon trengs.",
+  },
+  {
+    titleEn: "Plan the session",
+    titleNo: "Planlegg timen",
+    textEn:
+      "Placement, size, time estimate, price direction, and deposit are confirmed before the tattoo date.",
+    textNo:
+      "Plassering, størrelse, tidsbruk, prisretning og depositum avklares før tatoveringstimen.",
   },
 ];
 
@@ -404,21 +433,21 @@ export default function Home() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<a href="#booking" />}
+              render={<a href="#consultation" />}
               size="lg"
             >
-              <LocalizedText en="Book session" no="Book time" />
-              <CalendarDaysIcon data-icon="inline-end" />
+              <LocalizedText en="Start your idea" no="Start ideen din" />
+              <ClipboardListIcon data-icon="inline-end" />
             </Button>
             <Button
               className="motion-lift-subtle"
               nativeButton={false}
-              render={<a href="#work" />}
+              render={<a href="#booking" />}
               size="lg"
               variant="outline"
             >
-              <LocalizedText en="View work" no="Se arbeid" />
-              <MoveUpRightIcon data-icon="inline-end" />
+              <LocalizedText en="Book consultation" no="Book konsultasjon" />
+              <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
         </div>
@@ -555,8 +584,8 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
+                  en="Filip is the 26-year-old artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built around your idea, your body, and how the piece will age on your skin. Young in years, serious in standards: no templates, no shortcuts, just precise work from the first consultation to the final result."
+                  no="Filip er den 26 år gamle artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ung i alder, seriøs i standard: ingen maler, ingen snarveier, bare presist arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
@@ -644,8 +673,8 @@ export default function Home() {
             </h2>
             <p className="max-w-xl text-base leading-7 text-muted-foreground">
               <LocalizedText
-                en="Infinity Tattoo is based in Lørenskog and is easy to reach from Strømmen, Lillestrøm, and Oslo."
-                no="Infinity Tattoo ligger i Lørenskog og er lett å komme til fra Strømmen, Lillestrøm og Oslo."
+                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, with easy access from Strømmen, Lillestrøm, and Oslo by car or public transport."
+                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, med enkel tilgang fra Strømmen, Lillestrøm og Oslo med bil eller kollektivt."
               />
             </p>
           </div>
@@ -663,6 +692,66 @@ export default function Home() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div
+          id="consultation"
+          className="motion-reveal scroll-mt-28 border-b border-border/70 pb-12"
+        >
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-3">
+                <Badge variant="secondary" className="w-fit gap-2">
+                  <ClipboardListIcon className="size-4 text-[color:var(--studio-red)]" />
+                  <LocalizedText en="Custom tattoo planning" no="Custom planlegging" />
+                </Badge>
+                <h2 className="font-display text-4xl font-bold sm:text-5xl">
+                  <LocalizedText
+                    en="Start your tattoo idea"
+                    no="Start tatoveringsideen din"
+                  />
+                </h2>
+                <p className="max-w-2xl text-base leading-7 text-muted-foreground">
+                  <LocalizedText
+                    en="You do not need everything figured out. Send the idea, placement, size, and references you have, and the studio will help shape it into a clear plan before anything is booked."
+                    no="Du trenger ikke å ha alt ferdig bestemt. Send ideen, plassering, størrelse og referanser du har, så hjelper studioet deg med å gjøre det til en tydelig plan før noe bookes."
+                  />
+                </p>
+              </div>
+
+              <div className="grid gap-3">
+                {consultationSteps.map((step, index) => (
+                  <div
+                    className="motion-lift-subtle grid gap-4 rounded-lg border border-border/70 bg-card/45 p-5 sm:grid-cols-[auto_1fr]"
+                    key={step.titleEn}
+                  >
+                    <span className="flex size-10 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-primary-foreground">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <p className="font-display text-xl font-bold text-foreground">
+                        <LocalizedText en={step.titleEn} no={step.titleNo} />
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        <LocalizedText en={step.textEn} no={step.textNo} />
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="rounded-lg border border-border/70 bg-background/50 p-5 text-sm leading-6 text-muted-foreground">
+                <LocalizedText
+                  en="No templates. No pressure. Just a clean plan for placement, flow, detail level, time, and price direction before the final booking."
+                  no="Ingen maler. Ikke noe press. Bare en ryddig plan for plassering, flyt, detaljnivå, tid og prisretning før endelig booking."
+                />
+              </p>
+            </div>
+
+            <div className="motion-lift-subtle rounded-lg border bg-card/70 p-5 sm:p-6">
+              <ContactForm />
+            </div>
           </div>
         </div>
 
