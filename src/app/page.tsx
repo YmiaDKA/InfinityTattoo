@@ -109,6 +109,7 @@ const artistPoints = [...artistSpecialties, ...artistHighlights];
 const serviceAreas = [
   {
     area: "Lørenskog",
+    href: "/#contact",
     textEn:
       "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, portrait tattoos, consultations, and tooth gems.",
     textNo:
@@ -116,6 +117,7 @@ const serviceAreas = [
   },
   {
     area: "Strømmen",
+    href: "/tatovering-strommen",
     textEn:
       "Minutes from Strømmen for clients who want detailed custom tattoo work without going into central Oslo.",
     textNo:
@@ -123,6 +125,7 @@ const serviceAreas = [
   },
   {
     area: "Lillestrøm",
+    href: "/tatovering-lillestrom",
     textEn:
       "Minutes from Lillestrøm for larger pieces, sleeve tattoos, portraits, cover-up planning, and consultations.",
     textNo:
@@ -130,6 +133,7 @@ const serviceAreas = [
   },
   {
     area: "Oslo",
+    href: "/tatovering-oslo",
     textEn:
       "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
     textNo:
@@ -712,8 +716,9 @@ export default function Home() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {serviceAreas.map((item) => (
-              <div
+              <Link
                 className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-5"
+                href={item.href}
                 key={item.area}
               >
                 <p className="font-display text-2xl font-bold text-foreground">
@@ -722,7 +727,7 @@ export default function Home() {
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   <LocalizedText en={item.textEn} no={item.textNo} />
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
