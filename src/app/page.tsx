@@ -100,23 +100,23 @@ const serviceAreas = [
   {
     area: "Lørenskog",
     textEn:
-      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, consultations, and tooth gems.",
+      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, portrait tattoos, consultations, and tooth gems.",
     textNo:
-      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, konsultasjoner og tooth gems.",
+      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, portrett tatoveringer, konsultasjoner og tooth gems.",
   },
   {
     area: "Strømmen",
     textEn:
-      "A short trip from Strømmen for clients who want detailed custom tattoo work without going into central Oslo.",
+      "Minutes from Strømmen for clients who want detailed custom tattoo work without going into central Oslo.",
     textNo:
-      "Kort vei fra Strømmen for kunder som vil ha detaljert custom tatovering uten å dra inn til Oslo sentrum.",
+      "Minutter fra Strømmen for kunder som vil ha detaljert custom tatovering uten å dra inn til Oslo sentrum.",
   },
   {
     area: "Lillestrøm",
     textEn:
-      "Clients from Lillestrøm are welcome for larger pieces, sleeves, portraits, cover-up planning, and consultations.",
+      "Minutes from Lillestrøm for larger pieces, sleeve tattoos, portraits, cover-up planning, and consultations.",
     textNo:
-      "Kunder fra Lillestrøm er velkommen for større prosjekter, sleeves, portretter, cover-up planlegging og konsultasjoner.",
+      "Minutter fra Lillestrøm for større prosjekter, sleeve tatoveringer, portretter, cover-up planlegging og konsultasjoner.",
   },
   {
     area: "Oslo",
@@ -170,6 +170,16 @@ const localBusinessJsonLd = {
     addressCountry: "NO",
   },
   areaServed: ["Lørenskog", "Strømmen", "Lillestrøm", "Oslo"],
+  knowsAbout: [
+    "custom tattoo design",
+    "realistic tattoos",
+    "black and grey tattoos",
+    "portrait tattoos",
+    "sleeve tattoos",
+    "cover-up tattoo planning",
+    "tattoo consultation",
+    "tooth gems",
+  ],
   sameAs: [
     "https://www.instagram.com/infinitytattoo.lorenskog/",
     "https://www.tiktok.com/@infinitytattoostudio",
@@ -584,8 +594,8 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filip is the 26-year-old artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built around your idea, your body, and how the piece will age on your skin. Young in years, serious in standards: no templates, no shortcuts, just precise work from the first consultation to the final result."
-                  no="Filip er den 26 år gamle artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ung i alder, seriøs i standard: ingen maler, ingen snarveier, bare presist arbeid fra første konsultasjon til ferdig resultat."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
@@ -673,8 +683,8 @@ export default function Home() {
             </h2>
             <p className="max-w-xl text-base leading-7 text-muted-foreground">
               <LocalizedText
-                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, with easy access from Strømmen, Lillestrøm, and Oslo by car or public transport."
-                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, med enkel tilgang fra Strømmen, Lillestrøm og Oslo med bil eller kollektivt."
+                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, only minutes from Strømmen and Lillestrøm, and a natural choice for clients coming from Oslo."
+                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, bare minutter fra Strømmen og Lillestrøm, og er et naturlig valg for kunder som kommer fra Oslo."
               />
             </p>
           </div>
