@@ -446,7 +446,7 @@ export default function Home() {
             </h1>
             <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
               <LocalizedText
-                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm, and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin."
+                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin."
                 no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen og Lillestrøm, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din."
               />
             </p>
