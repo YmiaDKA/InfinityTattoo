@@ -48,11 +48,21 @@ const artistSpecialties = [
   },
   {
     icon: PaletteIcon,
-    titleEn: "Custom only",
-    titleNo: "Kun custom",
-    textEn: "Every design is shaped around your idea, placement, and long-term wear.",
+    titleEn: "Custom & freehand",
+    titleNo: "Custom og freehand",
+    textEn:
+      "Every design is shaped around your idea, placement, long-term wear, and natural body flow.",
     textNo:
-      "Hvert design formes rundt ideen din, plassering og langvarig uttrykk.",
+      "Hvert design formes rundt ideen din, plassering, langvarig uttrykk og kroppens naturlige flyt.",
+  },
+  {
+    icon: SparklesIcon,
+    titleEn: "Freehand Maori",
+    titleNo: "Freehand Maori",
+    textEn:
+      "Bold Maori and Polynesian-inspired flow work drawn directly around your body and placement.",
+    textNo:
+      "Sterk Maori og Polynesian-inspirert flyt tegnet direkte rundt kroppen og plasseringen din.",
   },
   {
     icon: ContrastIcon,
@@ -176,6 +186,8 @@ const localBusinessJsonLd = {
     "black and grey tattoos",
     "portrait tattoos",
     "sleeve tattoos",
+    "freehand Maori tattoos",
+    "Polynesian-inspired tattoos",
     "cover-up tattoo planning",
     "tattoo consultation",
     "tooth gems",
@@ -594,8 +606,8 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
