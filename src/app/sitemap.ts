@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 const siteUrl = "https://infinitytattoo.no";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["", "/work", "/reviews", "/tooth-gems"].map((route) => ({
+  return ["", "/work", "/reviews", "/tooth-gems", "/freehand-maori-tattoo"].map((route) => ({
     url: `${siteUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === "" ? "weekly" : "monthly",

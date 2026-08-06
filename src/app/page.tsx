@@ -639,6 +639,16 @@ export default function Home() {
                 );
               })}
             </div>
+            <Button
+              className="motion-lift-subtle w-fit rounded-full"
+              nativeButton={false}
+              render={<Link href="/freehand-maori-tattoo" />}
+              size="lg"
+              variant="outline"
+            >
+              <LocalizedText en="Freehand Maori work" no="Freehand Maori arbeid" />
+              <MoveUpRightIcon data-icon="inline-end" />
+            </Button>
           </div>
         </div>
       </section>
