@@ -709,8 +709,8 @@ export default function Home() {
             </h2>
             <p className="max-w-xl text-base leading-7 text-muted-foreground">
               <LocalizedText
-                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, only minutes from Strømmen and Lillestrøm, and a natural choice for clients coming from Oslo."
-                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, bare minutter fra Strømmen og Lillestrøm, og er et naturlig valg for kunder som kommer fra Oslo."
+                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, only minutes from Strømmen and Lillestrøm, and a natural choice for clients coming from Oslo. Custom tattoo work near Oslo, without the stress of city-center parking."
+                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, bare minutter fra Strømmen og Lillestrøm, og er et naturlig valg for kunder som kommer fra Oslo. Custom tatovering nær Oslo, uten stresset med parkering i sentrum."
               />
             </p>
           </div>
