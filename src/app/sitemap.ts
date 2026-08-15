@@ -14,7 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tatovering-oslo",
   ].map((route) => ({
     url: `${siteUrl}${route}`,
-    lastModified: new Date(),
     changeFrequency: route === "" ? "weekly" : "monthly",
     priority: route === "" ? 1 : 0.7,
   }));
