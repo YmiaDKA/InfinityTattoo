@@ -1,0 +1,21 @@
+{
+  "name": "infinity-tattoo-linework-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^9.0.0",
+    "@google-cloud/storage": "^8.0.0",
+    "playwright": "1.52.0",
+    "resend": "^6.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "typescript": "^5.8.3"
+  }
+}

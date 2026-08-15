@@ -17,8 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { ContactForm } from "@/components/contact-form";
-import { LineworkBooking } from "@/components/linework-booking";
+import { BookingRequestForm } from "@/components/booking-request-form";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
 import { SiteHeader } from "@/components/site-header";
@@ -30,7 +29,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
@@ -804,7 +802,7 @@ export default function Home() {
         </div>
 
         <div
-          id="consultation"
+          id="booking"
           className="motion-reveal scroll-mt-28 border-b border-border/70 pb-12"
         >
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
@@ -858,7 +856,7 @@ export default function Home() {
             </div>
 
             <div className="motion-lift-subtle rounded-lg border bg-card/70 p-5 sm:p-6">
-              <ContactForm />
+              <BookingRequestForm />
             </div>
           </div>
         </div>
@@ -891,32 +889,6 @@ export default function Home() {
             <MapPinIcon className="size-5 text-[color:var(--studio-red)]" />
             Skårersletta 48c
           </a>
-          <a
-            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
-            href="https://booking.linework.com/infinity"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <LocalizedText
-              en="Open booking in new page"
-              no="Åpne booking i ny side"
-            />
-            <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
-          </a>
-        </div>
-
-        <div
-          id="booking"
-          className="motion-lift-subtle relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
-        >
-          <BorderBeam
-            borderWidth={1}
-            colorFrom="var(--studio-red)"
-            colorTo="var(--foreground)"
-            duration={9}
-            size={240}
-          />
-          <LineworkBooking />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
