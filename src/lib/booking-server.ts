@@ -6,6 +6,7 @@ import {
   getGoogleSheetsClient,
   getStorageClient,
 } from "@/lib/google-services";
+import { Resend } from "resend";
 
 const bookingCollection = "bookingRequests";
 
@@ -126,6 +127,28 @@ export async function appendBookingBackup(record: BookingRecord) {
         ],
       ],
     },
+  });
+
+  return true;
+}
+
+export async function alertStudioBooking(record: BookingRecord, reason: string) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.BOOKING_EMAIL_FROM;
+  const to = process.env.BOOKING_ALERT_EMAIL ?? "infinitytattoo99@gmail.com";
+
+  if (!apiKey || !from) {
+    return false;
+  }
+
+  const escapeHtml = (value: string) =>
+    value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  await new Resend(apiKey).emails.send({
+    from,
+    to: [to],
+    subject: `Booking needs follow-up: ${record.fullName}`,
+    html: `<p>Booking request <strong>${escapeHtml(record.requestId)}</strong> needs manual follow-up.</p><p>${escapeHtml(reason)}</p><p>${escapeHtml(record.fullName)}<br>${escapeHtml(record.email)}<br>${escapeHtml(record.phone)}</p>`,
   });
 
   return true;

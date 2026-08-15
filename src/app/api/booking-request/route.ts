@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { bookingRequestSchema } from "@/lib/booking-schema";
 import {
   appendBookingBackup,
+  alertStudioBooking,
   createBookingRecord,
   enqueueBooking,
   updateBookingRecord,
@@ -81,6 +82,10 @@ export async function POST(request: Request) {
         status: "sheet_sync_pending",
         workerError: "The Google Sheets backup is not available yet.",
       });
+      await alertStudioBooking(
+        record,
+        "The Google Sheets backup is not available yet. The request is stored in Firestore and needs manual review."
+      ).catch(() => undefined);
       return NextResponse.json(
         {
           requestId: record.requestId,
@@ -111,6 +116,10 @@ export async function POST(request: Request) {
         status: "manual_review",
         workerError: "The booking worker is not configured or could not be queued.",
       });
+      await alertStudioBooking(
+        record,
+        "The booking worker is not configured or could not be queued. The request is stored in Firestore and needs manual review."
+      ).catch(() => undefined);
     }
 
     return NextResponse.json(
