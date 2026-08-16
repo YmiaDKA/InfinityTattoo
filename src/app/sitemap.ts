@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/reviews",
     "/tooth-gems",
     "/freehand-maori-tattoo",
+    "/kommer-du-fra-oslo",
     "/tatovering-lillestrom",
     "/tatovering-strommen",
     "/tatovering-oslo",

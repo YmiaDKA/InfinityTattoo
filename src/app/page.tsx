@@ -190,6 +190,7 @@ const localBusinessJsonLd = {
     "black and grey tattoos",
     "portrait tattoos",
     "sleeve tattoos",
+    "fine line tattoos",
     "freehand Maori tattoos",
     "Polynesian-inspired tattoos",
     "cover-up tattoo planning",
@@ -702,6 +703,76 @@ export default function Home() {
         id="contact"
         className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
       >
+        <div
+          id="oslo"
+          className="motion-reveal grid scroll-mt-28 gap-8 border-b border-border/70 pb-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center"
+        >
+          <div className="flex flex-col gap-5">
+            <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <MapPinIcon className="size-5" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h2 className="font-display text-4xl font-bold sm:text-5xl">
+                <LocalizedText en="Coming from Oslo?" no="Kommer du fra Oslo?" />
+              </h2>
+              <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
+                <LocalizedText
+                  en="Custom tattoo work near Oslo, without the stress of city-center parking. Infinity Tattoo is based in Lørenskog for clients who want serious custom work in a calmer studio setting."
+                  no="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo ligger i Lørenskog for kunder som vil ha seriøst custom arbeid i et roligere studio."
+                />
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={<Link href="/kommer-du-fra-oslo" />}
+                size="lg"
+              >
+                <LocalizedText en="Read more" no="Les mer" />
+                <MoveUpRightIcon data-icon="inline-end" />
+              </Button>
+              <Button
+                className="motion-lift-subtle rounded-full"
+                nativeButton={false}
+                render={<Link href="/#consultation" />}
+                size="lg"
+                variant="outline"
+              >
+                <LocalizedText en="Start your idea" no="Start ideen din" />
+                <ClipboardListIcon data-icon="inline-end" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                en: "Avoid city parking",
+                no: "Unngå sentrum-parkering",
+              },
+              {
+                en: "Calmer studio setting",
+                no: "Roligere studio",
+              },
+              {
+                en: "Built for longer sessions",
+                no: "Passer lengre sessions",
+              },
+            ].map((item) => (
+              <div
+                className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-5"
+                key={item.en}
+              >
+                <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
+                <p className="mt-4 font-display text-xl font-bold text-foreground">
+                  <LocalizedText en={item.en} no={item.no} />
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="motion-reveal grid gap-6 border-b border-border/70 pb-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div className="flex flex-col gap-3">
             <h2 className="font-display text-4xl font-bold sm:text-5xl">

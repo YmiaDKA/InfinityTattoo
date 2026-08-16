@@ -40,6 +40,12 @@ const serviceSignals = [
     textNo: "Maori og Polynesian-inspirert arbeid i stor skala, tegnet for kroppen.",
   },
   {
+    titleEn: "Fine line",
+    titleNo: "Fine line",
+    textEn: "Clean fine line tattoos for smaller, precise, and minimal custom pieces.",
+    textNo: "Rene fine line tatoveringer for mindre, presise og minimalistiske custom motiver.",
+  },
+  {
     titleEn: "Clear consultation",
     titleNo: "Tydelig konsultasjon",
     textEn: "Idea, placement, size, time, price direction, and deposit are discussed first.",
@@ -98,7 +104,7 @@ export function AreaLandingPage({
         </div>
 
         <div className="motion-stagger grid gap-3 sm:grid-cols-3">
-          {featuredGalleryImages.slice(0, 3).map((image) => (
+          {featuredGalleryImages.slice(0, 3).map((image, index) => (
             <div
               className="motion-lift motion-reveal relative aspect-[4/5] overflow-hidden rounded-lg border bg-card"
               key={image.src}
@@ -108,6 +114,7 @@ export function AreaLandingPage({
                 alt={image.alt}
                 fill
                 className="motion-media object-cover"
+                priority={index === 0}
                 sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 92vw"
               />
             </div>
