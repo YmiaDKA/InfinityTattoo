@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarDaysIcon,
@@ -102,24 +103,26 @@ export default function FreehandMaoriTattooPage() {
           </div>
         </div>
 
-        <div className="motion-stagger grid gap-3">
-          {processItems.map((item, index) => (
-            <Card className="motion-lift motion-reveal bg-card/70" key={item.titleEn}>
-              <CardContent className="grid gap-4 p-5 sm:grid-cols-[auto_1fr]">
-                <span className="flex size-10 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-primary-foreground">
-                  {index + 1}
-                </span>
-                <div>
-                  <p className="font-display text-xl font-bold text-foreground">
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="motion-lift relative min-h-[34rem] overflow-hidden rounded-lg border bg-card">
+          <Image
+            src="/media/artist/filip-freehand-maori.jpg"
+            alt="Filip working in front of freehand Maori artwork at Infinity Tattoo Studio"
+            fill
+            className="motion-media object-cover object-[50%_32%]"
+            priority
+            sizes="(min-width: 1024px) 46vw, 92vw"
+          />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/70 to-transparent px-5 pb-5 pt-24">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
+              Freehand Maori / body flow
+            </p>
+            <p className="mt-2 font-display text-2xl font-bold text-foreground">
+              <LocalizedText
+                en="Drawn around the body, not copied from a template."
+                no="Tegnet rundt kroppen, ikke kopiert fra en mal."
+              />
+            </p>
+          </div>
         </div>
       </section>
 
@@ -140,16 +143,40 @@ export default function FreehandMaoriTattooPage() {
             </p>
           </div>
 
-          <div className="motion-stagger grid gap-3 sm:grid-cols-2">
-            {fitItems.map((item) => (
-              <div
-                className="motion-lift-subtle flex items-center gap-3 rounded-lg border border-border/70 bg-background/55 p-4"
-                key={item}
-              >
-                <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
-                <p className="font-medium text-foreground">{item}</p>
-              </div>
-            ))}
+          <div className="grid gap-6">
+            <div className="motion-stagger grid gap-3 sm:grid-cols-2">
+              {fitItems.map((item) => (
+                <div
+                  className="motion-lift-subtle flex items-center gap-3 rounded-lg border border-border/70 bg-background/55 p-4"
+                  key={item}
+                >
+                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
+                  <p className="font-medium text-foreground">{item}</p>
+                </div>
+              ))}
+            </div>
+            <div className="motion-stagger grid gap-3">
+              {processItems.map((item, index) => (
+                <Card
+                  className="motion-lift motion-reveal bg-background/70"
+                  key={item.titleEn}
+                >
+                  <CardContent className="grid gap-4 p-5 sm:grid-cols-[auto_1fr]">
+                    <span className="flex size-10 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-primary-foreground">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <p className="font-display text-xl font-bold text-foreground">
+                        <LocalizedText en={item.titleEn} no={item.titleNo} />
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        <LocalizedText en={item.textEn} no={item.textNo} />
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
