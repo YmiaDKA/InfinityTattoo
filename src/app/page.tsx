@@ -17,7 +17,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { ContactForm } from "@/components/contact-form";
 import { LineworkBooking } from "@/components/linework-booking";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
@@ -132,33 +131,6 @@ const serviceAreas = [
       "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
     textNo:
       "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
-  },
-];
-
-const consultationSteps = [
-  {
-    titleEn: "Send the idea",
-    titleNo: "Send ideen",
-    textEn:
-      "Share the subject, placement, rough size, style, timing, and any references you already have.",
-    textNo:
-      "Del motiv, plassering, omtrent størrelse, stil, timing og referanser du allerede har.",
-  },
-  {
-    titleEn: "Filip reviews it",
-    titleNo: "Filip vurderer den",
-    textEn:
-      "You get clear feedback on what works, what needs adjustment, and whether a consultation is needed.",
-    textNo:
-      "Du får tydelig feedback på hva som fungerer, hva som bør justeres og om konsultasjon trengs.",
-  },
-  {
-    titleEn: "Plan the session",
-    titleNo: "Planlegg timen",
-    textEn:
-      "Placement, size, time estimate, price direction, and deposit are confirmed before the tattoo date.",
-    textNo:
-      "Plassering, størrelse, tidsbruk, prisretning og depositum avklares før tatoveringstimen.",
   },
 ];
 
@@ -446,7 +418,7 @@ export default function Home() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<a href="#consultation" />}
+              render={<a href="#booking" />}
               size="lg"
             >
               <LocalizedText en="Start your idea" no="Start ideen din" />
@@ -761,7 +733,7 @@ export default function Home() {
               <Button
                 className="motion-lift-subtle rounded-full"
                 nativeButton={false}
-                render={<Link href="/#consultation" />}
+                render={<Link href="/#booking" />}
                 size="lg"
                 variant="outline"
               >
@@ -826,66 +798,6 @@ export default function Home() {
                 </p>
               </Link>
             ))}
-          </div>
-        </div>
-
-        <div
-          id="consultation"
-          className="motion-reveal scroll-mt-28 border-b border-border/70 pb-12"
-        >
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <Badge variant="secondary" className="w-fit gap-2">
-                  <ClipboardListIcon className="size-4 text-[color:var(--studio-red)]" />
-                  <LocalizedText en="Custom tattoo planning" no="Custom planlegging" />
-                </Badge>
-                <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                  <LocalizedText
-                    en="Start your tattoo idea"
-                    no="Start tatoveringsideen din"
-                  />
-                </h2>
-                <p className="max-w-2xl text-base leading-7 text-muted-foreground">
-                  <LocalizedText
-                    en="You do not need everything figured out. Send the idea, placement, size, and references you have, and the studio will help shape it into a clear plan before anything is booked."
-                    no="Du trenger ikke å ha alt ferdig bestemt. Send ideen, plassering, størrelse og referanser du har, så hjelper studioet deg med å gjøre det til en tydelig plan før noe bookes."
-                  />
-                </p>
-              </div>
-
-              <div className="grid gap-3">
-                {consultationSteps.map((step, index) => (
-                  <div
-                    className="motion-lift-subtle grid gap-4 rounded-lg border border-border/70 bg-card/45 p-5 sm:grid-cols-[auto_1fr]"
-                    key={step.titleEn}
-                  >
-                    <span className="flex size-10 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-primary-foreground">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <p className="font-display text-xl font-bold text-foreground">
-                        <LocalizedText en={step.titleEn} no={step.titleNo} />
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        <LocalizedText en={step.textEn} no={step.textNo} />
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <p className="rounded-lg border border-border/70 bg-background/50 p-5 text-sm leading-6 text-muted-foreground">
-                <LocalizedText
-                  en="No templates. No pressure. Just a clean plan for placement, flow, detail level, time, and price direction before the final booking."
-                  no="Ingen maler. Ikke noe press. Bare en ryddig plan for plassering, flyt, detaljnivå, tid og prisretning før endelig booking."
-                />
-              </p>
-            </div>
-
-            <div className="motion-lift-subtle rounded-lg border bg-card/70 p-5 sm:p-6">
-              <ContactForm />
-            </div>
           </div>
         </div>
 

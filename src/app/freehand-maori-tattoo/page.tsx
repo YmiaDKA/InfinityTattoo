@@ -84,7 +84,7 @@ export default function FreehandMaoriTattooPage() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<Link href="/#consultation" />}
+              render={<Link href="/#booking" />}
               size="lg"
             >
               <LocalizedText en="Start your idea" no="Start ideen din" />
@@ -209,7 +209,7 @@ export default function FreehandMaoriTattooPage() {
               <Button
                 className="motion-lift-subtle rounded-full"
                 nativeButton={false}
-                render={<Link href="/#consultation" />}
+                render={<Link href="/#booking" />}
                 size="lg"
               >
                 <LocalizedText en="Send your idea" no="Send ideen din" />
