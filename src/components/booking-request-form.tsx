@@ -1,12 +1,17 @@
 "use client";
 
+import { format, startOfDay } from "date-fns";
+import { enUS, nb } from "date-fns/locale";
 import {
   CalendarDaysIcon,
+  ChevronDownIcon,
   ImagePlusIcon,
+  PlusIcon,
   SendIcon,
 } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 
+import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -15,10 +20,16 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/lib/language-store";
 
 type RequestStatus = "idle" | "uploading" | "submitting" | "success" | "error";
+type OptionalField = "time" | "position" | "photo";
 
 const maxFiles = 5;
 const maxFileSize = 8 * 1024 * 1024;
@@ -57,14 +68,32 @@ function createRequestId() {
 export function BookingRequestForm() {
   const language = useLanguage();
   const isNorwegian = language === "NO";
+  const calendarLocale = isNorwegian ? nb : enUS;
+  const today = startOfDay(new Date());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [requestId] = useState(createRequestId);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [openOptional, setOpenOptional] = useState<OptionalField[]>([]);
   const [status, setStatus] = useState<RequestStatus>("idle");
   const [error, setError] = useState("");
+
+  function toggleOptional(field: OptionalField) {
+    setOpenOptional((current) =>
+      current.includes(field)
+        ? current.filter((value) => value !== field)
+        : [...current, field]
+    );
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+
+    if (!selectedDate) {
+      setStatus("error");
+      setError(isNorwegian ? "Velg en dato." : "Choose a date.");
+      return;
+    }
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -100,6 +129,8 @@ export function BookingRequestForm() {
       );
       return;
     }
+
+    const selectedDateValue = format(selectedDate, "yyyy-MM-dd");
 
     try {
       setStatus(files.length ? "uploading" : "submitting");
@@ -151,8 +182,8 @@ export function BookingRequestForm() {
         body: JSON.stringify({
           budget: String(formData.get("budget") ?? ""),
           consent: formData.get("consent") === "on",
-          dateEnd: String(formData.get("dateEnd") ?? ""),
-          dateStart: String(formData.get("dateStart") ?? ""),
+          dateEnd: selectedDateValue,
+          dateStart: selectedDateValue,
           email: String(formData.get("email") ?? ""),
           firstName: String(formData.get("firstName") ?? ""),
           fullName: `${String(formData.get("firstName") ?? "")} ${String(
@@ -169,8 +200,8 @@ export function BookingRequestForm() {
           service: String(formData.get("service") ?? "consultation"),
           size: String(formData.get("size") ?? ""),
           style: String(formData.get("style") ?? ""),
-          timeEnd: String(formData.get("timeEnd") ?? ""),
-          timeStart: String(formData.get("timeStart") ?? ""),
+          timeEnd: "",
+          timeStart: "",
           timing: String(formData.get("timing") ?? ""),
           website: String(formData.get("website") ?? ""),
         }),
@@ -202,7 +233,7 @@ export function BookingRequestForm() {
   const isSubmitting = status === "uploading" || status === "submitting";
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form className="flex h-full flex-col gap-5" onSubmit={handleSubmit}>
       <FieldGroup>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field>
@@ -226,55 +257,37 @@ export function BookingRequestForm() {
               </option>
             </select>
           </Field>
-          <Field>
-            <FieldLabel htmlFor="style">
-              {isNorwegian ? "Stil" : "Style"}
-            </FieldLabel>
-            <Input
-              id="style"
-              name="style"
-              placeholder={
-                isNorwegian
-                  ? "Black & grey, realisme, portrett..."
-                  : "Black & grey, realism, portrait..."
-              }
-            />
-          </Field>
-        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="dateStart">
-              {isNorwegian ? "Fra dato" : "Date from"}
-            </FieldLabel>
-            <div className="relative">
-              <Input id="dateStart" name="dateStart" required type="date" />
-              <CalendarDaysIcon className="pointer-events-none absolute right-2.5 top-1.5 size-4 text-muted-foreground" />
-            </div>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="dateEnd">
-              {isNorwegian ? "Til dato" : "Date to"}
-            </FieldLabel>
-            <div className="relative">
-              <Input id="dateEnd" name="dateEnd" required type="date" />
-              <CalendarDaysIcon className="pointer-events-none absolute right-2.5 top-1.5 size-4 text-muted-foreground" />
-            </div>
-          </Field>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field>
-            <FieldLabel htmlFor="timeStart">
-              {isNorwegian ? "Tidligst" : "Earliest time"}
-            </FieldLabel>
-            <Input id="timeStart" name="timeStart" required type="time" />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="timeEnd">
-              {isNorwegian ? "Senest" : "Latest time"}
-            </FieldLabel>
-            <Input id="timeEnd" name="timeEnd" required type="time" />
+            <FieldLabel>{isNorwegian ? "Ønsket dato" : "Preferred date"}</FieldLabel>
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <Button
+                    aria-label={isNorwegian ? "Velg dato" : "Choose date"}
+                    className="w-full justify-between px-2.5 text-left font-normal"
+                    type="button"
+                    variant="outline"
+                  />
+                }
+              >
+                {selectedDate
+                  ? format(selectedDate, "d. MMMM yyyy", { locale: calendarLocale })
+                  : isNorwegian
+                    ? "Velg dato"
+                    : "Choose date"}
+                <CalendarDaysIcon className="size-4 opacity-70" />
+              </PopoverTrigger>
+              <PopoverContent align="start" className="w-auto p-0">
+                <Calendar
+                  disabled={{ before: today }}
+                  locale={calendarLocale}
+                  mode="single"
+                  onSelect={setSelectedDate}
+                  selected={selectedDate}
+                />
+              </PopoverContent>
+            </Popover>
           </Field>
         </div>
 
@@ -323,80 +336,109 @@ export function BookingRequestForm() {
           />
         </Field>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field>
-            <FieldLabel htmlFor="placement">
-              {isNorwegian ? "Plassering" : "Placement"}
-            </FieldLabel>
-            <Input
-              id="placement"
-              name="placement"
-              placeholder={isNorwegian ? "Underarm, sleeve, bryst..." : "Forearm, sleeve, chest..."}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="size">
-              {isNorwegian ? "Omtrent størrelse" : "Approximate size"}
-            </FieldLabel>
-            <Input id="size" name="size" placeholder="10 cm, half sleeve..." />
-          </Field>
+        <input
+          name="dateStart"
+          type="hidden"
+          value={selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""}
+        />
+        <input
+          name="dateEnd"
+          type="hidden"
+          value={selectedDate ? format(selectedDate, "yyyy-MM-dd") : ""}
+        />
+
+        <div className="flex flex-col gap-2">
+          {(
+            [
+              {
+                field: "time" as const,
+                label: isNorwegian ? "tid" : "time",
+              },
+              {
+                field: "position" as const,
+                label: isNorwegian ? "plassering" : "position",
+              },
+              {
+                field: "photo" as const,
+                label: isNorwegian ? "bilde" : "photo",
+              },
+            ]
+          ).map(({ field, label }) => (
+            <div key={field}>
+              <Button
+                aria-expanded={openOptional.includes(field)}
+                className="w-full justify-between border-border/70 bg-background/30 px-3 text-muted-foreground hover:text-foreground"
+                onClick={() => toggleOptional(field)}
+                type="button"
+                variant="outline"
+              >
+                <span className="flex items-center gap-2">
+                  <PlusIcon className="size-4" />
+                  {label}
+                </span>
+                <ChevronDownIcon
+                  className={`size-4 transition-transform ${
+                    openOptional.includes(field) ? "rotate-180" : ""
+                  }`}
+                />
+              </Button>
+
+              {openOptional.includes(field) && field === "time" ? (
+                <div className="mt-2">
+                  <Input
+                    aria-label={isNorwegian ? "Ønsket tidspunkt" : "Preferred timing"}
+                    name="timing"
+                    placeholder={
+                      isNorwegian
+                        ? "For eksempel ettermiddag eller så snart som mulig"
+                        : "For example afternoon or as soon as possible"
+                    }
+                  />
+                </div>
+              ) : null}
+
+              {openOptional.includes(field) && field === "position" ? (
+                <div className="mt-2">
+                  <Input
+                    aria-label={isNorwegian ? "Plassering" : "Position"}
+                    name="placement"
+                    placeholder={
+                      isNorwegian
+                        ? "For eksempel underarm, bryst eller sleeve"
+                        : "For example forearm, chest, or sleeve"
+                    }
+                  />
+                </div>
+              ) : null}
+
+              {openOptional.includes(field) && field === "photo" ? (
+                <div className="mt-2">
+                  <FieldLabel
+                    className="w-full rounded-lg border border-dashed border-border/70 p-3 text-sm text-muted-foreground"
+                    htmlFor="reference-images"
+                  >
+                    <ImagePlusIcon className="size-4 text-[color:var(--studio-red)]" />
+                    {isNorwegian ? "Last opp referanser" : "Upload references"}
+                  </FieldLabel>
+                  <Input
+                    accept="image/*"
+                    className="sr-only"
+                    id="reference-images"
+                    multiple
+                    name="reference-images"
+                    ref={fileInputRef}
+                    type="file"
+                  />
+                  <FieldDescription className="mt-2">
+                    {isNorwegian
+                      ? "Valgfritt. Opptil 5 bilder, maks 8 MB per bilde."
+                      : "Optional. Up to 5 images, maximum 8 MB each."}
+                  </FieldDescription>
+                </div>
+              ) : null}
+            </div>
+          ))}
         </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field>
-            <FieldLabel htmlFor="timing">
-              {isNorwegian ? "Når vil du starte?" : "When would you like to start?"}
-            </FieldLabel>
-            <Input
-              id="timing"
-              name="timing"
-              placeholder={isNorwegian ? "Så fort som mulig..." : "As soon as possible..."}
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="budget">
-              {isNorwegian ? "Budsjett" : "Budget range"}
-            </FieldLabel>
-            <Input id="budget" name="budget" placeholder={isNorwegian ? "Valgfritt" : "Optional"} />
-          </Field>
-        </div>
-
-        <Field>
-          <FieldLabel htmlFor="note">
-            {isNorwegian ? "Notat til artisten" : "Note to the artist"}
-          </FieldLabel>
-          <Textarea
-            id="note"
-            name="note"
-            placeholder={
-              isNorwegian
-                ? "Noe annet du vil at Filip skal vite?"
-                : "Anything else Filip should know?"
-            }
-            rows={3}
-          />
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="reference-images">
-            <ImagePlusIcon className="size-4 text-[color:var(--studio-red)]" />
-            {isNorwegian ? "Referansebilder" : "Reference images"}
-          </FieldLabel>
-          <Input
-            accept="image/*"
-            id="reference-images"
-            multiple
-            name="reference-images"
-            ref={fileInputRef}
-            type="file"
-          />
-          <FieldDescription>
-            {isNorwegian
-              ? "Valgfritt. Opptil 5 bilder, maks 8 MB per bilde."
-              : "Optional. Up to 5 images, maximum 8 MB each."}
-          </FieldDescription>
-        </Field>
       </FieldGroup>
 
       <input
@@ -412,12 +454,12 @@ export function BookingRequestForm() {
         <input className="mt-1 size-4 accent-[var(--studio-red)]" name="consent" required type="checkbox" />
         <span>
           {isNorwegian
-            ? "Jeg godtar at Infinity Tattoo bruker opplysningene mine til å behandle bookingforespørselen."
-            : "I agree that Infinity Tattoo may use my details to process this booking request."}
+            ? "Jeg godtar at Infinity Tattoo bruker opplysningene mine til å behandle forespørselen."
+            : "I agree that Infinity Tattoo may use my details to process this request."}
         </span>
       </label>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mt-auto flex flex-col gap-3 sm:flex-row sm:items-center">
         <Button className="w-full sm:w-fit" disabled={isSubmitting} size="lg" type="submit">
           {status === "uploading"
             ? isNorwegian
@@ -428,20 +470,20 @@ export function BookingRequestForm() {
                 ? "Sender..."
                 : "Sending..."
               : isNorwegian
-                ? "Send bookingforespørsel"
-                : "Send booking request"}
+                ? "Send forespørsel"
+                : "Send request"}
           <SendIcon data-icon="inline-end" />
         </Button>
         <p aria-live="polite" className="text-sm text-muted-foreground">
           {status === "success"
             ? isNorwegian
-              ? "Forespørselen er mottatt. Studioet følger opp og bekrefter tidspunktet."
-              : "Your request was received. The studio will follow up and confirm the time."
+              ? "Forespørselen er mottatt. Studioet følger opp."
+              : "Your request was received. The studio will follow up."
             : status === "error"
               ? error
               : isNorwegian
-                ? "Vi sjekker ønsket tidsrom i bookingkalenderen før studioet bekrefter."
-                : "We check your requested window in the booking calendar before the studio confirms."}
+                ? "Dato er nødvendig. De andre feltene kan legges til ved behov."
+                : "A date is required. Add the other details when useful."}
         </p>
       </div>
     </form>

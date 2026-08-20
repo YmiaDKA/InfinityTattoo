@@ -23,13 +23,13 @@ export const bookingRequestSchema = z
     service: z.enum(["consultation", "tattoo", "tooth-gems"]),
     dateStart: isoDate,
     dateEnd: isoDate,
-    timeStart: isoTime,
-    timeEnd: isoTime,
+    timeStart: isoTime.optional().default(""),
+    timeEnd: isoTime.optional().default(""),
     fullName: z.string().trim().min(2).max(120),
     email: z.string().trim().email().max(160),
     phone: z.string().trim().min(5).max(40),
     idea: z.string().trim().min(2).max(4000),
-    placement: z.string().trim().min(2).max(160),
+    placement: z.string().trim().max(160).optional().default(""),
     size: z.string().trim().max(160).optional().default(""),
     style: z.string().trim().max(160).optional().default(""),
     timing: z.string().trim().max(160).optional().default(""),
@@ -38,7 +38,7 @@ export const bookingRequestSchema = z
     locale: z.enum(["NO", "EN"]),
     consent: z.literal(true),
     website: z.string().max(0).optional().default(""),
-    referenceImages: z.array(referenceImageSchema).max(5),
+    referenceImages: z.array(referenceImageSchema).max(5).default([]),
   })
   .superRefine((value, context) => {
     if (value.dateStart > value.dateEnd) {
@@ -49,7 +49,7 @@ export const bookingRequestSchema = z
       });
     }
 
-    if (value.timeStart >= value.timeEnd) {
+    if (value.timeStart && value.timeEnd && value.timeStart >= value.timeEnd) {
       context.addIssue({
         code: "custom",
         path: ["timeEnd"],

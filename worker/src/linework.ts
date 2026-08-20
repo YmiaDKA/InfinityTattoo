@@ -336,6 +336,22 @@ export async function processBooking(requestId: string) {
     return;
   }
 
+  const missingDetails = [
+    !record.timeStart || !record.timeEnd ? "preferred time window" : "",
+    !record.placement ? "body position" : "",
+  ].filter(Boolean);
+
+  if (missingDetails.length > 0) {
+    const message = `Missing booking details: ${missingDetails.join(", ")}.`;
+    await updateRecord(requestId, {
+      status: "manual_review",
+      workerError: message,
+    });
+    await sendBookingOutcomeEmail(record, false);
+    await alertStudio(record, message);
+    return;
+  }
+
   const temporaryDirectory = await mkdtemp(join(tmpdir(), "infinity-booking-"));
   const browser = await chromium.launch({
     args: ["--disable-dev-shm-usage", "--no-sandbox"],

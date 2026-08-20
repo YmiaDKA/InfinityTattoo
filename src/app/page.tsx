@@ -9,7 +9,7 @@ import {
   MapPinIcon,
   MessagesSquareIcon,
   MoveUpRightIcon,
-  PaletteIcon,
+  PenLineIcon,
   PhoneIcon,
   ShieldCheckIcon,
   SparklesIcon,
@@ -35,7 +35,17 @@ import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
 import { toothGemPrices } from "@/lib/tooth-gems";
 
-const artistSpecialties = [
+type ArtistCard = {
+  icon?: LucideIcon;
+  emoji?: string;
+  titleEn: string;
+  titleNo: string;
+  textEn: string;
+  textNo: string;
+  href?: string;
+};
+
+const artistStyles: ArtistCard[] = [
   {
     icon: Maximize2Icon,
     titleEn: "Large-scale realism",
@@ -45,24 +55,6 @@ const artistSpecialties = [
       "Sleeves, portretter og større prosjekter bygget med dybde og kontrast.",
   },
   {
-    icon: PaletteIcon,
-    titleEn: "Custom & freehand",
-    titleNo: "Custom og freehand",
-    textEn:
-      "Every design is shaped around your idea, placement, long-term wear, and natural body flow.",
-    textNo:
-      "Hvert design formes rundt ideen din, plassering, langvarig uttrykk og kroppens naturlige flyt.",
-  },
-  {
-    icon: SparklesIcon,
-    titleEn: "Freehand Maori",
-    titleNo: "Freehand Maori",
-    textEn:
-      "Bold Maori and Polynesian-inspired flow work drawn directly around your body and placement.",
-    textNo:
-      "Sterk Maori og Polynesian-inspirert flyt tegnet direkte rundt kroppen og plasseringen din.",
-  },
-  {
     icon: ContrastIcon,
     titleEn: "Black & grey focus",
     titleNo: "Black & grey fokus",
@@ -70,17 +62,21 @@ const artistSpecialties = [
     textNo:
       "Ren kontrast, myk shading og struktur som er laget for å holde over tid.",
   },
+  {
+    icon: PenLineIcon,
+    titleEn: "Freehand Maori",
+    titleNo: "Freehand Maori",
+    textEn:
+      "Custom Maori and Polynesian-inspired flow work drawn directly around your body and placement.",
+    textNo:
+      "Sterk Maori og Polynesian-inspirert flyt tegnet direkte rundt kroppen og plasseringen din.",
+    href: "/freehand-maori-tattoo",
+  },
 ];
 
-const artistHighlights: Array<{
-  icon: LucideIcon;
-  titleEn: string;
-  titleNo: string;
-  textEn: string;
-  textNo: string;
-}> = [
+const artistStudio: ArtistCard[] = [
   {
-    icon: SparklesIcon,
+    emoji: "🇬🇷 🇳🇴",
     titleEn: "Greece + Norway",
     titleNo: "Hellas + Norge",
     textEn: "Experience in Greece and Norway.",
@@ -101,8 +97,6 @@ const artistHighlights: Array<{
     textNo: "Tydelige planer for design, størrelse, tid og forventninger.",
   },
 ];
-
-const artistPoints = [...artistSpecialties, ...artistHighlights];
 
 const serviceAreas = [
   {
@@ -232,11 +226,11 @@ const faqItems: FaqItem[] = [
   },
   {
     questionEn: "Do you do custom designs?",
-    questionNo: "Lager dere custom design?",
+    questionNo: "Lager dere spesialdesign?",
     answerEn:
       "Yes. Most work is custom, built around your idea, body placement, and the long-term look of the tattoo.",
     answerNo:
-      "Ja. Det meste lages custom rundt ideen din, plassering på kroppen og hvordan tatoveringen skal se ut over tid.",
+      "Ja. Det meste lages som spesialdesign rundt ideen din, plassering på kroppen og hvordan tatoveringen skal se ut over tid.",
   },
   {
     questionEn: "How does pricing work?",
@@ -248,75 +242,67 @@ const faqItems: FaqItem[] = [
   },
   {
     questionEn: "How long does a tattoo session take?",
-    questionNo: "How long does a tattoo session take?",
+    questionNo: "Hvor lang tid tar en tatoveringstime?",
     answerEn:
       "Session length depends on the size and complexity of the piece. A small tattoo can take 1-2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5-6 hours each. We'll give you a clear time estimate during your consultation.",
     answerNo:
-      "Session length depends on the size and complexity of the piece. A small tattoo can take 1-2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5-6 hours each. We'll give you a clear time estimate during your consultation.",
+      "Tidsbruken avhenger av størrelsen og hvor detaljert motivet er. En liten tatovering kan ta 1-2 timer, mens større realistiske prosjekter eller hele ermer deles opp i flere økter på 5-6 timer. Du får et tydelig tidsestimat under konsultasjonen.",
   },
   {
     questionEn: "Do you do touch-ups?",
-    questionNo: "Do you do touch-ups?",
+    questionNo: "Utfører dere etterjusteringer?",
     answerEn:
       "Yes. If your tattoo needs a touch-up after healing, contact us within 1 month of your session. Touch-ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
     answerNo:
-      "Yes. If your tattoo needs a touch-up after healing, contact us within 1 month of your session. Touch-ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
+      "Ja. Hvis tatoveringen trenger en etterjustering etter at den har grodd, ta kontakt innen én måned etter timen. Etterjusteringer på arbeid gjort hos Infinity Tattoo er gratis så lenge etterbehandlingen er fulgt riktig.",
   },
   {
     questionEn: "Do you require a deposit?",
-    questionNo: "Do you require a deposit?",
+    questionNo: "Kreves det depositum?",
     answerEn:
       "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.",
     answerNo:
-      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.",
+      "Ja. Det kreves depositum for å sikre bookingen og dekke tiden som brukes på spesialdesignet. Depositumet er vanligvis 500-1000 kr, avhengig av prosjektets størrelse. Det trekkes fra sluttprisen og refunderes ikke.",
   },
   {
     questionEn: "What happens if I need to reschedule?",
-    questionNo: "What happens if I need to reschedule?",
+    questionNo: "Hva skjer hvis jeg må flytte timen?",
     answerEn:
       "Life happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.",
     answerNo:
-      "Life happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.",
+      "Vi forstår at ting kan skje. Hvis du må flytte timen, ta kontakt minst 48 timer før avtalen, så flyttes depositumet til den nye datoen. Ved avbestilling senere enn 48 timer før timen går depositumet tapt.",
   },
   {
     questionEn: "What if I want to cancel completely?",
-    questionNo: "What if I want to cancel completely?",
+    questionNo: "Hva om jeg må avbestille helt?",
     answerEn:
       "If you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
     answerNo:
-      "If you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
+      "Hvis du avbestiller timen helt, refunderes ikke depositumet. Det dekker tiden som er brukt på designet og tiden som ble holdt av til deg. Ta gjerne kontakt hvis du er usikker før timen, så prøver vi heller å finne en løsning.",
   },
   {
     questionEn: "I've never had a tattoo before, where do I start?",
-    questionNo: "I've never had a tattoo before, where do I start?",
+    questionNo: "Jeg har aldri tatt tatovering før, hvor starter jeg?",
     answerEn:
       "Start by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
     answerNo:
-      "Start by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
+      "Start med å booke en konsultasjon. Du trenger ikke å ha alt klart; ta med en grov idé, en følelse eller noen referansebilder, så utvikler vi konseptet sammen. Førstegangskunder er alltid velkomne hos Infinity Tattoo, og vi guider deg gjennom hele prosessen.",
   },
   {
     questionEn: "Does getting a tattoo hurt?",
-    questionNo: "Does getting a tattoo hurt?",
+    questionNo: "Gjør det vondt å ta tatovering?",
     answerEn:
       "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.",
     answerNo:
-      "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.",
+      "Ærlig talt, ja, men for de fleste er det godt håndterbart. Smerten varierer etter plassering. Utsiden av armen, låret og ryggen er vanligvis enklere, mens ribbein, innsiden av armen, hender og nakke er mer følsomt. Vi jobber i et tempo som er komfortabelt for deg.",
   },
   {
     questionEn: "What are the least painful places to get tattooed?",
-    questionNo: "What are the least painful places to get tattooed?",
+    questionNo: "Hvor er det minst vondt å ta tatovering?",
     answerEn:
       "The outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
     answerNo:
-      "The outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
-  },
-  {
-    questionEn: "Aftercare - Long term",
-    questionNo: "Aftercare - Long term",
-    answerEn:
-      "Once fully healed, usually after 3-4 weeks, always apply SPF sunscreen over your tattoo when exposed to sunlight. Sun is the number one enemy of tattoo longevity, especially for black & grey realism. Keep your skin moisturized regularly and your tattoo will stay sharp and contrasted for years.",
-    answerNo:
-      "Once fully healed, usually after 3-4 weeks, always apply SPF sunscreen over your tattoo when exposed to sunlight. Sun is the number one enemy of tattoo longevity, especially for black & grey realism. Keep your skin moisturized regularly and your tattoo will stay sharp and contrasted for years.",
+      "Utsiden av overarmen, utsiden av låret, skulderen, leggen og øvre del av ryggen er vanligvis blant de minst smertefulle områdene. Dette er også gode plasseringer for større realistiske motiver. For en førstegangstatovering kan dette være fine steder å starte.",
   },
   {
     questionEn: "Can I get tattooed if I have health concerns?",
@@ -458,7 +444,7 @@ export default function Home() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<a href="#consultation" />}
+              render={<a href="#booking" />}
               size="lg"
             >
               <LocalizedText en="Start your idea" no="Start ideen din" />
@@ -583,6 +569,9 @@ export default function Home() {
                 className="motion-media object-cover"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
+              <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] font-medium tracking-[0.14em] text-foreground/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                {image.tag}
+              </span>
             </div>
           ))}
         </div>
@@ -614,44 +603,81 @@ export default function Home() {
                 />
               </p>
             </div>
-            <div
-              id="studio"
-              className="mt-auto grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {artistPoints.map((item, index) => {
-                const Icon = item.icon;
-                const isHighlight = index >= artistSpecialties.length;
+            <div id="studio" className="mt-auto flex flex-col gap-5">
+              <div className="flex flex-col gap-3">
+                <h3 className="font-display text-xl font-bold text-foreground">
+                  <LocalizedText en="Styles" no="Stiler" />
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {artistStyles.map((item) => {
+                    const Icon = item.icon;
+                    const card = (
+                      <>
+                        <div className="flex items-center justify-between gap-3">
+                          {Icon ? (
+                            <Icon className="size-5 text-[color:var(--studio-red)]" />
+                          ) : null}
+                          {item.href ? (
+                            <MoveUpRightIcon className="size-4 text-muted-foreground" />
+                          ) : null}
+                        </div>
+                        <p className="mt-3 font-display text-lg font-bold text-foreground">
+                          <LocalizedText en={item.titleEn} no={item.titleNo} />
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                          <LocalizedText en={item.textEn} no={item.textNo} />
+                        </p>
+                      </>
+                    );
 
-                return (
-                  <div
-                    className={`flex h-full flex-col rounded-lg border border-border/70 bg-background/35 ${isHighlight ? "justify-center p-3" : "p-4"}`}
-                    key={item.titleEn}
-                  >
-                    <Icon className="size-5 text-[color:var(--studio-red)]" />
-                    <p
-                      className={`${isHighlight ? "mt-2" : "mt-4"} font-display text-lg font-bold text-foreground`}
-                    >
-                      <LocalizedText en={item.titleEn} no={item.titleNo} />
-                    </p>
-                    {!isHighlight && (
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        <LocalizedText en={item.textEn} no={item.textNo} />
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
+                    return item.href ? (
+                      <Link
+                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                        href={item.href}
+                        key={item.titleEn}
+                      >
+                        {card}
+                      </Link>
+                    ) : (
+                      <div
+                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                        key={item.titleEn}
+                      >
+                        {card}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <h3 className="font-display text-xl font-bold text-foreground">
+                  <LocalizedText en="Studio" no="Studio" />
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {artistStudio.map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <div
+                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                        key={item.titleEn}
+                      >
+                        <div className="flex h-5 items-center gap-1 text-lg leading-none">
+                          {item.emoji ? item.emoji : Icon ? <Icon className="size-5 text-[color:var(--studio-red)]" /> : null}
+                        </div>
+                        <p className="mt-3 font-display text-lg font-bold text-foreground">
+                          <LocalizedText en={item.titleEn} no={item.titleNo} />
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                          <LocalizedText en={item.textEn} no={item.textNo} />
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <Button
-              className="motion-lift-subtle w-fit rounded-full"
-              nativeButton={false}
-              render={<Link href="/freehand-maori-tattoo" />}
-              size="lg"
-              variant="outline"
-            >
-              <LocalizedText en="Freehand Maori work" no="Freehand Maori arbeid" />
-              <MoveUpRightIcon data-icon="inline-end" />
-            </Button>
           </div>
         </div>
       </section>
@@ -733,7 +759,7 @@ export default function Home() {
               <Button
                 className="motion-lift-subtle rounded-full"
                 nativeButton={false}
-                render={<Link href="/#consultation" />}
+                render={<Link href="/#booking" />}
                 size="lg"
                 variant="outline"
               >
@@ -805,7 +831,7 @@ export default function Home() {
           id="booking"
           className="motion-reveal scroll-mt-28 border-b border-border/70 pb-12"
         >
-          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <Badge variant="secondary" className="w-fit gap-2">
@@ -855,7 +881,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="motion-lift-subtle rounded-lg border bg-card/70 p-5 sm:p-6">
+            <div className="motion-lift-subtle min-h-[34rem] rounded-lg border bg-card/70 p-5 sm:p-6 lg:min-h-[38rem]">
               <BookingRequestForm />
             </div>
           </div>
@@ -1024,7 +1050,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div id="gift-cards" className="pb-4 pt-8 lg:pb-6 lg:pt-10">
+        <div id="gift-cards" className="mt-5 pb-4 pt-14 lg:pb-6 lg:pt-20">
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
             <div className="gift-card-collage relative mx-auto aspect-[1.5] w-[60%]">
               <div className="gift-card-piece gift-card-piece-purple">
@@ -1132,7 +1158,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="flex items-center justify-between px-2 pt-3 text-xs text-muted-foreground/70 max-sm:pl-10">
+          <div className="mx-auto flex max-w-[64rem] items-center justify-between px-4 pt-3 text-xs text-muted-foreground/70 sm:px-6">
             <a
               className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"
