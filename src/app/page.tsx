@@ -605,20 +605,17 @@ export default function Home() {
             </div>
             <div id="studio" className="mt-auto flex flex-col gap-5">
               <div className="flex flex-col gap-3">
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  <LocalizedText en="Styles" no="Stiler" />
+                <h3 className="pl-2 font-display text-xl font-bold text-foreground">
+                  <LocalizedText en="Styles" no="Stil" />
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {artistStyles.map((item) => {
                     const Icon = item.icon;
                     const card = (
                       <>
-                        <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
                           {Icon ? (
                             <Icon className="size-5 text-[color:var(--studio-red)]" />
-                          ) : null}
-                          {item.href ? (
-                            <MoveUpRightIcon className="size-4 text-muted-foreground" />
                           ) : null}
                         </div>
                         <p className="mt-3 font-display text-lg font-bold text-foreground">
@@ -627,12 +624,15 @@ export default function Home() {
                         <p className="mt-2 text-sm leading-6 text-muted-foreground">
                           <LocalizedText en={item.textEn} no={item.textNo} />
                         </p>
+                        {item.href ? (
+                          <MoveUpRightIcon className="absolute bottom-4 right-4 size-4 text-muted-foreground" />
+                        ) : null}
                       </>
                     );
 
                     return item.href ? (
                       <Link
-                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                        className="motion-lift-subtle relative rounded-lg border border-border/70 bg-background/35 p-4"
                         href={item.href}
                         key={item.titleEn}
                       >
@@ -640,7 +640,7 @@ export default function Home() {
                       </Link>
                     ) : (
                       <div
-                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
+                        className="motion-lift-subtle relative rounded-lg border border-border/70 bg-background/35 p-4"
                         key={item.titleEn}
                       >
                         {card}
@@ -651,7 +651,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <h3 className="font-display text-xl font-bold text-foreground">
+                <h3 className="pl-2 font-display text-xl font-bold text-foreground">
                   <LocalizedText en="Studio" no="Studio" />
                 </h3>
                 <div className="grid gap-3 sm:grid-cols-3">
@@ -725,7 +725,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 pt-12 sm:px-8 lg:pb-28 lg:pt-16"
+        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
       >
         <div
           id="oslo"
@@ -1050,7 +1050,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div id="gift-cards" className="mt-5 pb-4 pt-14 lg:pb-6 lg:pt-20">
+        <div id="gift-cards" className="mt-5 pb-2 pt-14 lg:pb-3 lg:pt-20">
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
             <div className="gift-card-collage relative mx-auto aspect-[1.5] w-[60%]">
               <div className="gift-card-piece gift-card-piece-purple">
@@ -1158,7 +1158,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="mx-auto flex max-w-[64rem] items-center justify-between px-4 pt-3 text-xs text-muted-foreground/70 sm:px-6">
+          <div className="mx-auto flex max-w-[66rem] items-center justify-between px-4 pt-3 text-xs text-muted-foreground/70">
             <a
               className="relative z-10 inline-flex h-8 items-center transition hover:text-foreground"
               href="https://www.proff.no/selskap/infinity-tattoo-chotzai/l%C3%B8renskog/personlig-tjenesteyting/IFHPBP206Y9"

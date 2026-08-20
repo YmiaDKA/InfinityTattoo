@@ -459,7 +459,7 @@ export function BookingRequestForm() {
         </span>
       </label>
 
-      <div className="mt-auto flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mt-auto flex flex-col items-center justify-center gap-3 text-center sm:flex-row sm:items-center">
         <Button className="w-full sm:w-fit" disabled={isSubmitting} size="lg" type="submit">
           {status === "uploading"
             ? isNorwegian
