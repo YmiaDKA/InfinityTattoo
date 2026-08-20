@@ -40,6 +40,9 @@ export default function WorkPage() {
                 className="motion-media object-cover"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
+              <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] font-medium tracking-[0.14em] text-foreground/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                {image.tag}
+              </span>
             </div>
           ))}
         </div>
