@@ -46,6 +46,12 @@ const serviceSignals = [
     textNo: "Rene fine line tatoveringer for mindre, presise og minimalistiske custom motiver.",
   },
   {
+    titleEn: "Blackout work",
+    titleNo: "Blackout arbeid",
+    textEn: "Bold blackout and heavy blackwork projects planned for clean coverage and flow.",
+    textNo: "Sterke blackout og heavy blackwork prosjekter planlagt for ren dekning og flyt.",
+  },
+  {
     titleEn: "Clear consultation",
     titleNo: "Tydelig konsultasjon",
     textEn: "Idea, placement, size, time, price direction, and deposit are discussed first.",
