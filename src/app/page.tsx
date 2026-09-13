@@ -4,6 +4,7 @@ import {
   CalendarDaysIcon,
   ContrastIcon,
   ClipboardListIcon,
+  BadgeCheckIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -86,6 +87,14 @@ const artistStyles: ArtistCard[] = [
 ];
 
 const artistStudio: ArtistCard[] = [
+  {
+    icon: BadgeCheckIcon,
+    titleEn: "4+ years tattooing",
+    titleNo: "4+ år med tatovering",
+    textEn: "Focused experience with custom pieces, larger projects, and clean execution.",
+    textNo:
+      "Fokusert erfaring med custom motiver, større prosjekter og presist arbeid.",
+  },
   {
     emoji: "🇬🇷 🇳🇴",
     titleEn: "Greece + Norway",
@@ -618,8 +627,8 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, blackout work, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med erfaring fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, blackout, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With 4+ years of tattooing experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, blackout work, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med 4+ års erfaring med tatovering fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, blackout, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
@@ -628,7 +637,7 @@ export default function Home() {
                 <h3 className="pl-2 font-display text-xl font-bold text-foreground">
                   <LocalizedText en="Styles" no="Stil" />
                 </h3>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {artistStyles.map((item) => {
                     const Icon = item.icon;
                     const card = (
@@ -674,7 +683,7 @@ export default function Home() {
                 <h3 className="pl-2 font-display text-xl font-bold text-foreground">
                   <LocalizedText en="Studio" no="Studio" />
                 </h3>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {artistStudio.map((item) => {
                     const Icon = item.icon;
 
