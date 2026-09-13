@@ -110,13 +110,11 @@ const artistStudio: ArtistCard[] = [
     textNo: "Profesjonell hygiene gjennom hele behandlingen.",
   },
   {
-    icon: DoorClosedIcon,
-    titleEn: "Private, calm room",
-    titleNo: "Privat og rolig rom",
-    textEn:
-      "A quiet studio setting without a crowded room or people sitting right next to you.",
-    textNo:
-      "En rolig studio-opplevelse uten fullt rom eller folk som sitter rett ved siden av deg.",
+    icon: ShieldCheckIcon,
+    titleEn: "Clear communication",
+    titleNo: "Tydelig kommunikasjon",
+    textEn: "Clear plans for design, size, timing, and expectations.",
+    textNo: "Tydelige planer for design, størrelse, tid og forventninger.",
   },
 ];
 
@@ -481,6 +479,36 @@ export default function Home() {
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
+          <div className="motion-rise motion-delay-3 grid max-w-3xl gap-3 sm:grid-cols-2">
+            <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-background/45 p-4 backdrop-blur">
+              <DoorClosedIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-red)]" />
+              <div>
+                <p className="font-display text-lg font-bold text-foreground">
+                  <LocalizedText en="Private studio room" no="Privat studio-rom" />
+                </p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  <LocalizedText
+                    en="A calm room without a crowded studio around you."
+                    no="Et rolig rom uten et fullt studio rundt deg."
+                  />
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-background/45 p-4 backdrop-blur">
+              <ShieldCheckIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-red)]" />
+              <div>
+                <p className="font-display text-lg font-bold text-foreground">
+                  <LocalizedText en="Focused session" no="Fokusert time" />
+                </p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  <LocalizedText
+                    en="No one sitting right next to you during your tattoo."
+                    no="Ingen som sitter rett ved siden av deg under tatoveringen."
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -629,8 +657,8 @@ export default function Home() {
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With 4+ years of tattooing experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, blackout work, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. Sessions are handled in a calm, private room so you can focus on the tattoo without a crowded studio around you. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med 4+ års erfaring med tatovering fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, blackout, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Timene foregår i et rolig, privat rom, så du kan fokusere på tatoveringen uten et fullt studio rundt deg. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
+                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With 4+ years of tattooing experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, blackout work, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
+                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med 4+ års erfaring med tatovering fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, blackout, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
                 />
               </p>
             </div>
