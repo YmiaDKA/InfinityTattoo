@@ -5,7 +5,6 @@ import {
   ContrastIcon,
   ClipboardListIcon,
   BadgeCheckIcon,
-  DoorClosedIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -453,8 +452,8 @@ export default function Home() {
             </h1>
             <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
               <LocalizedText
-                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin."
-                no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen og Lillestrøm, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din."
+                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin, in a calm private room without a crowded studio around you."
+                no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen og Lillestrøm, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din, i et rolig privat rom uten et fullt studio rundt deg."
               />
             </p>
           </div>
@@ -478,36 +477,6 @@ export default function Home() {
               <LocalizedText en="Book consultation" no="Book konsultasjon" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
-          </div>
-          <div className="motion-rise motion-delay-3 grid max-w-3xl gap-3 sm:grid-cols-2">
-            <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-background/45 p-4 backdrop-blur">
-              <DoorClosedIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-red)]" />
-              <div>
-                <p className="font-display text-lg font-bold text-foreground">
-                  <LocalizedText en="Private studio room" no="Privat studio-rom" />
-                </p>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText
-                    en="A calm room without a crowded studio around you."
-                    no="Et rolig rom uten et fullt studio rundt deg."
-                  />
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg border border-border/70 bg-background/45 p-4 backdrop-blur">
-              <ShieldCheckIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-red)]" />
-              <div>
-                <p className="font-display text-lg font-bold text-foreground">
-                  <LocalizedText en="Focused session" no="Fokusert time" />
-                </p>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText
-                    en="No one sitting right next to you during your tattoo."
-                    no="Ingen som sitter rett ved siden av deg under tatoveringen."
-                  />
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
