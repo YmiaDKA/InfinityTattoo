@@ -153,7 +153,21 @@ const localBusinessJsonLd = {
   telephone: "+4740344775",
   email: "infinitytattoo99@gmail.com",
   priceRange: "NOK",
-  openingHours: "Tu-Su by appointment, Mo closed",
+  openingHours: ["Tu-Fr 11:00-18:00", "Sa-Su 11:00-16:00"],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "11:00",
+      closes: "18:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "11:00",
+      closes: "16:00",
+    },
+  ],
   address: {
     "@type": "PostalAddress",
     streetAddress: "Skårersletta 48c",
@@ -324,9 +338,9 @@ const faqItems: FaqItem[] = [
     questionEn: "When is the studio open?",
     questionNo: "Når er studioet åpent?",
     answerEn:
-      "Infinity Tattoo is open Tuesday to Sunday by appointment. Mondays are closed, so the easiest way to secure a time is to book through Linework or send your idea first.",
+      "Infinity Tattoo is open Tuesday to Friday from 11:00 to 18:00, and Saturday to Sunday from 11:00 to 16:00. Mondays are closed. Booking ahead through Linework is recommended.",
     answerNo:
-      "Infinity Tattoo er åpent tirsdag til søndag etter avtale. Mandager er stengt, så den enkleste måten å sikre tid på er å booke gjennom Linework eller sende ideen din først.",
+      "Infinity Tattoo er åpent tirsdag til fredag fra 11:00 til 18:00, og lørdag til søndag fra 11:00 til 16:00. Mandager er stengt. Det anbefales å booke på forhånd gjennom Linework.",
   },
 ];
 
@@ -779,8 +793,8 @@ export default function Home() {
                 no: "Passer lengre sessions",
               },
               {
-                en: "Open Tuesday-Sunday",
-                no: "Åpent tirsdag-søndag",
+                en: "Open six days a week",
+                no: "Åpent seks dager i uken",
               },
             ].map((item) => (
               <div
@@ -834,8 +848,8 @@ export default function Home() {
           <div className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground">
             <CalendarDaysIcon className="size-5 text-[color:var(--studio-red)]" />
             <LocalizedText
-              en="Open Tue-Sun. Mondays closed."
-              no="Åpent tirs-søn. Mandager stengt."
+              en="Tue-Fri 11-18. Sat-Sun 11-16. Mon closed."
+              no="Tirs-fre 11-18. Lør-søn 11-16. Man stengt."
             />
           </div>
           <a
