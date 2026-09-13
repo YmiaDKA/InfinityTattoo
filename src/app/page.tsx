@@ -326,9 +326,9 @@ const faqItems: FaqItem[] = [
     questionEn: "Where can I park?",
     questionNo: "Hvor kan jeg parkere?",
     answerEn:
-      "You can park for 2 hours free near the studio at Fresh Fitness, Skårersletta 60, or Triaden Senter Uteparkering, Skårersletta 70.",
+      "You can park for 2 hours free near the studio at Fresh Fitness, Skårersletta 60, or Triaden Senter Uteparkering, Skårersletta 70. Triaden is usually only a 2-3 minute walk from the studio.",
     answerNo:
-      "Du kan parkere gratis i 2 timer nær studioet ved Fresh Fitness, Skårersletta 60, eller Triaden Senter Uteparkering, Skårersletta 70.",
+      "Du kan parkere gratis i 2 timer nær studioet ved Fresh Fitness, Skårersletta 60, eller Triaden Senter Uteparkering, Skårersletta 70. Triaden er vanligvis bare 2-3 minutter å gå fra studioet.",
     parkingLinks: {
       freshFitness: "https://maps.app.goo.gl/MixgmVqLpSrBzwrU9",
       triaden: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
@@ -761,8 +761,8 @@ export default function Home() {
               </h2>
               <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Custom tattoo work near Oslo, without the stress of city-center parking. Infinity Tattoo is based in Lørenskog for clients who want serious custom work, easier planning, and a calmer studio setting."
-                  no="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo ligger i Lørenskog for kunder som vil ha seriøst custom arbeid, enklere planlegging og et roligere studio."
+                  en="Custom tattoo work near Oslo, without the stress of city-center parking. Infinity Tattoo is based in Lørenskog for clients who want serious custom work, easier planning, free nearby parking, and a calmer studio setting."
+                  no="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo ligger i Lørenskog for kunder som vil ha seriøst custom arbeid, enklere planlegging, gratis parkering i nærheten og et roligere studio."
                 />
               </p>
             </div>
@@ -794,6 +794,10 @@ export default function Home() {
               {
                 en: "Avoid city parking",
                 no: "Unngå sentrum-parkering",
+              },
+              {
+                en: "2 hours free at Triaden",
+                no: "2 timer gratis på Triaden",
               },
               {
                 en: "Calmer studio setting",
@@ -832,8 +836,8 @@ export default function Home() {
             </h2>
             <p className="max-w-xl text-base leading-7 text-muted-foreground">
               <LocalizedText
-                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, only minutes from Strømmen and Lillestrøm, and a natural choice for clients coming from Oslo. Custom tattoo work near Oslo, without the stress of city-center parking."
-                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, bare minutter fra Strømmen og Lillestrøm, og er et naturlig valg for kunder som kommer fra Oslo. Custom tatovering nær Oslo, uten stresset med parkering i sentrum."
+                en="Infinity Tattoo is based at Skårersletta 48c in Lørenskog, only minutes from Strømmen and Lillestrøm, and a natural choice for clients coming from Oslo. Custom tattoo work near Oslo, without the stress of city-center parking. Triaden offers 2 hours of free parking about 2-3 minutes from the studio."
+                no="Infinity Tattoo ligger på Skårersletta 48c i Lørenskog, bare minutter fra Strømmen og Lillestrøm, og er et naturlig valg for kunder som kommer fra Oslo. Custom tatovering nær Oslo, uten stresset med parkering i sentrum. På Triaden får du 2 timer gratis parkering ca. 2-3 minutter fra studioet."
               />
             </p>
           </div>
@@ -1018,7 +1022,7 @@ export default function Home() {
                             >
                               Skårersletta 70
                             </a>{" "}
-                            <LocalizedText en="(4 min walk)" no="(4 min gange)" />
+                            <LocalizedText en="(2-3 min walk)" no="(2-3 min gange)" />
                           </li>
                         </ul>
                         <p>
