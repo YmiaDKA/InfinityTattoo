@@ -153,6 +153,7 @@ const localBusinessJsonLd = {
   telephone: "+4740344775",
   email: "infinitytattoo99@gmail.com",
   priceRange: "NOK",
+  openingHours: "Tu-Su by appointment, Mo closed",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Skårersletta 48c",
@@ -318,6 +319,14 @@ const faqItems: FaqItem[] = [
       freshFitness: "https://maps.app.goo.gl/MixgmVqLpSrBzwrU9",
       triaden: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
     },
+  },
+  {
+    questionEn: "When is the studio open?",
+    questionNo: "Når er studioet åpent?",
+    answerEn:
+      "Infinity Tattoo is open Tuesday to Sunday by appointment. Mondays are closed, so the easiest way to secure a time is to book through Linework or send your idea first.",
+    answerNo:
+      "Infinity Tattoo er åpent tirsdag til søndag etter avtale. Mandager er stengt, så den enkleste måten å sikre tid på er å booke gjennom Linework eller sende ideen din først.",
   },
 ];
 
@@ -755,7 +764,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {[
               {
                 en: "Avoid city parking",
@@ -768,6 +777,10 @@ export default function Home() {
               {
                 en: "Built for longer sessions",
                 no: "Passer lengre sessions",
+              },
+              {
+                en: "Open Tuesday-Sunday",
+                no: "Åpent tirsdag-søndag",
               },
             ].map((item) => (
               <div
@@ -817,7 +830,14 @@ export default function Home() {
           <LocalizedText en="Booking" no="Booking" />
         </h2>
 
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground">
+            <CalendarDaysIcon className="size-5 text-[color:var(--studio-red)]" />
+            <LocalizedText
+              en="Open Tue-Sun. Mondays closed."
+              no="Åpent tirs-søn. Mandager stengt."
+            />
+          </div>
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
