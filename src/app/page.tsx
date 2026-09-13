@@ -478,6 +478,17 @@ export default function Home() {
         className="motion-reveal border-y bg-card/25 py-8 text-muted-foreground"
         aria-label="Client reviews"
       >
+        <div className="mx-auto mb-7 flex max-w-6xl flex-col gap-3 px-5 text-center sm:px-8">
+          <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+            <LocalizedText en="135+ Google reviews" no="135+ Google-anmeldelser" />
+          </p>
+          <p className="mx-auto max-w-2xl text-sm leading-6 text-muted-foreground">
+            <LocalizedText
+              en="Trusted by clients from Lørenskog, Strømmen, Lillestrøm and Oslo for custom tattoo work, clear consultation, and precise execution."
+              no="Valgt av kunder fra Lørenskog, Strømmen, Lillestrøm og Oslo for custom tatoveringer, tydelig konsultasjon og presist arbeid."
+            />
+          </p>
+        </div>
         <Marquee
           pauseOnHover
           repeat={2}
@@ -750,8 +761,8 @@ export default function Home() {
               </h2>
               <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
                 <LocalizedText
-                  en="Custom tattoo work near Oslo, without the stress of city-center parking. Infinity Tattoo is based in Lørenskog for clients who want serious custom work in a calmer studio setting."
-                  no="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo ligger i Lørenskog for kunder som vil ha seriøst custom arbeid i et roligere studio."
+                  en="Custom tattoo work near Oslo, without the stress of city-center parking. Infinity Tattoo is based in Lørenskog for clients who want serious custom work, easier planning, and a calmer studio setting."
+                  no="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo ligger i Lørenskog for kunder som vil ha seriøst custom arbeid, enklere planlegging og et roligere studio."
                 />
               </p>
             </div>
@@ -795,6 +806,10 @@ export default function Home() {
               {
                 en: "Open six days a week",
                 no: "Åpent seks dager i uken",
+              },
+              {
+                en: "135+ Google reviews",
+                no: "135+ Google-anmeldelser",
               },
             ].map((item) => (
               <div

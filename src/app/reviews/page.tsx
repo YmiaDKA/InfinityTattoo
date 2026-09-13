@@ -11,7 +11,7 @@ import { testimonials } from "@/lib/site-data";
 export const metadata: Metadata = {
   title: "Anmeldelser | Infinity Tattoo Lørenskog",
   description:
-    "Les kundeanmeldelser for Infinity Tattoo i Lørenskog, et tatoveringsstudio for custom realisme, black and grey og større prosjekter.",
+    "Les kundeanmeldelser for Infinity Tattoo i Lørenskog. Studioet har 135+ Google-anmeldelser og lager custom realisme, black and grey og større prosjekter.",
   alternates: {
     canonical: "https://infinitytattoo.no/reviews",
   },
@@ -26,6 +26,12 @@ export default function ReviewsPage() {
           <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
             Reviews
           </h1>
+          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
+            <LocalizedText
+              en="135+ Google reviews from clients choosing Infinity Tattoo for custom work, clear consultation, and a calm studio experience in Lørenskog."
+              no="135+ Google-anmeldelser fra kunder som velger Infinity Tattoo for custom arbeid, tydelig konsultasjon og en rolig studio-opplevelse i Lørenskog."
+            />
+          </p>
         </div>
 
         <div className="motion-stagger grid gap-3 md:grid-cols-2">
