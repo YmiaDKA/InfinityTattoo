@@ -844,14 +844,52 @@ export default function Home() {
           <LocalizedText en="Booking" no="Booking" />
         </h2>
 
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <div className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground">
-            <CalendarDaysIcon className="size-5 text-[color:var(--studio-red)]" />
-            <LocalizedText
-              en="Tue-Fri 11-18. Sat-Sun 11-16. Mon closed."
-              no="Tirs-fre 11-18. Lør-søn 11-16. Man stengt."
-            />
+        <div className="motion-reveal grid gap-4 rounded-3xl border border-border/70 bg-card/45 p-5 sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+          <div className="flex items-center gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <CalendarDaysIcon className="size-5" />
+            </div>
+            <div>
+              <p className="font-display text-2xl font-bold text-foreground">
+                <LocalizedText en="Studio hours" no="Åpningstider" />
+              </p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                <LocalizedText
+                  en="Plan your consultation or tattoo session around the studio week."
+                  no="Planlegg konsultasjon eller tatoveringstime rundt studioets åpningstider."
+                />
+              </p>
+            </div>
           </div>
+          <div className="grid gap-3 text-sm sm:grid-cols-3">
+            <div className="rounded-lg border border-border/70 bg-background/35 p-4">
+              <p className="text-muted-foreground">
+                <LocalizedText en="Tuesday-Friday" no="Tirsdag-fredag" />
+              </p>
+              <p className="mt-2 font-display text-2xl font-bold text-foreground">
+                11:00-18:00
+              </p>
+            </div>
+            <div className="rounded-lg border border-border/70 bg-background/35 p-4">
+              <p className="text-muted-foreground">
+                <LocalizedText en="Saturday-Sunday" no="Lørdag-søndag" />
+              </p>
+              <p className="mt-2 font-display text-2xl font-bold text-foreground">
+                11:00-16:00
+              </p>
+            </div>
+            <div className="rounded-lg border border-border/70 bg-background/35 p-4">
+              <p className="text-muted-foreground">
+                <LocalizedText en="Monday" no="Mandag" />
+              </p>
+              <p className="mt-2 font-display text-2xl font-bold text-foreground">
+                <LocalizedText en="Closed" no="Stengt" />
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
