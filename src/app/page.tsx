@@ -154,13 +154,24 @@ const serviceAreas = [
 
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
-  "@type": "HealthAndBeautyBusiness",
+  "@type": ["TattooParlor", "HealthAndBeautyBusiness"],
+  "@id": "https://infinitytattoo.no/#business",
   name: "Infinity Tattoo Studio",
-  image: "https://infinitytattoo.no/media/hero-poster.jpeg",
+  alternateName: "Infinity Tattoo",
+  description:
+    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, cover-up planning, tooth gems, and consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
+  image: [
+    "https://infinitytattoo.no/media/hero-poster.jpeg",
+    "https://infinitytattoo.no/media/artist/filippos.jpg",
+    "https://infinitytattoo.no/media/studio-panorama.jpg",
+  ],
+  logo: "https://infinitytattoo.no/media/brand/logo-wordmark.png",
   url: "https://infinitytattoo.no/",
   telephone: "+4740344775",
   email: "infinitytattoo99@gmail.com",
   priceRange: "NOK",
+  currenciesAccepted: "NOK",
+  hasMap: "https://maps.app.goo.gl/z7rXGVEJVXESGa8E7",
   openingHours: ["Tu-Fr 11:00-18:00", "Sa-Su 11:00-16:00"],
   openingHoursSpecification: [
     {
@@ -180,9 +191,42 @@ const localBusinessJsonLd = {
     "@type": "PostalAddress",
     streetAddress: "Skårersletta 48c",
     addressLocality: "Lørenskog",
+    addressRegion: "Akershus",
+    postalCode: "1473",
     addressCountry: "NO",
   },
-  areaServed: ["Lørenskog", "Strømmen", "Lillestrøm", "Oslo"],
+  founder: {
+    "@type": "Person",
+    name: "Filip",
+    jobTitle: "Tattoo artist and owner",
+    image: "https://infinitytattoo.no/media/artist/filippos.jpg",
+    knowsAbout: [
+      "realistic tattoos",
+      "black and grey tattoos",
+      "portrait tattoos",
+      "blackout tattoos",
+      "freehand Maori tattoos",
+      "custom tattoo design",
+    ],
+  },
+  areaServed: [
+    {
+      "@type": "City",
+      name: "Lørenskog",
+    },
+    {
+      "@type": "City",
+      name: "Strømmen",
+    },
+    {
+      "@type": "City",
+      name: "Lillestrøm",
+    },
+    {
+      "@type": "City",
+      name: "Oslo",
+    },
+  ],
   knowsAbout: [
     "custom tattoo design",
     "realistic tattoos",
@@ -202,6 +246,96 @@ const localBusinessJsonLd = {
     "https://www.instagram.com/infinitytattoo.lorenskog/",
     "https://www.tiktok.com/@infinitytattoostudio",
   ],
+  potentialAction: {
+    "@type": "ReserveAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://booking.linework.com/infinity",
+      actionPlatform: [
+        "https://schema.org/DesktopWebPlatform",
+        "https://schema.org/MobileWebPlatform",
+      ],
+    },
+    name: "Book a tattoo consultation",
+  },
+  makesOffer: {
+    "@type": "OfferCatalog",
+    name: "Tattoo and studio services",
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Custom tattoo consultation",
+          serviceType: "Tattoo consultation",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Realistic tattoos",
+          serviceType: "Realism tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Black and grey tattoos",
+          serviceType: "Black and grey tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Blackout tattoos",
+          serviceType: "Blackout tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Freehand Maori tattoos",
+          serviceType: "Freehand Maori tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Portrait tattoos",
+          serviceType: "Portrait tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Sleeve tattoos",
+          serviceType: "Sleeve tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Cover-up tattoo planning",
+          serviceType: "Cover-up tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Tooth gems",
+          serviceType: "Tooth gems",
+        },
+      },
+    ],
+  },
 };
 
 type FaqItem = {
