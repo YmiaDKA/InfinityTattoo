@@ -117,6 +117,73 @@ const artistStudio: ArtistCard[] = [
   },
 ];
 
+const signatureStyles = [
+  {
+    titleEn: "Realistic tattoos",
+    titleNo: "Realistisk tatovering",
+    textEn: "Detailed custom realism planned around contrast, reference quality and long-term readability.",
+    textNo:
+      "Detaljert custom realisme planlagt rundt kontrast, referansekvalitet og langvarig lesbarhet.",
+    href: "/realistisk-tatovering",
+  },
+  {
+    titleEn: "Black and grey",
+    titleNo: "Black and grey",
+    textEn: "Smooth shading, strong darks and controlled structure for portraits, sleeves and larger work.",
+    textNo:
+      "Myk shading, sterke mørke partier og kontrollert struktur for portretter, sleeves og større arbeid.",
+    href: "/black-and-grey-tatovering",
+  },
+  {
+    titleEn: "Blackout",
+    titleNo: "Blackout",
+    textEn: "Heavy blackwork and blackout projects planned around coverage, edges and body flow.",
+    textNo:
+      "Heavy blackwork og blackout prosjekter planlagt rundt dekning, kanter og kroppsflyt.",
+    href: "/blackout-tatovering",
+  },
+  {
+    titleEn: "Portrait tattoos",
+    titleNo: "Portrett tatovering",
+    textEn: "Portrait work with focus on likeness, structure, contrast and strong reference photos.",
+    textNo:
+      "Portrettarbeid med fokus på likhet, struktur, kontrast og sterke referansebilder.",
+    href: "/portrett-tatovering",
+  },
+  {
+    titleEn: "Sleeves",
+    titleNo: "Sleeves",
+    textEn: "Large custom projects built around theme, session planning, transitions and body movement.",
+    textNo:
+      "Store custom prosjekter bygget rundt tema, sessions, overganger og kroppens bevegelse.",
+    href: "/sleeve-tatovering",
+  },
+  {
+    titleEn: "Cover-ups",
+    titleNo: "Cover-up",
+    textEn: "Realistic cover-up planning for old, faded or unwanted tattoos.",
+    textNo:
+      "Realistisk cover-up planlegging for gamle, falmede eller uønskede tatoveringer.",
+    href: "/cover-up-tatovering",
+  },
+  {
+    titleEn: "Fine line",
+    titleNo: "Fine line",
+    textEn: "Small custom pieces with clean placement, simple detail and clear consultation.",
+    textNo:
+      "Mindre custom motiver med ren plassering, enkle detaljer og tydelig konsultasjon.",
+    href: "/fine-line-tatovering",
+  },
+  {
+    titleEn: "Freehand Maori",
+    titleNo: "Freehand Maori",
+    textEn: "Large-scale Maori and Polynesian-inspired flow work drawn around the body.",
+    textNo:
+      "Maori og Polynesian-inspirert arbeid i stor skala, tegnet rundt kroppen.",
+    href: "/freehand-maori-tattoo",
+  },
+];
+
 const serviceAreas = [
   {
     area: "Lørenskog",
@@ -676,6 +743,43 @@ export default function Home() {
             Read all
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
+        </div>
+      </section>
+
+      <section
+        id="styles"
+        className="motion-reveal border-y bg-card/30"
+      >
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-24">
+          <div className="flex flex-col gap-4 lg:max-w-3xl">
+            <h2 className="font-display text-4xl font-bold sm:text-5xl">
+              <LocalizedText en="Signature styles" no="Stiler og spesialiteter" />
+            </h2>
+            <p className="text-base leading-7 text-muted-foreground">
+              <LocalizedText
+                en="Explore the main tattoo styles at Infinity Tattoo. Each project starts with a consultation around idea, placement, size, references and how the tattoo should age on your skin."
+                no="Utforsk de viktigste stilene hos Infinity Tattoo. Hvert prosjekt starter med konsultasjon rundt idé, plassering, størrelse, referanser og hvordan tatoveringen skal eldes på huden."
+              />
+            </p>
+          </div>
+
+          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {signatureStyles.map((style) => (
+              <Link
+                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-red)] hover:bg-background/80"
+                href={style.href}
+                key={style.href}
+              >
+                <p className="font-display text-xl font-bold text-foreground">
+                  <LocalizedText en={style.titleEn} no={style.titleNo} />
+                </p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  <LocalizedText en={style.textEn} no={style.textNo} />
+                </p>
+                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-red)]" />
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
