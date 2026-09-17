@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { GoogleAdsTag } from "@/components/google-ads-tag";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -91,7 +92,10 @@ export default function RootLayout({
       lang="no"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark h-full scroll-smooth antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <GoogleAdsTag />
+        {children}
+      </body>
     </html>
   );
 }
