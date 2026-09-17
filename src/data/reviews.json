@@ -1,5 +1,215 @@
 [
   {
+    "name": "Joe Nusa",
+    "rating": 5,
+    "quoteEn": "Best on freehand work!",
+    "quoteNo": "Best på freehand arbeid!",
+    "date": "2026-09-16"
+  },
+  {
+    "name": "Agbubike Akpotowho",
+    "rating": 5,
+    "quoteEn": "This guy is useful. ⭐️",
+    "quoteNo": "Denne fyren er dyktig. ⭐️",
+    "date": "2026-09-16"
+  },
+  {
+    "name": "Oda Eirin Almeland",
+    "rating": 5,
+    "quoteEn": "Filip is an incredibly kind, talented, and funny guy who is truly exceptional at what he does. He's someone you can completely trust, and he approaches every project with precision and great attention to detail.",
+    "quoteNo": "Filip er en utrolig snill, talentfull og morsom fyr som virkelig er eksepsjonell i det han gjør. Han er en du kan stole helt på, og han går inn i hvert prosjekt med presisjon og stor oppmerksomhet på detaljer.",
+    "date": "2026-09-16"
+  },
+  {
+    "name": "Nils Asbjørn Lie",
+    "rating": 5,
+    "quoteEn": "Happy with the experience at the studio and the service I received!",
+    "quoteNo": "Fornøyd med opplevelsen i studioet og servicen jeg fikk!",
+    "date": "2026-09-16"
+  },
+  {
+    "name": "Anastasios Piskah",
+    "rating": 5,
+    "quoteEn": "I really have no words; everything was wonderful. Filippos was very helpful and extremely professional in his work.",
+    "quoteNo": "Jeg har virkelig ikke ord; alt var fantastisk. Filippos var veldig hjelpsom og ekstremt profesjonell i arbeidet sitt.",
+    "date": "2026-09-13"
+  },
+  {
+    "name": "Mats Hermansen",
+    "rating": 5,
+    "quoteEn": "Good service and great result.",
+    "quoteNo": "God service og flott resultat.",
+    "date": "2026-09-10"
+  },
+  {
+    "name": "Andrei Manuel",
+    "rating": 5,
+    "quoteEn": "Filip is the best artist! He did exactly what I asked for, and the result is simply brilliant. It looks way better than I expected. The vibe was really awesome, and he was extremely kind and patient. Thanks a lot!",
+    "quoteNo": "Filip er den beste artisten! Han gjorde akkurat det jeg ba om, og resultatet er rett og slett strålende. Det ser mye bedre ut enn jeg forventet. Stemningen var fantastisk, og han var ekstremt snill og tålmodig. Tusen takk!",
+    "date": "2026-09-10"
+  },
+  {
+    "name": "Thanas Cala",
+    "rating": 5,
+    "quoteEn": "Perfect tattoo experience.",
+    "quoteNo": "Perfekt tatoveringsopplevelse.",
+    "date": "2026-09-03"
+  },
+  {
+    "name": "Nora Zeqiri",
+    "rating": 5,
+    "quoteEn": "Amazing experience! Professional, friendly, and precise. I’m so happy with my tattoo. Highly recommend! ✨",
+    "quoteNo": "Fantastisk opplevelse! Profesjonell, hyggelig og presis. Jeg er så fornøyd med tatoveringen min. Anbefales på det sterkeste! ✨",
+    "date": "2026-09-03"
+  },
+  {
+    "name": "Gabriel Radu",
+    "rating": 5,
+    "quoteEn": "I visited this studio a couple of Saturdays ago, and it was honestly a great experience. Finding a tattoo artist available on Saturdays can be difficult, so the flexibility was a huge plus for me.",
+    "quoteNo": "Jeg besøkte studioet for et par lørdager siden, og det var ærlig talt en veldig god opplevelse. Det kan være vanskelig å finne en tatovør som er tilgjengelig på lørdager, så fleksibiliteten var et stort pluss for meg.",
+    "date": "2026-09-03"
+  },
+  {
+    "name": "Christian Gryttman",
+    "rating": 5,
+    "quoteEn": "I had a very good experience at INFINITY. The premises were clean, tidy and professional, and I felt very welcomed from the start.",
+    "quoteNo": "Jeg hadde en veldig god opplevelse hos INFINITY. Lokalene var rene, ryddige og profesjonelle, og jeg følte meg veldig velkommen fra starten.",
+    "date": "2026-08-27"
+  },
+  {
+    "name": "Daniel Harjar93",
+    "rating": 5,
+    "quoteEn": "Awesome artist and insane work! 🔥💥",
+    "quoteNo": "Fantastisk artist og rått arbeid! 🔥💥",
+    "date": "2026-08-27"
+  },
+  {
+    "name": "Jenny Bjøru Flakstad",
+    "rating": 5,
+    "quoteEn": "The best!",
+    "quoteNo": "Den beste!",
+    "date": "2026-08-27"
+  },
+  {
+    "name": "Zissis Dangas",
+    "rating": 5,
+    "quoteEn": "Filip did an excellent job on my old tattoo and he is great at fine line.",
+    "quoteNo": "Filip gjorde en utmerket jobb på den gamle tatoveringen min, og han er veldig flink på fine line.",
+    "date": "2026-08-20"
+  },
+  {
+    "name": "Patrycja",
+    "rating": 5,
+    "quoteEn": "Great place! Asked about a nice line tattoo in red and was so happy with the result! Highly recommend!",
+    "quoteNo": "Flott sted! Spurte om en fin line tatovering i rødt og ble så fornøyd med resultatet! Anbefales på det sterkeste!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "DjsexTi- p",
+    "rating": 5,
+    "quoteEn": "Amazing experience at Infinity! Filip did my quarter-sleeve in just one day, and the level of detail was incredible. He was very easy to communicate with and guided me throughout the whole process. Super professional and talented. Highly recommended!",
+    "quoteNo": "Fantastisk opplevelse hos Infinity! Filip gjorde quarter-sleeven min på bare én dag, og detaljnivået var utrolig. Han var veldig enkel å kommunisere med og guidet meg gjennom hele prosessen. Superprofesjonell og talentfull. Anbefales på det sterkeste!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Sadik Partalko",
+    "rating": 5,
+    "quoteEn": "Fantastic experience, Filip was nice and good at both tattooing and design.",
+    "quoteNo": "Fantastisk opplevelse, Filip var hyggelig og flink både med tatovering og design.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Karoline Sofie Losnedahl",
+    "rating": 5,
+    "quoteEn": "Very satisfied! Nice tattoo artist and very skilled.",
+    "quoteNo": "Veldig fornøyd! Hyggelig tatovør og veldig dyktig.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Sebastian Samuelsen",
+    "rating": 5,
+    "quoteEn": "Been there twice now and have been very happy with the tattoos I've gotten. A very nice person who welcomes you. He takes his time with both tattooing and creating designs, a very skilled person. Definitely recommend him.",
+    "quoteNo": "Har vært der to ganger nå og har vært veldig fornøyd med tatoveringene jeg har fått. En veldig hyggelig person som tar deg godt imot. Han tar seg tid både med tatovering og design, en veldig dyktig person. Anbefaler ham definitivt.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Hilde-Ma Myhre",
+    "rating": 5,
+    "quoteEn": "Super satisfied.",
+    "quoteNo": "Superfornøyd.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "victor haraldsen",
+    "rating": 5,
+    "quoteEn": "Skilled tattoo artist! Someone who really prioritizes the customer, comfort, hygiene, etc. I was extremely satisfied with the tattoo you did on me. Highly recommended!",
+    "quoteNo": "Dyktig tatovør! En som virkelig prioriterer kunden, komfort, hygiene osv. Jeg ble ekstremt fornøyd med tatoveringen du gjorde på meg. Anbefales på det sterkeste!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Annlaug Kristiansen",
+    "rating": 5,
+    "quoteEn": "Very clever.",
+    "quoteNo": "Veldig flink.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Jonny Martinsen",
+    "rating": 5,
+    "quoteEn": "Amazing experience at Infinity Tattoo! What I appreciated the most was how well the artist listened to what I wanted, while also sharing his own honest thoughts and professional feedback on the design I brought in. That made the final result even better than I had imagined. Highly recommended!",
+    "quoteNo": "Fantastisk opplevelse hos Infinity Tattoo! Det jeg satte mest pris på var hvor godt artisten lyttet til det jeg ønsket, samtidig som han delte ærlige tanker og profesjonelle råd om designet jeg kom med. Det gjorde sluttresultatet enda bedre enn jeg hadde sett for meg. Anbefales på det sterkeste!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Demas Noclass",
+    "rating": 5,
+    "quoteEn": "It was one of the best experiences I’ve ever had. He helped me find the design I had always wanted and gave me great advice throughout the process. The final result was perfect, and he was always friendly and positive. I highly recommend him! The best shading!",
+    "quoteNo": "Det var en av de beste opplevelsene jeg noen gang har hatt. Han hjalp meg med å finne designet jeg alltid hadde ønsket meg og ga gode råd gjennom hele prosessen. Sluttresultatet ble perfekt, og han var alltid hyggelig og positiv. Jeg anbefaler ham på det sterkeste! Den beste shadingen!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Martine",
+    "rating": 5,
+    "quoteEn": "Filip is a great tattoo artist! 10/10 would recommend if you’re looking for a great and professional artist.",
+    "quoteNo": "Filip er en fantastisk tatovør! 10/10, anbefales hvis du ser etter en flink og profesjonell artist.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Samuel Yeboah",
+    "rating": 5,
+    "quoteEn": "Good and kind.",
+    "quoteNo": "Dyktig og snill.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Klaudio Rotsi",
+    "rating": 5,
+    "quoteEn": "Absolutely stoked with my Māori leg piece from Filip at Infinity Tattoo Studio in Lørenskog. Clean lines, and the pattern sits perfectly with my leg. He took his time, knew exactly what he was doing, and the studio’s spotless. Highly recommend. Cheers, Filip!",
+    "quoteNo": "Utrolig fornøyd med Māori-tatoveringen på beinet mitt fra Filip hos Infinity Tattoo Studio i Lørenskog. Rene linjer, og mønsteret sitter perfekt med beinet mitt. Han tok seg tid, visste akkurat hva han gjorde, og studioet er skinnende rent. Anbefales på det sterkeste. Takk, Filip!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Rachel Gebrehiwot",
+    "rating": 5,
+    "quoteEn": "I had my very first tattoo done by Filip, and I couldn’t have asked for a better experience. He is incredibly friendly, welcoming, and made me feel comfortable from the moment I walked in.",
+    "quoteNo": "Jeg tok min aller første tatovering hos Filip, og jeg kunne ikke bedt om en bedre opplevelse. Han er utrolig vennlig, imøtekommende og fikk meg til å føle meg komfortabel fra øyeblikket jeg kom inn.",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "Linn Maria Sundfør",
+    "rating": 5,
+    "quoteEn": "Great service, I felt safe and well taken care of! Highly recommended!",
+    "quoteNo": "God service, jeg følte meg trygg og godt ivaretatt! Anbefales på det sterkeste!",
+    "date": "2026-08-17"
+  },
+  {
+    "name": "siaman manoharan",
+    "rating": 5,
+    "quoteEn": "Took a half sleeve from Filip today, very good experience. He was very professional and adapted a perfect design based on what I described. Very nice to talk to, and explained everything in a neat way. Highly recommended, I am very satisfied!",
+    "quoteNo": "Tok en half sleeve hos Filip i dag, veldig god opplevelse. Han var veldig profesjonell og tilpasset et perfekt design basert på det jeg beskrev. Veldig hyggelig å snakke med, og forklarte alt på en ryddig måte. Anbefales på det sterkeste, jeg er veldig fornøyd!",
+    "date": "2026-08-17"
+  },
+  {
     "name": "Dimitra Kirani",
     "rating": 5,
     "quoteEn": "A very nice tattoo from a very good artist, I am very satisfied, it is worth a visit!!",
