@@ -121,7 +121,7 @@ export default function WorkPage() {
 
       <section
         id="portfolio-grid"
-        className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-20 sm:px-8 lg:pb-28"
+        className="mx-auto flex max-w-7xl flex-col gap-8 px-5 pb-20 sm:px-8 lg:pb-28"
       >
         <div className="motion-reveal flex flex-col justify-between gap-4 border-y border-border/70 py-6 sm:flex-row sm:items-end">
           <div>
@@ -140,24 +140,21 @@ export default function WorkPage() {
           </p>
         </div>
 
-        <div className="motion-stagger grid auto-rows-[14rem] gap-3 sm:grid-cols-2 sm:auto-rows-[18rem] lg:grid-cols-4">
-          {galleryImages.map((image, index) => (
+        <div className="motion-stagger grid gap-5 md:grid-cols-2">
+          {galleryImages.map((image) => (
             <div
-              className={`motion-lift motion-reveal group relative overflow-hidden rounded-lg border bg-card ${
-                index === 0 || index === 5 || index === 10
-                  ? "sm:row-span-2"
-                  : ""
-              } ${index === 1 || index === 8 ? "lg:col-span-2" : ""}`}
+              className="group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card shadow-2xl shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-foreground/30"
               key={image.src}
             >
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="motion-media object-cover"
-                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                className="object-cover"
+                loading="eager"
+                sizes="(min-width: 1280px) 600px, (min-width: 768px) 48vw, 92vw"
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-background/80 to-transparent p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-background/85 to-transparent p-4 opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100">
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85">
                   {image.tag}
                 </span>

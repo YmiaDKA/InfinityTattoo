@@ -891,7 +891,7 @@ export default function Home() {
         <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredGalleryImages.map((image, index) => (
             <div
-              className={`motion-lift motion-reveal group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card ${
+              className={`group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card transition duration-300 hover:-translate-y-1 hover:border-foreground/30 ${
                 index > 2 ? "hidden sm:block" : ""
               }`}
               key={image.src}
@@ -900,7 +900,8 @@ export default function Home() {
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="motion-media object-cover"
+                className="object-cover"
+                loading="eager"
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
               />
               <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] font-medium tracking-[0.14em] text-foreground/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
