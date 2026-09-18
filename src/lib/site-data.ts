@@ -91,6 +91,13 @@ export const galleryImages = [
   },
 ];
 
-export const featuredGalleryImages = galleryImages.slice(0, 6);
+export const featuredGalleryImages = [
+  galleryImages[0],
+  galleryImages[1],
+  galleryImages[4],
+  galleryImages[2],
+  galleryImages[3],
+  galleryImages[5],
+];
 
 export const testimonials: Testimonial[] = reviews;

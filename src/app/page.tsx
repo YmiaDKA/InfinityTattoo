@@ -266,7 +266,7 @@ const localBusinessJsonLd = {
   name: "Infinity Tattoo Studio",
   alternateName: "Infinity Tattoo",
   description:
-    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, piercing, tooth gems, and consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
+    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, piercing, tooth gems, and free consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
   image: [
     "https://infinitytattoo.no/media/hero-poster.jpeg",
     "https://infinitytattoo.no/media/artist/filippos.jpg",
@@ -364,7 +364,7 @@ const localBusinessJsonLd = {
         "https://schema.org/MobileWebPlatform",
       ],
     },
-    name: "Book a tattoo consultation",
+    name: "Book a free tattoo consultation",
   },
   makesOffer: {
     "@type": "OfferCatalog",
@@ -374,9 +374,11 @@ const localBusinessJsonLd = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Custom tattoo consultation",
+          name: "Free custom tattoo consultation",
           serviceType: "Tattoo consultation",
         },
+        price: "0",
+        priceCurrency: "NOK",
       },
       {
         "@type": "Offer",
@@ -471,9 +473,9 @@ const faqItems: FaqItem[] = [
     questionEn: "How do I book a consultation?",
     questionNo: "Hvordan booker jeg konsultasjon?",
     answerEn:
-      "Use the booking calendar above and choose a consultation length that fits your idea. You can share references and placement details during the consultation.",
+      "Use the booking calendar above and choose a consultation length that fits your idea. Tattoo consultations are free, and you can share references, placement details, size and budget during the consultation.",
     answerNo:
-      "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Du kan dele referanser og plassering under konsultasjonen.",
+      "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Tatoveringskonsultasjoner er gratis, og du kan dele referanser, plassering, størrelse og budsjett under konsultasjonen.",
   },
   {
     questionEn: "What should I bring?",
@@ -702,8 +704,8 @@ export default function Home() {
             </h1>
             <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
               <LocalizedText
-                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin, in a calm private room without a crowded studio around you."
-                no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen og Lillestrøm, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din, i et rolig privat rom uten et fullt studio rundt deg."
+                en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin. Free consultation in a calm private room without a crowded studio around you."
+                no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen, Lillestrøm og Oslo, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din. Gratis konsultasjon i et rolig privat rom uten et fullt studio rundt deg."
               />
             </p>
           </div>
@@ -724,7 +726,7 @@ export default function Home() {
               size="lg"
               variant="outline"
             >
-              <LocalizedText en="Book consultation" no="Book konsultasjon" />
+              <LocalizedText en="Book free consultation" no="Book gratis konsultasjon" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
@@ -1177,6 +1179,12 @@ export default function Home() {
         <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
           <LocalizedText en="Booking" no="Booking" />
         </h2>
+        <p className="mx-auto max-w-2xl text-center text-base leading-7 text-muted-foreground">
+          <LocalizedText
+            en="Book a free tattoo consultation to talk through your idea, placement, size, time estimate and budget before committing to a full tattoo session."
+            no="Book en gratis tatoveringskonsultasjon for å gå gjennom idé, plassering, størrelse, tidsestimat og budsjett før du bestemmer deg for en full tatoveringstime."
+          />
+        </p>
 
         <div className="motion-reveal grid gap-4 rounded-3xl border border-border/70 bg-card/45 p-5 sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div className="flex items-center gap-4">
@@ -1189,8 +1197,8 @@ export default function Home() {
               </p>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">
                 <LocalizedText
-                  en="Plan your consultation or tattoo session around the studio week."
-                  no="Planlegg konsultasjon eller tatoveringstime rundt studioets åpningstider."
+                  en="Plan your free consultation or tattoo session around the studio week."
+                  no="Planlegg gratis konsultasjon eller tatoveringstime rundt studioets åpningstider."
                 />
               </p>
             </div>
@@ -1254,8 +1262,8 @@ export default function Home() {
             target="_blank"
           >
             <LocalizedText
-              en="Open booking in new page"
-              no="Åpne booking i ny side"
+              en="Book free consultation"
+              no="Book gratis konsultasjon"
             />
             <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
           </a>
