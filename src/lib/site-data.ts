@@ -25,9 +25,9 @@ export const galleryImages = [
     alt: "Custom tattoo composition",
   },
   {
-    src: "/media/gallery/infinity/infinity-09.jpg",
+    src: "/media/gallery/infinity/infinity-30.webp",
     tag: "#04",
-    alt: "Hercules black and grey tattoo",
+    alt: "Fine line Japanese text tattoo on arm",
   },
   {
     src: "/media/gallery/infinity/infinity-21.webp",
