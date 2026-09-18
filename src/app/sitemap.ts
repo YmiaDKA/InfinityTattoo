@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/work",
     "/reviews",
+    "/piercing",
     "/tooth-gems",
     "/freehand-maori-tattoo",
     "/realistisk-tatovering",

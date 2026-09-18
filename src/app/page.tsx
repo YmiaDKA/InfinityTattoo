@@ -226,7 +226,7 @@ const localBusinessJsonLd = {
   name: "Infinity Tattoo Studio",
   alternateName: "Infinity Tattoo",
   description:
-    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, cover-up planning, tooth gems, and consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
+    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, piercing, tooth gems, and consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
   image: [
     "https://infinitytattoo.no/media/hero-poster.jpeg",
     "https://infinitytattoo.no/media/artist/filippos.jpg",
@@ -306,6 +306,7 @@ const localBusinessJsonLd = {
     "freehand Maori tattoos",
     "Polynesian-inspired tattoos",
     "cover-up tattoo planning",
+    "piercing",
     "tattoo consultation",
     "tooth gems",
   ],
@@ -391,6 +392,14 @@ const localBusinessJsonLd = {
           "@type": "Service",
           name: "Cover-up tattoo planning",
           serviceType: "Cover-up tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Piercing",
+          serviceType: "Piercing",
         },
       },
       {

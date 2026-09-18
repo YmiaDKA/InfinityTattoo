@@ -54,6 +54,8 @@ export const metadata: Metadata = {
     "freehand Maori tattoo",
     "Maori tattoo Norway",
     "Polynesian tattoo",
+    "piercing Lørenskog",
+    "piercing",
     "cover up tattoo",
     "tattoo consultation",
     "tooth gems",

@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { labelEn: "Work", labelNo: "Arbeid", href: "/#work" },
   { labelEn: "Artist", labelNo: "Artist", href: "/#artist" },
+  { labelEn: "Piercing", labelNo: "Piercing", href: "/piercing" },
   { labelEn: "Tooth gems", labelNo: "Tooth gems", href: "/tooth-gems" },
   { labelEn: "Contact", labelNo: "Kontakt", href: "/#contact" },
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
@@ -192,11 +193,11 @@ export function SiteHeader() {
 
         <div
           ref={navItemsRef}
-          className="relative z-10 hidden h-12 items-center gap-1 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 md:flex"
+          className="relative z-10 hidden h-12 items-center gap-0.5 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 md:flex"
         >
           {navItems.map((item) => (
             <a
-              className="inline-flex h-10 items-center rounded-full px-5 text-sm text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
+              className="inline-flex h-10 items-center rounded-full px-4 text-sm text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
               href={item.href}
               key={item.href}
             >
