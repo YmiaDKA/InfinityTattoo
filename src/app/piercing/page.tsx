@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
+  BadgeCheckIcon,
   CalendarDaysIcon,
   CircleDotIcon,
   GemIcon,
@@ -14,7 +16,12 @@ import { PiercingEarMap } from "@/components/piercing-ear-map";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { piercingAftercare, piercingPrices } from "@/lib/piercing";
+import {
+  noraPiercingHighlights,
+  piercingAftercare,
+  piercingGallery,
+  piercingPrices,
+} from "@/lib/piercing";
 
 export const metadata: Metadata = {
   title: "Piercing Lørenskog | Infinity Tattoo Studio",
@@ -101,6 +108,78 @@ export default function PiercingPage() {
 
       <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 lg:pb-24">
         <PiercingEarMap />
+      </section>
+
+      <section className="mx-auto grid max-w-6xl gap-8 px-5 pb-16 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:pb-24">
+        <div className="flex flex-col gap-6">
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <GemIcon className="size-5" />
+          </div>
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+              SUPREME.GEMZ
+            </p>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
+              Nora, 25
+            </h2>
+            <p className="mt-2 text-lg font-semibold text-[color:var(--studio-red)]">
+              Piercing / Tooth gems
+            </p>
+          </div>
+          <p className="text-base leading-7 text-muted-foreground">
+            <LocalizedText
+              en="Nora works with piercing placement, jewelry styling and tooth gems at Infinity Tattoo Studio. She helps you choose jewelry that fits your anatomy, personal style, budget and any allergies."
+              no="Nora jobber med piercing, smykkestyling og tooth gems hos Infinity Tattoo Studio. Hun hjelper deg å velge smykker som passer anatomien din, stilen din, budsjettet ditt og eventuelle allergier."
+            />
+          </p>
+          <p className="text-base leading-7 text-muted-foreground">
+            <LocalizedText
+              en="All piercing jewelry sold in studio is allergy friendly, with options in titanium, stainless steel and 18-24k gold plating. From placement to healing and aftercare, the focus is safe work, clear communication and comfort."
+              no="Alle piercing-smykker som selges i studio er allergivennlige, med valg i titanium, kirurgisk stål og 18-24k gullbelagt. Fra plassering til healing og etterbehandling er fokuset trygt arbeid, tydelig kommunikasjon og komfort."
+            />
+          </p>
+
+          <div className="grid gap-2 sm:grid-cols-2">
+            {noraPiercingHighlights.map((item, index) => (
+              <div
+                className="flex items-start gap-2 rounded-lg border border-border/70 bg-card/45 p-3 text-sm text-foreground"
+                key={item.titleEn}
+              >
+                {index < 2 ? (
+                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                ) : (
+                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                )}
+                <LocalizedText en={item.titleEn} no={item.titleNo} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {piercingGallery.map((image, index) => (
+            <div
+              className={[
+                "motion-lift relative overflow-hidden rounded-lg border border-border/70 bg-card/40",
+                index === 0 ? "col-span-2 aspect-[1.25]" : "aspect-[0.95]",
+              ].join(" ")}
+              key={image.src}
+            >
+              <Image
+                alt={image.alt}
+                className="object-cover"
+                fill
+                loading="eager"
+                sizes={
+                  index === 0
+                    ? "(min-width: 1024px) 620px, 90vw"
+                    : "(min-width: 1024px) 300px, 45vw"
+                }
+                src={image.src}
+              />
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="border-y bg-card/30">

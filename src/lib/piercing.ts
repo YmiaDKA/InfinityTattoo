@@ -126,3 +126,41 @@ export const piercingAftercare = [
       "Vær forsiktig med svømmehall, ferskvann og sjø de første 24 timene.",
   },
 ];
+
+export const piercingGallery = [
+  {
+    src: "/media/piercing/gallery/supreme-gemz-navel-piercing.webp",
+    alt: "Navel piercing jewelry by Supreme.Gemz at Infinity Tattoo Studio",
+  },
+  {
+    src: "/media/piercing/gallery/supreme-gemz-nostril-piercing.webp",
+    alt: "Nostril piercing with crystal jewelry by Supreme.Gemz",
+  },
+  {
+    src: "/media/piercing/gallery/supreme-gemz-cheek-piercing.webp",
+    alt: "Facial piercing jewelry styling by Supreme.Gemz",
+  },
+];
+
+export const noraPiercingHighlights = [
+  {
+    titleEn: "10+ years piercing experience",
+    titleNo: "10+ års erfaring med piercing",
+  },
+  {
+    titleEn: "Jewelry styling for your anatomy and style",
+    titleNo: "Smykkestyling tilpasset anatomi og stil",
+  },
+  {
+    titleEn: "Titanium, stainless steel and gold plated options",
+    titleNo: "Titanium, kirurgisk stål og gullbelagte valg",
+  },
+  {
+    titleEn: "Allergy friendly jewelry available in studio",
+    titleNo: "Allergivennlige smykker tilgjengelig i studio",
+  },
+  {
+    titleEn: "Clear placement, healing and aftercare guidance",
+    titleNo: "Tydelig veiledning om plassering, healing og etterbehandling",
+  },
+];
