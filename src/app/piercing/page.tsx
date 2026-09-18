@@ -77,7 +77,7 @@ export default function PiercingPage() {
                 <LocalizedText en="Piercing prices" no="Piercing priser" />
               </p>
               <p className="mt-3 font-display text-4xl font-bold text-foreground sm:text-5xl">
-                <LocalizedText en="Clear before you book" no="Tydelig før du booker" />
+                <LocalizedText en="Prices & placements" no="Priser og plasseringer" />
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
