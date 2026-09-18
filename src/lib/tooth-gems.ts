@@ -112,3 +112,61 @@ export const toothGemSizes = [
     textNo: "Den største viste størrelsen, best når du vil ha et tydelig uttrykk.",
   },
 ];
+
+export const supremeGemzGallery = [
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-portrait-smile.webp",
+    alt: "Tooth gems by Supreme.Gemz with crystal smile design",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-cherry.webp",
+    alt: "Cherry tooth gem design by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-cross-design.webp",
+    alt: "Cross tooth gem design by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-rainbow-gems.webp",
+    alt: "Rainbow tooth gems by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-paw-design.webp",
+    alt: "Custom paw tooth gem design by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-lip-piercing.webp",
+    alt: "Piercing jewelry styling by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-star-design.webp",
+    alt: "Star tooth gem design by Supreme.Gemz",
+  },
+  {
+    src: "/media/tooth-gems/gallery/supreme-gemz-gold-design.webp",
+    alt: "Gold tooth gem design by Supreme.Gemz",
+  },
+];
+
+export const noraHighlights = [
+  {
+    titleEn: "Certified tooth gem artist",
+    titleNo: "Sertifisert tooth gem artist",
+  },
+  {
+    titleEn: "10+ years piercing experience",
+    titleNo: "10+ års erfaring med piercing",
+  },
+  {
+    titleEn: "Swarovski crystals and 18k gold options",
+    titleNo: "Swarovski krystaller og 18k gullvalg",
+  },
+  {
+    titleEn: "Allergy friendly jewelry options",
+    titleNo: "Allergivennlige smykkevalg",
+  },
+  {
+    titleEn: "Clear aftercare and healing guidance",
+    titleNo: "Tydelig veiledning for etterbehandling og healing",
+  },
+];
