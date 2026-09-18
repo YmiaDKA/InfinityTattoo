@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { GemIcon } from "lucide-react";
 
@@ -16,9 +17,6 @@ type PiercingSpot = {
   textNo: string;
   x: number;
   y: number;
-  labelX: number;
-  labelY: number;
-  align: "left" | "right";
 };
 
 const spots: PiercingSpot[] = [
@@ -30,11 +28,8 @@ const spots: PiercingSpot[] = [
     priceNo: "800,-",
     textEn: "Inner upper cartilage placement.",
     textNo: "Indre øvre bruskplassering.",
-    x: 42,
-    y: 26,
-    labelX: 7,
-    labelY: 18,
-    align: "left",
+    x: 43,
+    y: 29,
   },
   {
     id: "flat",
@@ -44,11 +39,8 @@ const spots: PiercingSpot[] = [
     priceNo: "700,-",
     textEn: "Upper flat cartilage placement.",
     textNo: "Øvre flat bruskplassering.",
-    x: 56,
-    y: 20,
-    labelX: 92,
-    labelY: 14,
-    align: "right",
+    x: 61,
+    y: 15,
   },
   {
     id: "helix",
@@ -58,11 +50,8 @@ const spots: PiercingSpot[] = [
     priceNo: "700,-",
     textEn: "Classic upper ear cartilage.",
     textNo: "Klassisk piercing øverst i øret.",
-    x: 72,
-    y: 30,
-    labelX: 93,
-    labelY: 27,
-    align: "right",
+    x: 73,
+    y: 21,
   },
   {
     id: "industrial",
@@ -72,11 +61,8 @@ const spots: PiercingSpot[] = [
     priceNo: "800,-",
     textEn: "Structured bar placement.",
     textNo: "Strukturert stavplassering.",
-    x: 61,
+    x: 67,
     y: 34,
-    labelX: 94,
-    labelY: 39,
-    align: "right",
   },
   {
     id: "forward-helix",
@@ -86,11 +72,8 @@ const spots: PiercingSpot[] = [
     priceNo: "700,-",
     textEn: "Forward upper cartilage placement.",
     textNo: "Fremre øvre bruskplassering.",
-    x: 37,
-    y: 35,
-    labelX: 6,
-    labelY: 34,
-    align: "left",
+    x: 32,
+    y: 29,
   },
   {
     id: "daith",
@@ -100,11 +83,8 @@ const spots: PiercingSpot[] = [
     priceNo: "800,-",
     textEn: "Inner fold placement.",
     textNo: "Plassering i indre fold.",
-    x: 38,
-    y: 50,
-    labelX: 7,
-    labelY: 49,
-    align: "left",
+    x: 41,
+    y: 44,
   },
   {
     id: "snug",
@@ -114,11 +94,19 @@ const spots: PiercingSpot[] = [
     priceNo: "Spør først",
     textEn: "Anatomy-dependent placement. Ask in studio first.",
     textNo: "Anatomi-avhengig plassering. Spør i studio først.",
-    x: 62,
-    y: 49,
-    labelX: 92,
-    labelY: 50,
-    align: "right",
+    x: 68,
+    y: 47,
+  },
+  {
+    id: "mid-helix",
+    titleEn: "Mid helix",
+    titleNo: "Mid helix",
+    priceEn: "700,-",
+    priceNo: "700,-",
+    textEn: "Middle ear cartilage placement.",
+    textNo: "Midtre bruskplassering i øret.",
+    x: 67,
+    y: 43,
   },
   {
     id: "conch",
@@ -128,11 +116,8 @@ const spots: PiercingSpot[] = [
     priceNo: "700,-",
     textEn: "Central cartilage placement.",
     textNo: "Sentral bruskplassering.",
-    x: 62,
-    y: 59,
-    labelX: 92,
-    labelY: 61,
-    align: "right",
+    x: 70,
+    y: 52,
   },
   {
     id: "tragus",
@@ -142,11 +127,8 @@ const spots: PiercingSpot[] = [
     priceNo: "700,-",
     textEn: "Small front cartilage placement.",
     textNo: "Liten frontplassering i brusk.",
-    x: 32,
-    y: 63,
-    labelX: 7,
-    labelY: 65,
-    align: "left",
+    x: 31,
+    y: 55,
   },
   {
     id: "antitragus",
@@ -156,11 +138,19 @@ const spots: PiercingSpot[] = [
     priceNo: "Spør først",
     textEn: "Small lower cartilage placement. Anatomy is checked first.",
     textNo: "Liten nedre bruskplassering. Anatomi sjekkes først.",
-    x: 62,
-    y: 72,
-    labelX: 94,
-    labelY: 74,
-    align: "right",
+    x: 53,
+    y: 63,
+  },
+  {
+    id: "upper-lobe",
+    titleEn: "Upper lobe",
+    titleNo: "Upper lobe",
+    priceEn: "500,-",
+    priceNo: "500,-",
+    textEn: "Upper lobe placement.",
+    textNo: "Øvre lobe-plassering.",
+    x: 61,
+    y: 71,
   },
   {
     id: "stacked-lobe",
@@ -170,11 +160,8 @@ const spots: PiercingSpot[] = [
     priceNo: "500,-",
     textEn: "Layered lobe placement.",
     textNo: "Flere lobe-plasseringer i lag.",
-    x: 49,
-    y: 80,
-    labelX: 7,
-    labelY: 83,
-    align: "left",
+    x: 48,
+    y: 73,
   },
   {
     id: "lobe",
@@ -184,11 +171,8 @@ const spots: PiercingSpot[] = [
     priceNo: "500,-",
     textEn: "Clean lower ear placement.",
     textNo: "Ren plassering i øreflipp.",
-    x: 54,
-    y: 90,
-    labelX: 18,
-    labelY: 95,
-    align: "left",
+    x: 44,
+    y: 88,
   },
 ];
 
@@ -202,125 +186,17 @@ export function PiercingEarMap() {
   return (
     <div className="motion-reveal rounded-lg border bg-card/70 p-5 sm:p-6">
       <div className="grid gap-8 lg:grid-cols-[1.08fr_0.82fr] lg:items-center">
-        <div className="relative mx-auto aspect-[0.78] w-full max-w-[31rem] rounded-lg border border-border/70 bg-[radial-gradient(circle_at_50%_22%,rgba(255,255,255,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0))] p-3 shadow-2xl shadow-black/20">
-          <svg
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full text-foreground/55"
-            viewBox="0 0 100 135"
-          >
-            <defs>
-              <linearGradient id="earSkin" x1="30" x2="78" y1="6" y2="120">
-                <stop offset="0%" stopColor="#d69a76" />
-                <stop offset="45%" stopColor="#a76548" />
-                <stop offset="100%" stopColor="#6b382b" />
-              </linearGradient>
-              <linearGradient id="earInner" x1="38" x2="72" y1="26" y2="92">
-                <stop offset="0%" stopColor="#f0b38c" />
-                <stop offset="100%" stopColor="#7a3d30" />
-              </linearGradient>
-              <linearGradient id="metal" x1="0" x2="1">
-                <stop offset="0%" stopColor="#7d7d7d" />
-                <stop offset="45%" stopColor="#ffffff" />
-                <stop offset="100%" stopColor="#5b5b5b" />
-              </linearGradient>
-              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" floodOpacity="0.35" stdDeviation="3" />
-              </filter>
-            </defs>
+        <div className="relative mx-auto aspect-square w-full max-w-[35rem] overflow-hidden rounded-lg border border-border/70 bg-black shadow-2xl shadow-black/30">
+          <Image
+            alt="Ear piercing placement map showing helix, rook, daith, tragus, conch, lobe and other placements"
+            className="h-full w-full object-cover"
+            height={1254}
+            priority
+            src="/media/piercing/ear-piercing-map.png"
+            width={1254}
+          />
 
-            <path
-              d="M46 7C27 10 17 31 17 58c0 17-6 23-6 39 0 18 12 31 29 32 20 1 35-10 43-31 8-22 8-53 1-70C78 13 64 4 46 7Z"
-              fill="url(#earSkin)"
-              filter="url(#softShadow)"
-              stroke="rgba(255,255,255,0.18)"
-              strokeWidth="1.1"
-            />
-            <path
-              d="M51 18c-14 3-23 18-23 38 0 16-5 20-5 34 0 14 8 23 20 24 15 1 27-8 33-25 6-18 6-43 1-56-5-12-14-18-26-15Z"
-              fill="none"
-              stroke="rgba(20,20,20,0.42)"
-              strokeLinecap="round"
-              strokeWidth="5.5"
-            />
-            <path
-              d="M44 30c-10 8-7 20 4 22 8 2 14-7 9-16-2-4-7-8-13-6Z"
-              fill="url(#earInner)"
-              opacity="0.92"
-            />
-            <path
-              d="M42 48c-9 5-13 15-9 24 4 8 15 8 22 1 7-8 11-18 24-14"
-              fill="none"
-              stroke="rgba(34,19,16,0.48)"
-              strokeLinecap="round"
-              strokeWidth="5"
-            />
-            <path
-              d="M31 62c8 5 17 3 22-4 5-6 5-14-1-20"
-              fill="none"
-              stroke="rgba(255,218,190,0.32)"
-              strokeLinecap="round"
-              strokeWidth="4"
-            />
-            <path
-              d="M34 76c9 2 18 0 24-5"
-              fill="none"
-              stroke="rgba(255,226,205,0.26)"
-              strokeLinecap="round"
-              strokeWidth="3"
-            />
-
-            <path
-              d="M30 25 L77 38"
-              stroke="url(#metal)"
-              strokeLinecap="round"
-              strokeWidth="2.3"
-            />
-            <circle cx="28.5" cy="24.5" fill="url(#metal)" r="3.3" />
-            <circle cx="79" cy="38.5" fill="url(#metal)" r="3.3" />
-            <path
-              d="M68 27c8 2 10 4 11 10"
-              fill="none"
-              stroke="url(#metal)"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-            />
-            <path
-              d="M34 48c-8 7-8 15-1 21"
-              fill="none"
-              stroke="url(#metal)"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-            />
-            <path
-              d="M58 55c9 1 14 1 19-2"
-              fill="none"
-              stroke="url(#metal)"
-              strokeLinecap="round"
-              strokeWidth="2.3"
-            />
-            <path
-              d="M51 88c1 8 1 15-1 22"
-              fill="none"
-              stroke="url(#metal)"
-              strokeLinecap="round"
-              strokeWidth="2.7"
-            />
-
-            {spots.map((spot) => (
-              <path
-                className="hidden sm:block"
-                d={`M ${spot.labelX} ${spot.labelY} Q ${(spot.labelX + spot.x) / 2} ${
-                  spot.y + (spot.align === "left" ? -5 : 5)
-                } ${spot.x} ${spot.y}`}
-                fill="none"
-                key={`${spot.id}-line`}
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth={spot.id === activeId ? 0.8 : 0.45}
-                opacity={spot.id === activeId ? 0.9 : 0.32}
-              />
-            ))}
-          </svg>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_62%,rgba(0,0,0,0.28))]" />
 
           {spots.map((spot) => {
             const isActive = spot.id === activeSpot.id;
@@ -329,10 +205,10 @@ export function PiercingEarMap() {
               <button
                 aria-pressed={isActive}
                 className={cn(
-                  "absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border bg-background/90 text-foreground shadow-lg shadow-black/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-8",
+                  "absolute z-10 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border bg-background/85 text-foreground shadow-lg shadow-black/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-8",
                   isActive
-                    ? "scale-110 border-[color:var(--studio-red)] text-[color:var(--studio-red)]"
-                    : "border-foreground/25 hover:scale-110 hover:border-foreground/60",
+                    ? "scale-110 border-[color:var(--studio-red)] bg-background text-[color:var(--studio-red)]"
+                    : "border-white/35 opacity-0 hover:scale-110 hover:border-white/70 hover:opacity-100 focus-visible:opacity-100",
                 )}
                 key={spot.id}
                 onClick={() => setActiveId(spot.id)}
@@ -345,30 +221,6 @@ export function PiercingEarMap() {
                 <span className="sr-only">
                   {spot.titleEn} {spot.priceEn}
                 </span>
-              </button>
-            );
-          })}
-
-          {spots.map((spot) => {
-            const isActive = spot.id === activeSpot.id;
-
-            return (
-              <button
-                className={cn(
-                  "absolute z-10 hidden max-w-[7.8rem] -translate-y-1/2 text-balance rounded-full border px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-[0.1em] transition sm:block sm:text-[0.68rem]",
-                  spot.align === "right" && "-translate-x-full text-right",
-                  isActive
-                    ? "border-[color:var(--studio-red)] bg-background text-foreground shadow-lg shadow-black/20"
-                    : "border-transparent bg-background/55 text-muted-foreground hover:bg-background/80 hover:text-foreground",
-                )}
-                key={`${spot.id}-label`}
-                onClick={() => setActiveId(spot.id)}
-                onFocus={() => setActiveId(spot.id)}
-                onMouseEnter={() => setActiveId(spot.id)}
-                style={{ left: `${spot.labelX}%`, top: `${spot.labelY}%` }}
-                type="button"
-              >
-                <LocalizedText en={spot.titleEn} no={spot.titleNo} />
               </button>
             );
           })}
