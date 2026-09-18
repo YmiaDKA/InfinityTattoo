@@ -30,9 +30,9 @@ export const galleryImages = [
     alt: "Hercules black and grey tattoo",
   },
   {
-    src: "/media/gallery/infinity/infinity-17.webp",
+    src: "/media/gallery/infinity/infinity-21.webp",
     tag: "#05",
-    alt: "Large black and grey clown realism tattoo",
+    alt: "Large black and grey clown leg sleeve tattoo",
   },
   {
     src: "/media/gallery/infinity/infinity-18.webp",
@@ -50,54 +50,42 @@ export const galleryImages = [
     alt: "Black and grey warrior realism sleeve tattoo",
   },
   {
-    src: "/media/gallery/infinity/infinity-21.webp",
-    tag: "#09",
-    alt: "Full black and grey dragon and tiger sleeve tattoo",
-  },
-  {
     src: "/media/gallery/infinity/infinity-22.webp",
-    tag: "#10",
+    tag: "#09",
     alt: "Fine line text tattoo with crack detail",
   },
   {
     src: "/media/gallery/infinity/infinity-23.webp",
-    tag: "#11",
+    tag: "#10",
     alt: "Black and grey dice cards and rose tattoo",
   },
   {
     src: "/media/gallery/infinity/infinity-24.webp",
-    tag: "#12",
+    tag: "#11",
     alt: "Black and grey tattoo detail from Infinity Tattoo",
   },
   {
     src: "/media/gallery/infinity/infinity-25.webp",
-    tag: "#13",
+    tag: "#12",
     alt: "Custom black and grey tattoo from Infinity Tattoo",
   },
   {
     src: "/media/gallery/infinity/infinity-26.webp",
-    tag: "#14",
+    tag: "#13",
     alt: "Large scale black and grey tattoo composition",
   },
   {
     src: "/media/gallery/infinity/infinity-27.webp",
-    tag: "#15",
+    tag: "#14",
     alt: "Black and grey realism tattoo close-up",
   },
   {
     src: "/media/gallery/infinity/infinity-28.webp",
-    tag: "#16",
+    tag: "#15",
     alt: "Custom tattoo design artwork by Infinity Tattoo",
   },
 ];
 
-export const featuredGalleryImages = [
-  galleryImages[0],
-  galleryImages[1],
-  galleryImages[4],
-  galleryImages[2],
-  galleryImages[3],
-  galleryImages[5],
-];
+export const featuredGalleryImages = galleryImages.slice(0, 6);
 
 export const testimonials: Testimonial[] = reviews;
