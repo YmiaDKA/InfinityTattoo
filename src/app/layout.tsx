@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
-import { GoogleAdsTag } from "@/components/google-ads-tag";
+import Script from "next/script";
+import { GoogleAdsConversionTracker } from "@/components/google-ads-conversion-tracker";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -92,8 +93,21 @@ export default function RootLayout({
       lang="no"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark h-full scroll-smooth antialiased`}
     >
+      <Script
+        id="google-ads-src"
+        src="https://www.googletagmanager.com/gtag/js?id=AW-18110021666"
+        strategy="beforeInteractive"
+      />
+      <Script id="google-ads-tag" strategy="beforeInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-18110021666');
+        `}
+      </Script>
       <body className="flex min-h-full flex-col">
-        <GoogleAdsTag />
+        <GoogleAdsConversionTracker />
         {children}
       </body>
     </html>
