@@ -5,6 +5,7 @@ import {
   ContrastIcon,
   ClipboardListIcon,
   BadgeCheckIcon,
+  GemIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -216,6 +217,45 @@ const serviceAreas = [
       "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
     textNo:
       "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
+  },
+];
+
+const mobileServiceLinks = [
+  {
+    icon: PenLineIcon,
+    labelEn: "Tattoo work",
+    labelNo: "Tatovering",
+    href: "#work",
+  },
+  {
+    icon: GemIcon,
+    labelEn: "Piercing",
+    labelNo: "Piercing",
+    href: "/piercing",
+  },
+  {
+    icon: SparklesIcon,
+    labelEn: "Tooth gems",
+    labelNo: "Tooth gems",
+    href: "/tooth-gems",
+  },
+  {
+    icon: StarIcon,
+    labelEn: "Reviews",
+    labelNo: "Anmeldelser",
+    href: "#reviews",
+  },
+  {
+    icon: MapPinIcon,
+    labelEn: "Contact",
+    labelNo: "Kontakt",
+    href: "#contact",
+  },
+  {
+    icon: CalendarDaysIcon,
+    labelEn: "Book",
+    labelNo: "Book",
+    href: "#booking",
   },
 ];
 
@@ -688,6 +728,25 @@ export default function Home() {
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
+          <nav
+            aria-label="Quick service navigation"
+            className="motion-rise motion-delay-4 grid grid-cols-2 gap-2 md:hidden"
+          >
+            {mobileServiceLinks.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <Link
+                  className="motion-lift-subtle flex min-h-12 items-center gap-2 rounded-lg border border-border/70 bg-background/70 px-3 text-sm font-medium text-foreground shadow-xl shadow-black/10 backdrop-blur transition hover:border-foreground/40"
+                  href={item.href}
+                  key={item.href}
+                >
+                  <Icon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <LocalizedText en={item.labelEn} no={item.labelNo} />
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </section>
 
