@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
+import { ToothGemSizeGuide } from "@/components/tooth-gem-size-guide";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toothGemDesigns, toothGemPrices } from "@/lib/tooth-gems";
@@ -78,6 +79,8 @@ export default function ToothGemsPage() {
           ))}
         </div>
       </section>
+
+      <ToothGemSizeGuide />
 
       <section className="border-y bg-card/30">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-16 sm:px-8 lg:py-24">
