@@ -43,10 +43,9 @@ export function ToothGemSizeGuide() {
                   <stop offset="72%" stopColor="#5e5e5e" />
                   <stop offset="100%" stopColor="#121212" />
                 </radialGradient>
-                <linearGradient id="gemFacetLight" x1="-1" x2="1" y1="-1" y2="1">
-                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0.12" />
-                </linearGradient>
+                <clipPath id="gemClip">
+                  <circle r={gemRadius} />
+                </clipPath>
               </defs>
               <path
                 d="M210 22C127 22 83 98 58 224 35 337 31 457 91 504c49 39 190 42 239 1 61-51 56-170 31-282C333 97 292 22 210 22Z"
@@ -76,72 +75,51 @@ export function ToothGemSizeGuide() {
               />
               <g transform="translate(126 375)">
                 <circle
-                  fill="rgba(0,0,0,0.18)"
-                  r={gemRadius + 6}
-                  transform="translate(2 4)"
+                  fill="rgba(0,0,0,0.22)"
+                  r={gemRadius + 3}
+                  transform="translate(1.5 3)"
                 />
                 <circle
-                  fill="rgba(255,255,255,0.26)"
-                  r={gemRadius + 3.4}
+                  fill="rgba(255,255,255,0.4)"
+                  r={gemRadius + 1.5}
                 />
-                <path
-                  d={`M 0 ${-gemRadius} L ${gemRadius * 0.56} ${-gemRadius * 0.56} L ${gemRadius} 0 L ${gemRadius * 0.56} ${gemRadius * 0.56} L 0 ${gemRadius} L ${-gemRadius * 0.56} ${gemRadius * 0.56} L ${-gemRadius} 0 L ${-gemRadius * 0.56} ${-gemRadius * 0.56} Z`}
-                  fill="url(#gemShine)"
-                />
-                <path
-                  d={`M 0 ${-gemRadius} L ${gemRadius * 0.46} ${-gemRadius * 0.46} L 0 0 L ${-gemRadius * 0.46} ${-gemRadius * 0.46} Z`}
-                  fill="url(#gemFacetLight)"
-                  opacity="0.82"
-                />
-                <path
-                  d={`M ${gemRadius * 0.46} ${-gemRadius * 0.46} L ${gemRadius} 0 L 0 0 Z`}
-                  fill="rgba(255,255,255,0.42)"
-                />
-                <path
-                  d={`M ${gemRadius} 0 L ${gemRadius * 0.46} ${gemRadius * 0.46} L 0 0 Z`}
-                  fill="rgba(30,30,30,0.42)"
-                />
-                <path
-                  d={`M ${gemRadius * 0.46} ${gemRadius * 0.46} L 0 ${gemRadius} L 0 0 Z`}
-                  fill="rgba(255,255,255,0.22)"
-                />
-                <path
-                  d={`M 0 ${gemRadius} L ${-gemRadius * 0.46} ${gemRadius * 0.46} L 0 0 Z`}
-                  fill="rgba(20,20,20,0.48)"
-                />
-                <path
-                  d={`M ${-gemRadius * 0.46} ${gemRadius * 0.46} L ${-gemRadius} 0 L 0 0 Z`}
-                  fill="rgba(255,255,255,0.18)"
-                />
-                <path
-                  d={`M ${-gemRadius} 0 L ${-gemRadius * 0.46} ${-gemRadius * 0.46} L 0 0 Z`}
-                  fill="rgba(15,15,15,0.44)"
-                />
-                <path
-                  d={`M 0 ${-gemRadius} L ${gemRadius * 0.56} ${-gemRadius * 0.56} L ${gemRadius} 0 L ${gemRadius * 0.56} ${gemRadius * 0.56} L 0 ${gemRadius} L ${-gemRadius * 0.56} ${gemRadius * 0.56} L ${-gemRadius} 0 L ${-gemRadius * 0.56} ${-gemRadius * 0.56} Z`}
+                <g clipPath="url(#gemClip)">
+                  <circle fill="url(#gemShine)" r={gemRadius} />
+                  {Array.from({ length: 10 }).map((_, index) => {
+                    const angle = (Math.PI * 2 * index) / 10 - Math.PI / 2;
+                    const nextAngle = (Math.PI * 2 * (index + 1)) / 10 - Math.PI / 2;
+                    const x1 = Math.cos(angle) * gemRadius;
+                    const y1 = Math.sin(angle) * gemRadius;
+                    const x2 = Math.cos(nextAngle) * gemRadius;
+                    const y2 = Math.sin(nextAngle) * gemRadius;
+                    return (
+                      <path
+                        d={`M 0 0 L ${x1} ${y1} L ${x2} ${y2} Z`}
+                        fill={index % 2 === 0 ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.24)"}
+                        key={index}
+                        opacity={index < 4 ? 0.9 : 0.72}
+                      />
+                    );
+                  })}
+                  <circle
+                    fill="rgba(255,255,255,0.3)"
+                    r={gemRadius * 0.46}
+                    transform={`translate(${-gemRadius * 0.16} ${-gemRadius * 0.16})`}
+                  />
+                  <path
+                    d={`M ${-gemRadius * 0.9} ${-gemRadius * 0.1} Q 0 ${-gemRadius * 0.54} ${gemRadius * 0.9} ${-gemRadius * 0.1}`}
+                    fill="none"
+                    opacity="0.64"
+                    stroke="rgba(255,255,255,0.9)"
+                    strokeLinecap="round"
+                    strokeWidth="1.2"
+                  />
+                </g>
+                <circle
                   fill="none"
-                  stroke="rgba(255,255,255,0.88)"
-                  strokeWidth="1.6"
-                />
-                <path
-                  d={`M ${-gemRadius * 0.92} 0 H ${gemRadius * 0.92} M 0 ${-gemRadius * 0.92} V ${gemRadius * 0.92} M ${-gemRadius * 0.65} ${-gemRadius * 0.65} L ${gemRadius * 0.65} ${gemRadius * 0.65} M ${gemRadius * 0.65} ${-gemRadius * 0.65} L ${-gemRadius * 0.65} ${gemRadius * 0.65}`}
-                  opacity="0.55"
-                  stroke="rgba(0,0,0,0.72)"
-                  strokeLinecap="round"
+                  r={gemRadius}
+                  stroke="rgba(255,255,255,0.82)"
                   strokeWidth="1.2"
-                />
-                <circle
-                  fill="none"
-                  opacity="0.4"
-                  r={gemRadius * 0.62}
-                  stroke="rgba(255,255,255,0.9)"
-                  strokeWidth="1"
-                />
-                <circle
-                  cx={-gemRadius * 0.36}
-                  cy={-gemRadius * 0.42}
-                  fill="white"
-                  r={Math.max(2.2, gemRadius * 0.2)}
                 />
                 <path
                   d={`M ${gemRadius * 0.56} ${-gemRadius * 1.65} L ${gemRadius * 0.56} ${-gemRadius * 0.8} M ${gemRadius * 0.14} ${-gemRadius * 1.23} L ${gemRadius} ${-gemRadius * 1.23}`}
