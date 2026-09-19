@@ -21,6 +21,8 @@ import {
   toothGemPrices,
 } from "@/lib/tooth-gems";
 
+const supremeGemzBookingUrl = "https://booking.linework.com/supreme-gemz";
+
 export const metadata = {
   title: "Tooth gems og tannsmykker | Infinity Tattoo Lørenskog",
   description:
@@ -33,7 +35,7 @@ export const metadata = {
 export default function ToothGemsPage() {
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader bookingExternal bookingHref={supremeGemzBookingUrl} />
 
       <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:pb-24">
         <div className="motion-rise flex flex-col gap-6">
@@ -55,7 +57,7 @@ export default function ToothGemsPage() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<Link href="/#booking" />}
+              render={<a href={supremeGemzBookingUrl} rel="noreferrer" target="_blank" />}
               size="lg"
             >
               <LocalizedText en="Book tooth gems" no="Book tooth gems" />

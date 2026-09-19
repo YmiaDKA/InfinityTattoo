@@ -73,8 +73,8 @@ export const piercingPrices = [
     titleEn: "Tongue",
     titleNo: "Tunge",
     price: "800,-",
-    textEn: "Tongue piercing with aftercare guidance.",
-    textNo: "Tungepiercing med etterbehandlingsveiledning.",
+    textEn: "Tongue piercing with clear placement guidance.",
+    textNo: "Tungepiercing med tydelig veiledning på plassering.",
   },
   {
     titleEn: "Navel",
@@ -89,41 +89,6 @@ export const piercingPrices = [
     price: "800,- / 1500,-",
     textEn: "800,- each or 1500,- for both.",
     textNo: "800,- per stykk eller 1500,- for begge.",
-  },
-];
-
-export const piercingAftercare = [
-  {
-    titleEn: "First hours",
-    titleNo: "Første timer",
-    textEn:
-      "Avoid food, snus, cigarettes and lip products for the first few hours after treatment.",
-    textNo:
-      "Unngå mat, snus, sigaretter og leppeprodukter de første timene etter behandling.",
-  },
-  {
-    titleEn: "Do not touch",
-    titleNo: "Ikke ta på",
-    textEn:
-      "Do not touch the piercing during the first hour, and avoid touching or twisting the jewelry while it heals.",
-    textNo:
-      "Ikke ta på piercingen den første timen, og unngå å ta på eller vri smykket mens det gror.",
-  },
-  {
-    titleEn: "Clean care",
-    titleNo: "Ren pleie",
-    textEn:
-      "Wait at least 24 hours before cleaning. Use electronic aftercare guidance and stay consistent.",
-    textNo:
-      "Vent minst 24 timer før du pusser/renser området. Følg elektronisk etterbehandlingsguide og vær konsekvent.",
-  },
-  {
-    titleEn: "Avoid water",
-    titleNo: "Unngå vann",
-    textEn:
-      "Avoid swimming pools, lakes and the ocean for the first 24 hours.",
-    textNo:
-      "Vær forsiktig med svømmehall, ferskvann og sjø de første 24 timene.",
   },
 ];
 
@@ -160,7 +125,7 @@ export const noraPiercingHighlights = [
     titleNo: "Allergivennlige smykker tilgjengelig i studio",
   },
   {
-    titleEn: "Clear placement, healing and aftercare guidance",
-    titleNo: "Tydelig veiledning om plassering, healing og etterbehandling",
+    titleEn: "Clear placement and healing guidance",
+    titleNo: "Tydelig veiledning om plassering og healing",
   },
 ];

@@ -18,10 +18,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   noraPiercingHighlights,
-  piercingAftercare,
   piercingGallery,
   piercingPrices,
 } from "@/lib/piercing";
+
+const supremeGemzBookingUrl = "https://booking.linework.com/supreme-gemz";
 
 export const metadata: Metadata = {
   title: "Piercing Lørenskog | Infinity Tattoo Studio",
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
 export default function PiercingPage() {
   return (
     <main className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader bookingExternal bookingHref={supremeGemzBookingUrl} />
 
       <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-end lg:pb-24">
         <div className="motion-rise flex flex-col gap-6">
@@ -48,8 +49,8 @@ export default function PiercingPage() {
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText
-                en="A separate piercing service at Infinity Tattoo Studio in Lørenskog. Clean placement, calm guidance, clear prices, and aftercare explained before you leave."
-                no="En egen piercing-service hos Infinity Tattoo Studio i Lørenskog. Ren plassering, rolig veiledning, tydelige priser og etterbehandling forklart før du går."
+                en="A separate piercing service at Infinity Tattoo Studio in Lørenskog. Clean placement, calm guidance, clear prices, and personal guidance from Nora at your appointment."
+                no="En egen piercing-service hos Infinity Tattoo Studio i Lørenskog. Ren plassering, rolig veiledning, tydelige priser og personlig veiledning fra Nora på timen."
               />
             </p>
           </div>
@@ -57,7 +58,7 @@ export default function PiercingPage() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<Link href="/#booking" />}
+              render={<a href={supremeGemzBookingUrl} rel="noreferrer" target="_blank" />}
               size="lg"
             >
               <LocalizedText en="Book piercing" no="Book piercing" />
@@ -134,8 +135,8 @@ export default function PiercingPage() {
           </p>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="All piercing jewelry sold in studio is allergy friendly, with options in titanium, stainless steel and 18-24k gold plating. From placement to healing and aftercare, the focus is safe work, clear communication and comfort."
-              no="Alle piercing-smykker som selges i studio er allergivennlige, med valg i titanium, kirurgisk stål og 18-24k gullbelagt. Fra plassering til healing og etterbehandling er fokuset trygt arbeid, tydelig kommunikasjon og komfort."
+              en="All piercing jewelry sold in studio is allergy friendly, with options in titanium, stainless steel and 18-24k gold plating. The focus is safe work, clear communication and comfort from placement to the finished service."
+              no="Alle piercing-smykker som selges i studio er allergivennlige, med valg i titanium, kirurgisk stål og 18-24k gullbelagt. Fokuset er trygt arbeid, tydelig kommunikasjon og komfort fra plassering til ferdig behandling."
             />
           </p>
 
@@ -219,53 +220,20 @@ export default function PiercingPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:py-24">
-        <div className="motion-reveal flex flex-col gap-4">
-          <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <ShieldCheckIcon className="size-5" />
-          </div>
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            <LocalizedText en="Aftercare" no="Etterbehandling" />
-          </h2>
-          <p className="text-base leading-7 text-muted-foreground">
-            <LocalizedText
-              en="Piercing healing depends on placement, hygiene and consistency. You get aftercare guidance at the appointment, and you can always contact the studio if something feels unclear."
-              no="Healing av piercing avhenger av plassering, hygiene og konsekvent pleie. Du får etterbehandlingsråd på timen, og du kan alltid kontakte studioet hvis noe er uklart."
-            />
-          </p>
-        </div>
-
-        <div className="motion-stagger grid gap-3 sm:grid-cols-2">
-          {piercingAftercare.map((item) => (
-            <div
-              className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-5"
-              key={item.titleEn}
-            >
-              <p className="font-display text-xl font-bold text-foreground">
-                <LocalizedText en={item.titleEn} no={item.titleNo} />
-              </p>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                <LocalizedText en={item.textEn} no={item.textNo} />
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 pb-20 text-center sm:px-8 lg:pb-28">
         <h2 className="font-display text-4xl font-bold sm:text-5xl">
           <LocalizedText en="Ready to plan it?" no="Klar for å planlegge?" />
         </h2>
         <p className="max-w-2xl text-base leading-7 text-muted-foreground">
           <LocalizedText
-            en="Use the same booking system as the tattoo studio. Write piercing in the message so the appointment is routed correctly."
-            no="Bruk samme bookingsystem som tatoveringsstudioet. Skriv piercing i meldingen, så blir timen riktig satt opp."
+            en="Book directly with SUPREME.GEMZ through Linework for piercing or jewelry styling."
+            no="Book direkte hos SUPREME.GEMZ via Linework for piercing eller smykkestyling."
           />
         </p>
         <Button
           className="motion-lift-subtle rounded-full"
           nativeButton={false}
-          render={<Link href="/#booking" />}
+          render={<a href={supremeGemzBookingUrl} rel="noreferrer" target="_blank" />}
           size="lg"
         >
           <LocalizedText en="Book appointment" no="Book time" />

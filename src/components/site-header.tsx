@@ -24,7 +24,15 @@ const expandedContentInset = 6;
 const expandedLogoOffset = 3;
 const mobileExpandedContentInset = 14;
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  bookingExternal?: boolean;
+  bookingHref?: string;
+};
+
+export function SiteHeader({
+  bookingExternal = false,
+  bookingHref = "/#booking",
+}: SiteHeaderProps = {}) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [pillBounds, setPillBounds] = useState<{
@@ -221,7 +229,13 @@ export function SiteHeader() {
           <Button
             className="h-9 gap-1.5 rounded-full pl-2.5 !pr-2.5 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
             nativeButton={false}
-            render={<Link href="/#booking" />}
+            render={
+              bookingExternal ? (
+                <a href={bookingHref} rel="noreferrer" target="_blank" />
+              ) : (
+                <Link href={bookingHref} />
+              )
+            }
             size="lg"
           >
             <span className="md:hidden">Book</span>
