@@ -50,19 +50,19 @@ type ArtistCard = {
 const tattooPricingCards = [
   {
     title: "Startpris",
-    price: "Fra 1 500 kr",
+    priceLines: ["Fra 1 500 kr"],
     text:
       "Gjelder svært små og enkle tatoveringer. Den nøyaktige prisen bekreftes før timen.",
   },
   {
     title: "Små tatoveringer",
-    price: "Vanligvis 3 000–4 000 kr",
+    priceLines: ["Vanligvis", "3 000–4 000 kr"],
     text:
       "Passer for mange mindre custom-design. Mer detaljert arbeid, krevende plasseringer og større design kan koste mer.",
   },
   {
     title: "Heldagstime",
-    price: "8 000 kr",
+    priceLines: ["8 000 kr"],
     text:
       "Passer best for større motiver, portretter, quarter sleeves, sleeve-prosjekter og tatoveringer som krever flere timer med konsentrert arbeid.",
     featured: true,
@@ -1086,14 +1086,18 @@ export default function Home() {
                       </span>
                     ) : null}
                   </div>
-                  <p
+                  <div
                     className={[
                       "font-display font-bold leading-none text-foreground",
                       item.featured ? "text-5xl" : "text-4xl",
                     ].join(" ")}
                   >
-                    {item.price}
-                  </p>
+                    {item.priceLines.map((line) => (
+                      <span className="block whitespace-nowrap" key={line}>
+                        {line}
+                      </span>
+                    ))}
+                  </div>
                   <p className="text-base leading-7 text-muted-foreground">
                     {item.text}
                   </p>
