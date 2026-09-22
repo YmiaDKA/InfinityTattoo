@@ -227,7 +227,7 @@ export function SiteHeader({
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
           <Button
-            className="h-9 gap-1.5 rounded-full pl-2.5 !pr-2.5 text-xs sm:h-10 sm:gap-2 sm:pl-5 sm:!pr-5 sm:text-sm md:h-11 md:gap-2.5 md:pl-7 md:!pr-7"
+            className="min-h-11 gap-2 rounded-full px-4 !py-2.5 text-sm sm:min-h-12 sm:px-6 sm:text-base md:px-8"
             nativeButton={false}
             render={
               bookingExternal ? (

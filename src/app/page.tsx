@@ -36,7 +36,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
-import { toothGemPrices } from "@/lib/tooth-gems";
 
 type ArtistCard = {
   icon?: LucideIcon;
@@ -47,6 +46,28 @@ type ArtistCard = {
   textNo: string;
   href?: string;
 };
+
+const tattooPricingCards = [
+  {
+    title: "Startpris",
+    price: "Fra 1 500 kr",
+    text:
+      "Gjelder svært små og enkle tatoveringer. Den nøyaktige prisen bekreftes før timen.",
+  },
+  {
+    title: "Små tatoveringer",
+    price: "Vanligvis 3 000–4 000 kr",
+    text:
+      "Passer for mange mindre custom-design. Mer detaljert arbeid, krevende plasseringer og større design kan koste mer.",
+  },
+  {
+    title: "Heldagstime",
+    price: "8 000 kr",
+    text:
+      "Passer best for større motiver, portretter, quarter sleeves, sleeve-prosjekter og tatoveringer som krever flere timer med konsentrert arbeid.",
+    featured: true,
+  },
+];
 
 const artistStyles: ArtistCard[] = [
   {
@@ -1019,42 +1040,105 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="tooth-gems" className="motion-reveal border-y bg-background">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 lg:flex-row lg:items-center lg:gap-10 lg:py-16">
-          <div className="flex items-center gap-4 lg:shrink-0">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <SparklesIcon className="size-5" />
-            </span>
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">
-              <LocalizedText en="Tooth gems" no="Tooth gems" />
-            </h2>
+      <section
+        id="tattoo-prices"
+        className="motion-reveal border-y border-border/70 bg-card/30"
+      >
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28">
+          <div className="flex flex-col gap-4">
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <BadgeCheckIcon className="size-5" />
+            </div>
+            <div className="flex max-w-3xl flex-col gap-4">
+              <h2 className="font-display text-4xl font-bold sm:text-5xl">
+                Tatoveringspriser
+              </h2>
+              <p className="text-lg leading-8 text-muted-foreground">
+                Tydelige priser før vi begynner. Den endelige prisen avhenger av
+                design, størrelse, plassering, detaljnivå og forventet
+                arbeidstid.
+              </p>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-1">
-            <div className="grid w-full gap-3 sm:min-w-0 sm:flex-1 sm:grid-cols-3">
-              {toothGemPrices.map((item) => (
-                <div
-                  className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-4"
-                  key={item.titleEn}
-                >
-                  <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </p>
-                  <p className="mt-2 font-display text-2xl font-bold text-foreground">
+          <div className="motion-stagger grid gap-4 lg:grid-cols-3 lg:items-stretch">
+            {tattooPricingCards.map((item) => (
+              <Card
+                className={[
+                  "motion-lift motion-reveal relative overflow-hidden bg-background/70",
+                  item.featured
+                    ? "border-[color:var(--studio-red)] shadow-2xl shadow-black/20"
+                    : "border-border/70",
+                ].join(" ")}
+                key={item.title}
+              >
+                {item.featured ? (
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--studio-red)] to-transparent" />
+                ) : null}
+                <CardContent className="flex h-full flex-col gap-5 p-6 sm:p-7 lg:min-h-72">
+                  <div className="flex items-start justify-between gap-4">
+                    <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
+                      {item.title}
+                    </p>
+                    {item.featured ? (
+                      <span className="rounded-full border border-[color:var(--studio-red)]/40 px-3 py-1 text-xs font-medium text-[color:var(--studio-red)]">
+                        Mest valgt
+                      </span>
+                    ) : null}
+                  </div>
+                  <p
+                    className={[
+                      "font-display font-bold leading-none text-foreground",
+                      item.featured ? "text-5xl" : "text-4xl",
+                    ].join(" ")}
+                  >
                     {item.price}
                   </p>
-                </div>
-              ))}
+                  <p className="text-base leading-7 text-muted-foreground">
+                    {item.text}
+                  </p>
+                  {item.featured ? (
+                    <div className="mt-auto rounded-lg border border-border/70 bg-card/45 p-4 text-sm leading-6 text-muted-foreground">
+                      Heldagsprisen er 8 000 kr for timer gjennomført til og med{" "}
+                      <strong className="font-semibold text-foreground">
+                        4. januar 2027
+                      </strong>
+                      . Fra{" "}
+                      <strong className="font-semibold text-foreground">
+                        5. januar 2027
+                      </strong>{" "}
+                      justeres heldagsprisen til{" "}
+                      <strong className="font-semibold text-foreground">
+                        9 000 kr
+                      </strong>
+                      .
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="grid gap-6 rounded-lg border border-border/70 bg-background/55 p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="flex flex-col gap-3 text-base leading-7 text-muted-foreground">
+              <p>
+                Forberedelser, tilpasning av design, plassering av stencil og
+                normale pauser er en del av en heldagstime.
+              </p>
+              <p>
+                Alle prosjekter er forskjellige. Book en gratis konsultasjon for
+                å gjennomgå idé, plassering, forventet tidsbruk og pris før du
+                bestemmer deg.
+              </p>
             </div>
             <Button
-              className="motion-lift-subtle shrink-0 self-center rounded-full sm:self-auto"
+              className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<Link href="/tooth-gems" />}
+              render={<a href="#booking" />}
               size="lg"
-              variant="outline"
             >
-              <LocalizedText en="Read more" no="Les mer" />
-              <MoveUpRightIcon data-icon="inline-end" />
+              Book gratis konsultasjon
+              <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
         </div>
