@@ -119,7 +119,7 @@ export function SiteHeader({
     <header
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
     >
-      <div className="absolute right-5 top-6 hidden md:block sm:right-8">
+      <div className="absolute right-5 top-6 z-20 hidden md:block sm:right-8">
         <LanguageToggle large />
       </div>
       <nav

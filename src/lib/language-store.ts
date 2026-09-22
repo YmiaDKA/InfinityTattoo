@@ -26,12 +26,23 @@ function readLanguage(): Language {
   return currentLanguage;
 }
 
+function syncDocumentLanguage(language: Language) {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  document.documentElement.lang = language === "NO" ? "no" : "en";
+}
+
 export function getLanguage() {
-  return readLanguage();
+  const language = readLanguage();
+  syncDocumentLanguage(language);
+  return language;
 }
 
 export function setLanguage(language: Language) {
   currentLanguage = language;
+  syncDocumentLanguage(language);
 
   try {
     window.localStorage.setItem(storageKey, language);

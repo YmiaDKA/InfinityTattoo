@@ -49,21 +49,33 @@ type ArtistCard = {
 
 const tattooPricingCards = [
   {
-    title: "Startpris",
-    priceLines: ["Fra 1 500 kr"],
-    text:
+    titleEn: "Starting price",
+    titleNo: "Startpris",
+    priceLinesEn: ["From 1,500 NOK"],
+    priceLinesNo: ["Fra 1 500 kr"],
+    textEn:
+      "Applies to very small and simple tattoos. The exact price is confirmed before the appointment.",
+    textNo:
       "Gjelder svært små og enkle tatoveringer. Den nøyaktige prisen bekreftes før timen.",
   },
   {
-    title: "Små tatoveringer",
-    priceLines: ["Vanligvis", "3 000–4 000 kr"],
-    text:
+    titleEn: "Small tattoos",
+    titleNo: "Små tatoveringer",
+    priceLinesEn: ["Usually", "3,000-4,000 NOK"],
+    priceLinesNo: ["Vanligvis", "3 000–4 000 kr"],
+    textEn:
+      "Fits many smaller custom designs. More detailed work, difficult placements and larger designs can cost more.",
+    textNo:
       "Passer for mange mindre custom-design. Mer detaljert arbeid, krevende plasseringer og større design kan koste mer.",
   },
   {
-    title: "Heldagstime",
-    priceLines: ["8 000 kr"],
-    text:
+    titleEn: "Full-day session",
+    titleNo: "Heldagstime",
+    priceLinesEn: ["8,000 NOK"],
+    priceLinesNo: ["8 000 kr"],
+    textEn:
+      "Best for larger pieces, portraits, quarter sleeves, sleeve projects and tattoos that require several hours of focused work.",
+    textNo:
       "Passer best for større motiver, portretter, quarter sleeves, sleeve-prosjekter og tatoveringer som krever flere timer med konsentrert arbeid.",
     featured: true,
   },
@@ -1051,12 +1063,13 @@ export default function Home() {
             </div>
             <div className="flex max-w-3xl flex-col gap-4">
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                Tatoveringspriser
+                <LocalizedText en="Tattoo prices" no="Tatoveringspriser" />
               </h2>
               <p className="text-lg leading-8 text-muted-foreground">
-                Tydelige priser før vi begynner. Den endelige prisen avhenger av
-                design, størrelse, plassering, detaljnivå og forventet
-                arbeidstid.
+                <LocalizedText
+                  en="Clear prices before we begin. The final price depends on design, size, placement, level of detail and expected working time."
+                  no="Tydelige priser før vi begynner. Den endelige prisen avhenger av design, størrelse, plassering, detaljnivå og forventet arbeidstid."
+                />
               </p>
             </div>
           </div>
@@ -1070,7 +1083,7 @@ export default function Home() {
                     ? "border-[color:var(--studio-red)] shadow-2xl shadow-black/20"
                     : "border-border/70",
                 ].join(" ")}
-                key={item.title}
+                key={item.titleEn}
               >
                 {item.featured ? (
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--studio-red)] to-transparent" />
@@ -1078,11 +1091,11 @@ export default function Home() {
                 <CardContent className="flex h-full flex-col gap-5 p-6 sm:p-7 lg:min-h-72">
                   <div className="flex items-start justify-between gap-4">
                     <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
-                      {item.title}
+                      <LocalizedText en={item.titleEn} no={item.titleNo} />
                     </p>
                     {item.featured ? (
                       <span className="rounded-full border border-[color:var(--studio-red)]/40 px-3 py-1 text-xs font-medium text-[color:var(--studio-red)]">
-                        Mest valgt
+                        <LocalizedText en="Most chosen" no="Mest valgt" />
                       </span>
                     ) : null}
                   </div>
@@ -1092,30 +1105,24 @@ export default function Home() {
                       item.featured ? "text-5xl" : "text-4xl",
                     ].join(" ")}
                   >
-                    {item.priceLines.map((line) => (
-                      <span className="block whitespace-nowrap" key={line}>
-                        {line}
+                    {item.priceLinesNo.map((_, index) => (
+                      <span className="block whitespace-nowrap" key={index}>
+                        <LocalizedText
+                          en={item.priceLinesEn[index] ?? ""}
+                          no={item.priceLinesNo[index] ?? ""}
+                        />
                       </span>
                     ))}
                   </div>
                   <p className="text-base leading-7 text-muted-foreground">
-                    {item.text}
+                    <LocalizedText en={item.textEn} no={item.textNo} />
                   </p>
                   {item.featured ? (
                     <div className="mt-auto rounded-lg border border-border/70 bg-card/45 p-4 text-sm leading-6 text-muted-foreground">
-                      Heldagsprisen er 8 000 kr for timer gjennomført til og med{" "}
-                      <strong className="font-semibold text-foreground">
-                        4. januar 2027
-                      </strong>
-                      . Fra{" "}
-                      <strong className="font-semibold text-foreground">
-                        5. januar 2027
-                      </strong>{" "}
-                      justeres heldagsprisen til{" "}
-                      <strong className="font-semibold text-foreground">
-                        9 000 kr
-                      </strong>
-                      .
+                      <LocalizedText
+                        en="The full-day price is 8,000 NOK for appointments completed on or before January 4, 2027. From January 5, 2027, the full-day price will be adjusted to 9,000 NOK."
+                        no="Heldagsprisen er 8 000 kr for timer gjennomført til og med 4. januar 2027. Fra 5. januar 2027 justeres heldagsprisen til 9 000 kr."
+                      />
                     </div>
                   ) : null}
                 </CardContent>
@@ -1126,13 +1133,16 @@ export default function Home() {
           <div className="grid gap-6 rounded-lg border border-border/70 bg-background/55 p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="flex flex-col gap-3 text-base leading-7 text-muted-foreground">
               <p>
-                Forberedelser, tilpasning av design, plassering av stencil og
-                normale pauser er en del av en heldagstime.
+                <LocalizedText
+                  en="Preparation, design adjustment, stencil placement and normal breaks are part of a full-day session."
+                  no="Forberedelser, tilpasning av design, plassering av stencil og normale pauser er en del av en heldagstime."
+                />
               </p>
               <p>
-                Alle prosjekter er forskjellige. Book en gratis konsultasjon for
-                å gjennomgå idé, plassering, forventet tidsbruk og pris før du
-                bestemmer deg.
+                <LocalizedText
+                  en="Every project is different. Book a free consultation to go through idea, placement, expected time and price before you decide."
+                  no="Alle prosjekter er forskjellige. Book en gratis konsultasjon for å gjennomgå idé, plassering, forventet tidsbruk og pris før du bestemmer deg."
+                />
               </p>
             </div>
             <Button
@@ -1141,7 +1151,7 @@ export default function Home() {
               render={<a href="#booking" />}
               size="lg"
             >
-              Book gratis konsultasjon
+              <LocalizedText en="Book free consultation" no="Book gratis konsultasjon" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
           </div>
