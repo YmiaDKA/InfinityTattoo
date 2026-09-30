@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/sleeve-tatovering",
     "/cover-up-tatovering",
     "/fine-line-tatovering",
+    "/lettering-tatovering",
     "/kommer-du-fra-oslo",
     "/tatovering-lillestrom",
     "/tatovering-strommen",

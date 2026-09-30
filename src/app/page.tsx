@@ -209,6 +209,15 @@ const signatureStyles = [
     href: "/fine-line-tatovering",
   },
   {
+    titleEn: "Lettering",
+    titleNo: "Lettering",
+    textEn:
+      "Names, quotes and script tattoos planned around font choice, spacing, placement and healed readability.",
+    textNo:
+      "Navn, sitater og script-tatoveringer planlagt rundt fontvalg, avstand, plassering og lesbarhet etter healing.",
+    href: "/lettering-tatovering",
+  },
+  {
     titleEn: "Freehand Maori",
     titleNo: "Freehand Maori",
     textEn: "Large-scale Maori and Polynesian-inspired flow work drawn around the body.",
@@ -376,6 +385,8 @@ const localBusinessJsonLd = {
     "portrait tattoos",
     "sleeve tattoos",
     "fine line tattoos",
+    "lettering tattoos",
+    "script tattoos",
     "freehand Maori tattoos",
     "Polynesian-inspired tattoos",
     "cover-up tattoo planning",
@@ -467,6 +478,14 @@ const localBusinessJsonLd = {
           "@type": "Service",
           name: "Cover-up tattoo planning",
           serviceType: "Cover-up tattoo",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Lettering tattoos",
+          serviceType: "Lettering tattoo",
         },
       },
       {
@@ -866,7 +885,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {signatureStyles.map((style) => (
               <Link
                 className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-red)] hover:bg-background/80"
