@@ -734,7 +734,7 @@ export default function Home() {
       />
       <SiteHeader />
 
-      <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden">
+      <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden sm:min-h-[88svh]">
         <video
           aria-label="Infinity Tattoo Studio reel"
           autoPlay
@@ -747,39 +747,55 @@ export default function Home() {
         >
           <source src="/media/video/studio-reel.mp4#t=4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/35 via-background/45 to-background" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/50 to-background sm:from-background/35 sm:via-background/45" />
 
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-5 pb-14 pt-32 sm:px-8 lg:pb-20">
-          <div className="flex max-w-4xl flex-col gap-6">
-            <h1 className="motion-rise motion-delay-1 font-display text-5xl font-bold leading-none text-foreground sm:text-7xl lg:text-8xl">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 pb-8 pt-[7.5rem] sm:gap-8 sm:px-8 sm:pb-14 sm:pt-32 lg:pb-20">
+          <div className="flex max-w-4xl flex-col gap-5 sm:gap-6">
+            <h1 className="motion-rise motion-delay-1 max-w-[9ch] font-display text-[4.15rem] font-bold leading-[0.9] text-foreground sm:max-w-none sm:text-7xl lg:text-8xl">
               INFINITY TATTOO
             </h1>
-            <p className="motion-rise motion-delay-2 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+            <p className="motion-rise motion-delay-2 max-w-2xl text-[1.38rem] leading-[1.55] text-foreground/78 sm:hidden">
+              <LocalizedText
+                en="Custom realistic tattoos in Lørenskog. Free consultation in a calm private studio."
+                no="Custom realistiske tatoveringer i Lørenskog. Gratis konsultasjon i et rolig privat studio."
+              />
+            </p>
+            <p className="motion-rise motion-delay-2 hidden max-w-2xl text-lg leading-8 text-muted-foreground sm:block sm:text-xl">
               <LocalizedText
                 en="Custom realistic tattoos in Lørenskog, close to Strømmen, Lillestrøm and Oslo, for clients who want precision, detail, and a design that actually belongs on their skin. Free consultation in a calm private room without a crowded studio around you."
                 no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen, Lillestrøm og Oslo, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din. Gratis konsultasjon i et rolig privat rom uten et fullt studio rundt deg."
               />
             </p>
           </div>
+          <div className="motion-rise motion-delay-3 grid grid-cols-2 gap-2.5 text-xs font-semibold text-foreground/85 sm:hidden">
+            <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
+              <MapPinIcon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
+              Lørenskog
+            </div>
+            <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
+              <StarIcon className="size-4 shrink-0 fill-current text-[color:var(--studio-red)]" />
+              <LocalizedText en="135+ reviews" no="135+ anmeldelser" />
+            </div>
+          </div>
           <div className="motion-rise motion-delay-3 flex flex-col gap-3 sm:flex-row">
             <Button
-              className="motion-lift-subtle rounded-full"
+              className="motion-lift-subtle rounded-full max-sm:min-h-14 max-sm:text-lg"
               nativeButton={false}
               render={<a href="#booking" />}
               size="lg"
-            >
-              <LocalizedText en="Start your idea" no="Start ideen din" />
-              <ClipboardListIcon data-icon="inline-end" />
-            </Button>
-            <Button
-              className="motion-lift-subtle"
-              nativeButton={false}
-              render={<a href="#booking" />}
-              size="lg"
-              variant="outline"
             >
               <LocalizedText en="Book free consultation" no="Book gratis konsultasjon" />
               <CalendarDaysIcon data-icon="inline-end" />
+            </Button>
+            <Button
+              className="motion-lift-subtle rounded-full max-sm:min-h-14 max-sm:text-lg"
+              nativeButton={false}
+              render={<a href="#work" />}
+              size="lg"
+              variant="outline"
+            >
+              <LocalizedText en="See recent work" no="Se arbeid" />
+              <MoveUpRightIcon data-icon="inline-end" />
             </Button>
           </div>
           <nav
@@ -791,7 +807,7 @@ export default function Home() {
 
               return (
                 <Link
-                  className="motion-lift-subtle flex min-h-12 items-center gap-2 rounded-lg border border-border/70 bg-background/70 px-3 text-sm font-medium text-foreground shadow-xl shadow-black/10 backdrop-blur transition hover:border-foreground/40"
+                  className="motion-lift-subtle flex min-h-[3.25rem] items-center gap-2.5 rounded-lg border border-foreground/10 bg-background/72 px-3.5 text-base font-semibold text-foreground shadow-xl shadow-black/10 backdrop-blur transition hover:border-foreground/40"
                   href={item.href}
                   key={item.href}
                 >
@@ -1293,15 +1309,17 @@ export default function Home() {
           </div>
         </div>
 
-        <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
-          <LocalizedText en="Booking" no="Booking" />
-        </h2>
-        <p className="mx-auto max-w-2xl text-center text-base leading-7 text-muted-foreground">
-          <LocalizedText
-            en="Book a free tattoo consultation to talk through your idea, placement, size, time estimate and budget before committing to a full tattoo session."
-            no="Book en gratis tatoveringskonsultasjon for å gå gjennom idé, plassering, størrelse, tidsestimat og budsjett før du bestemmer deg for en full tatoveringstime."
-          />
-        </p>
+        <div id="booking" className="scroll-mt-28 text-center">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">
+            <LocalizedText en="Booking" no="Booking" />
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+            <LocalizedText
+              en="Book a free tattoo consultation to talk through your idea, placement, size, time estimate and budget before committing to a full tattoo session."
+              no="Book en gratis tatoveringskonsultasjon for å gå gjennom idé, plassering, størrelse, tidsestimat og budsjett før du bestemmer deg for en full tatoveringstime."
+            />
+          </p>
+        </div>
 
         <div className="motion-reveal grid gap-4 rounded-3xl border border-border/70 bg-card/45 p-5 sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <div className="flex items-center gap-4">
@@ -1387,7 +1405,6 @@ export default function Home() {
         </div>
 
         <div
-          id="booking"
           className="motion-lift-subtle relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]"
         >
           <BorderBeam

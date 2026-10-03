@@ -99,20 +99,20 @@ export default function RootLayout({
       lang="no"
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} dark h-full scroll-smooth antialiased`}
     >
-      <Script
-        id="google-ads-src"
-        src="https://www.googletagmanager.com/gtag/js?id=AW-18110021666"
-        strategy="beforeInteractive"
-      />
-      <Script id="google-ads-tag" strategy="beforeInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          window.gtag = function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'AW-18110021666');
-        `}
-      </Script>
       <body className="flex min-h-full flex-col">
+        <Script
+          id="google-ads-src"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18110021666"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-tag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function gtag(){window.dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18110021666');
+          `}
+        </Script>
         <GoogleAdsConversionTracker />
         {children}
       </body>
