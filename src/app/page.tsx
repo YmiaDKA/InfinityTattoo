@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 import { LineworkBooking } from "@/components/linework-booking";
+import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
 import { SiteHeader } from "@/components/site-header";
@@ -735,18 +736,7 @@ export default function Home() {
       <SiteHeader />
 
       <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden sm:min-h-[88svh]">
-        <video
-          aria-label="Infinity Tattoo Studio reel"
-          autoPlay
-          className="motion-hero-media absolute inset-0 -z-20 size-full object-cover opacity-70"
-          loop
-          muted
-          playsInline
-          poster="/media/hero-poster.jpeg"
-          preload="metadata"
-        >
-          <source src="/media/video/studio-reel.mp4#t=4" type="video/mp4" />
-        </video>
+        <HeroBackgroundVideo />
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background/30 via-background/50 to-background sm:from-background/35 sm:via-background/45" />
 
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 pb-8 pt-[7.5rem] sm:gap-8 sm:px-8 sm:pb-14 sm:pt-32 lg:pb-20">
