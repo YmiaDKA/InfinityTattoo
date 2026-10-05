@@ -69,17 +69,6 @@ const tattooPricingCards = [
     textNo:
       "Passer for mange mindre custom-design. Mer detaljert arbeid, krevende plasseringer og større design kan koste mer.",
   },
-  {
-    titleEn: "Full-day session",
-    titleNo: "Heldagstime",
-    priceLinesEn: ["8,000 NOK"],
-    priceLinesNo: ["8 000 kr"],
-    textEn:
-      "Best for larger pieces, portraits, quarter sleeves, sleeve projects and tattoos that require several hours of focused work.",
-    textNo:
-      "Passer best for større motiver, portretter, quarter sleeves, sleeve-prosjekter og tatoveringer som krever flere timer med konsentrert arbeid.",
-    featured: true,
-  },
 ];
 
 const artistStyles: ArtistCard[] = [
@@ -1099,37 +1088,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="motion-stagger grid gap-4 lg:grid-cols-3 lg:items-stretch">
+          <div className="motion-stagger grid gap-4 md:grid-cols-2 lg:items-stretch">
             {tattooPricingCards.map((item) => (
               <Card
-                className={[
-                  "motion-lift motion-reveal relative overflow-hidden bg-background/70",
-                  item.featured
-                    ? "border-[color:var(--studio-red)] shadow-2xl shadow-black/20"
-                    : "border-border/70",
-                ].join(" ")}
+                className="motion-lift motion-reveal relative overflow-hidden border-border/70 bg-background/70"
                 key={item.titleEn}
               >
-                {item.featured ? (
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--studio-red)] to-transparent" />
-                ) : null}
                 <CardContent className="flex h-full flex-col gap-5 p-6 sm:p-7 lg:min-h-72">
                   <div className="flex items-start justify-between gap-4">
                     <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
                       <LocalizedText en={item.titleEn} no={item.titleNo} />
                     </p>
-                    {item.featured ? (
-                      <span className="rounded-full border border-[color:var(--studio-red)]/40 px-3 py-1 text-xs font-medium text-[color:var(--studio-red)]">
-                        <LocalizedText en="Most chosen" no="Mest valgt" />
-                      </span>
-                    ) : null}
                   </div>
-                  <div
-                    className={[
-                      "font-display font-bold leading-none text-foreground",
-                      item.featured ? "text-5xl" : "text-4xl",
-                    ].join(" ")}
-                  >
+                  <div className="font-display text-4xl font-bold leading-none text-foreground">
                     {item.priceLinesNo.map((_, index) => (
                       <span className="block whitespace-nowrap" key={index}>
                         <LocalizedText
@@ -1142,14 +1113,6 @@ export default function Home() {
                   <p className="text-base leading-7 text-muted-foreground">
                     <LocalizedText en={item.textEn} no={item.textNo} />
                   </p>
-                  {item.featured ? (
-                    <div className="mt-auto rounded-lg border border-border/70 bg-card/45 p-4 text-sm leading-6 text-muted-foreground">
-                      <LocalizedText
-                        en="The full-day price is 8,000 NOK for appointments completed on or before January 4, 2027. From January 5, 2027, the full-day price will be adjusted to 9,000 NOK."
-                        no="Heldagsprisen er 8 000 kr for timer gjennomført til og med 4. januar 2027. Fra 5. januar 2027 justeres heldagsprisen til 9 000 kr."
-                      />
-                    </div>
-                  ) : null}
                 </CardContent>
               </Card>
             ))}
