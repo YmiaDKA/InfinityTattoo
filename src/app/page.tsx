@@ -1009,7 +1009,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
+        className="motion-reveal mx-auto flex max-w-6xl scroll-mt-28 flex-col gap-8 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
       >
         <div
           id="oslo"
