@@ -797,7 +797,7 @@ export default function Home() {
               bioEn="Artist and owner with 4+ years of experience from Greece and Norway. Custom realism, black & grey, blackout and freehand Maori."
               bioNo="Artist og eier med over 4 års erfaring fra Hellas og Norge. Custom realisme, black & grey, blackout og freehand Maori."
             />
-            <div className="grid gap-9 sm:grid-cols-2 lg:grid-cols-1 lg:gap-7">
+            <div className="grid grid-cols-2 items-start gap-3 sm:gap-5">
               <ArtistProfileCard
                 label="PIERCING"
                 name="Piercing"
