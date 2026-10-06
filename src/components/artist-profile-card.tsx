@@ -36,7 +36,7 @@ export function ArtistProfileCard({
     <article
       className={cn(
         "flex min-w-0 flex-col rounded-3xl border border-border bg-card/80 p-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0",
-        large && "w-full sm:max-w-96",
+        large && "w-full sm:mx-auto sm:max-w-96",
       )}
     >
       <div className="relative z-30 mb-2 mt-2 flex min-h-9 items-center justify-between gap-1 px-2 sm:px-3">
