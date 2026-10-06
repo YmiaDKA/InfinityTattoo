@@ -62,25 +62,21 @@ const showcaseRows = [
 const serviceAreas = [
   {
     area: "Lørenskog",
-    href: "/#contact",
     textEn: "On Skårer in Lørenskog, close to Triaden.",
     textNo: "På Skårer i Lørenskog, nær Triaden.",
   },
   {
     area: "Strømmen",
-    href: "/tatovering-strommen",
     textEn: "About 5 km from central Strømmen.",
     textNo: "Ca. 5 km fra Strømmen sentrum.",
   },
   {
     area: "Lillestrøm",
-    href: "/tatovering-lillestrom",
     textEn: "About 8 km from central Lillestrøm.",
     textNo: "Ca. 8 km fra Lillestrøm sentrum.",
   },
   {
     area: "Oslo",
-    href: "/tatovering-oslo",
     textEn: "About 17 km from central Oslo.",
     textNo: "Ca. 17 km fra Oslo sentrum.",
   },
@@ -703,10 +699,7 @@ export default function Home() {
           <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <div
-            id="services"
-            className="grid scroll-mt-28 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-stretch"
-          >
+          <div id="services" className="grid scroll-mt-28 gap-6">
             <ArtistSpotlight
               name="Filip"
               professionEn="Tattoo artist"
@@ -832,12 +825,9 @@ export default function Home() {
             <ul className="flex list-disc flex-col gap-5 pl-5 marker:text-muted-foreground">
               {serviceAreas.map((item) => (
                 <li key={item.area} className="pl-1">
-                  <Link
-                    className="font-semibold text-foreground underline-offset-4 hover:underline"
-                    href={item.href}
-                  >
+                  <span className="font-semibold text-foreground">
                     {item.area}
-                  </Link>
+                  </span>
                   <p className="mt-1 text-sm leading-6 text-muted-foreground">
                     <LocalizedText en={item.textEn} no={item.textNo} />
                   </p>

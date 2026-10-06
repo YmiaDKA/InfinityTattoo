@@ -31,7 +31,7 @@ export function ArtistSpotlight({
   children: ReactNode;
 }) {
   return (
-    <article className="relative isolate mx-auto flex h-full w-full max-w-lg flex-col overflow-hidden rounded-3xl border bg-card/60 lg:max-w-none">
+    <article className="relative isolate mx-auto grid w-full max-w-lg overflow-hidden rounded-3xl border bg-card/60 sm:max-w-none sm:grid-cols-2">
       <div className="relative h-[32rem] sm:h-[36rem] lg:h-[34rem]">
         <p className="relative z-20 px-6 pt-6 text-center text-sm font-semibold text-foreground sm:text-base">
           <LocalizedText en={professionEn} no={professionNo} />
@@ -68,19 +68,15 @@ export function ArtistSpotlight({
             )}
             sizes={
               mirrored
-                ? "(min-width: 1024px) 28vw, (min-width: 640px) 440px, 84vw"
-                : "(min-width: 1024px) 512px, (min-width: 640px) 480px, 84vw"
+                ? "(min-width: 1152px) 544px, (min-width: 640px) 48vw, 90vw"
+                : "(min-width: 1152px) 512px, (min-width: 640px) 44vw, 84vw"
             }
           />
         </Link>
       </div>
-      <div className="relative z-20 flex flex-1 flex-col px-6 pb-6 sm:px-8 sm:pb-8">
-        <div
-          className={cn("mx-auto w-full", mirrored ? "max-w-64" : "max-w-xl")}
-        >
-          {children}
-        </div>
-        <div className="mt-auto flex items-center justify-center gap-3 pt-7">
+      <div className="relative z-20 flex flex-col justify-center px-6 pb-6 sm:p-8 lg:p-10">
+        <div className="mx-auto w-full max-w-xl">{children}</div>
+        <div className="flex items-center justify-center gap-3 pt-7 sm:justify-start">
           {mirrored ? (
             <>
               <Button

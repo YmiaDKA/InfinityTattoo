@@ -31,6 +31,8 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number
+  /** Hide duplicated, non-interactive content from assistive technology. */
+  decorativeRepeats?: boolean
 }
 
 export function Marquee({
@@ -40,6 +42,7 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  decorativeRepeats = false,
   ...props
 }: MarqueeProps) {
   return (
@@ -59,6 +62,7 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
+            aria-hidden={decorativeRepeats && i > 0 ? true : undefined}
             className={cn("flex shrink-0 justify-around gap-(--gap)", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,

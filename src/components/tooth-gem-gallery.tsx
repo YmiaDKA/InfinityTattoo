@@ -1,45 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { PauseIcon, PlayIcon } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Marquee } from "@/components/ui/marquee";
 import { useLanguage } from "@/lib/language-store";
 import { supremeGemzGallery } from "@/lib/tooth-gems";
+import { cn } from "@/lib/utils";
 
 export function ToothGemGallery() {
   const language = useLanguage();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [canPrevious, setCanPrevious] = useState(false);
-  const [canNext, setCanNext] = useState(true);
-
-  function updateControls() {
-    const track = trackRef.current;
-    if (!track) return;
-    setCanPrevious(track.scrollLeft > 1);
-    setCanNext(track.scrollLeft + track.clientWidth < track.scrollWidth - 1);
-  }
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const observer = new ResizeObserver(updateControls);
-    observer.observe(track);
-    return () => observer.disconnect();
-  }, []);
-
-  function scroll(direction: number) {
-    const track = trackRef.current;
-    const slide = track?.firstElementChild;
-    if (!track || !slide) return;
-    track.scrollBy({
-      left: direction * (slide.clientWidth + 12),
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "instant"
-        : "smooth",
-    });
-  }
+  const [paused, setPaused] = useState(false);
 
   return (
     <section
@@ -49,24 +22,20 @@ export function ToothGemGallery() {
           ? "Tooth Gems bildegalleri"
           : "Tooth Gems photo gallery"
       }
-      aria-roledescription={language === "NO" ? "karusell" : "carousel"}
     >
-      <div
-        ref={trackRef}
-        onScroll={updateControls}
-        tabIndex={0}
-        aria-label={language === "NO" ? "Bla gjennom bildene" : "Browse photos"}
-        onKeyDown={(event) => {
-          if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-          event.preventDefault();
-          scroll(event.key === "ArrowLeft" ? -1 : 1);
-        }}
-        className="flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain rounded-2xl pb-3 focus-visible:outline-2 focus-visible:outline-ring"
+      <Marquee
+        pauseOnHover
+        repeat={2}
+        decorativeRepeats
+        className={cn(
+          "rounded-2xl p-0 [--duration:60s] motion-reduce:overflow-x-auto [&>div]:motion-reduce:animate-none [&>div:not(:first-child)]:motion-reduce:hidden",
+          paused && "[&>div]:[animation-play-state:paused]",
+        )}
       >
         {supremeGemzGallery.map((image, index) => (
           <div
             key={image.src}
-            className="relative aspect-[4/5] w-[78%] shrink-0 snap-start overflow-hidden rounded-2xl bg-card sm:w-[42%] lg:w-[calc((100%-2.25rem)/4)]"
+            className="relative h-72 w-56 shrink-0 overflow-hidden rounded-2xl bg-card sm:h-80 sm:w-64"
           >
             <Image
               src={image.src}
@@ -74,31 +43,29 @@ export function ToothGemGallery() {
               fill
               className="object-cover"
               loading={index === 0 ? "eager" : "lazy"}
-              sizes="(min-width: 1152px) 260px, (min-width: 1024px) 24vw, (min-width: 640px) 42vw, 78vw"
+              sizes="(min-width: 640px) 256px, 224px"
             />
           </div>
         ))}
-      </div>
-      <div className="mt-3 flex justify-end gap-2">
+      </Marquee>
+      <div className="mt-3 flex justify-end motion-reduce:hidden">
         <Button
           variant="outline"
           size="icon-lg"
           className="rounded-full"
-          aria-label={language === "NO" ? "Forrige bilde" : "Previous photo"}
-          disabled={!canPrevious}
-          onClick={() => scroll(-1)}
+          aria-label={
+            paused
+              ? language === "NO"
+                ? "Start galleri"
+                : "Play gallery"
+              : language === "NO"
+                ? "Pause galleri"
+                : "Pause gallery"
+          }
+          aria-pressed={paused}
+          onClick={() => setPaused((value) => !value)}
         >
-          <ArrowLeftIcon />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon-lg"
-          className="rounded-full"
-          aria-label={language === "NO" ? "Neste bilde" : "Next photo"}
-          disabled={!canNext}
-          onClick={() => scroll(1)}
-        >
-          <ArrowRightIcon />
+          {paused ? <PlayIcon /> : <PauseIcon />}
         </Button>
       </div>
     </section>

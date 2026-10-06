@@ -1,14 +1,12 @@
 "use client";
 
-import { CheckIcon, CopyIcon, MoveUpRightIcon } from "lucide-react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { useLanguage } from "@/lib/language-store";
 
 const address = "Skårersletta 48c, 1473 Lørenskog";
-const mapsHref =
-  "https://www.google.com/maps/search/?api=1&query=Sk%C3%A5rersletta%2048c%2C%20L%C3%B8renskog";
 
 export function StudioAddress() {
   const language = useLanguage();
@@ -101,23 +99,6 @@ export function StudioAddress() {
             </AnimatePresence>
           </span>
         </button>
-        <a
-          href={mapsHref}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={
-            norwegian
-              ? "Åpne adressen i Google Maps"
-              : "Open the address in Google Maps"
-          }
-          className="flex size-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-card hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-        >
-          <MoveUpRightIcon
-            aria-hidden="true"
-            data-icon="inline-end"
-            className="size-4"
-          />
-        </a>
       </div>
       <span
         role="status"
