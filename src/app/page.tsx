@@ -543,7 +543,7 @@ export default function Home() {
               }
               size="lg"
             >
-              <LocalizedText en="Open in a new tab" no="Åpne i ny fane" />
+              <LocalizedText en="Book appointment" no="Book time" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button
