@@ -3,7 +3,9 @@
 import { motion, useMotionValue } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
 
-export function PanoramaViewer() {
+import { cn } from "@/lib/utils";
+
+export function PanoramaViewer({ className }: { className?: string } = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const panoramaRef = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -21,7 +23,7 @@ export function PanoramaViewer() {
     const measure = () => {
       const nextOverflow = Math.max(
         panorama.offsetWidth - container.offsetWidth,
-        0
+        0,
       );
 
       setOverflow(nextOverflow);
@@ -52,7 +54,10 @@ export function PanoramaViewer() {
     <div
       ref={containerRef}
       aria-label="Draggable panoramic view of Infinity Tattoo Studio"
-      className="motion-lift motion-panorama relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[25rem]"
+      className={cn(
+        "motion-lift motion-panorama relative h-72 touch-pan-y overflow-hidden rounded-3xl border bg-card sm:h-[26rem] lg:h-[25rem]",
+        className,
+      )}
       onKeyDown={handleKeyDown}
       role="group"
       tabIndex={0}

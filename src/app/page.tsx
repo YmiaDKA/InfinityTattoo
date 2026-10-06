@@ -31,13 +31,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
 
@@ -50,29 +44,6 @@ type ArtistCard = {
   textNo: string;
   href?: string;
 };
-
-const tattooPricingCards = [
-  {
-    titleEn: "Starting price",
-    titleNo: "Startpris",
-    priceLinesEn: ["From 1,500 NOK"],
-    priceLinesNo: ["Fra 1 500 kr"],
-    textEn:
-      "Applies to very small and simple tattoos. The exact price is confirmed before the appointment.",
-    textNo:
-      "Gjelder svært små og enkle tatoveringer. Den nøyaktige prisen bekreftes før timen.",
-  },
-  {
-    titleEn: "Small tattoos",
-    titleNo: "Små tatoveringer",
-    priceLinesEn: ["Usually", "3,000-4,000 NOK"],
-    priceLinesNo: ["Vanligvis", "3 000–4 000 kr"],
-    textEn:
-      "Fits many smaller custom designs. More detailed work, difficult placements and larger designs can cost more.",
-    textNo:
-      "Passer for mange mindre custom-design. Mer detaljert arbeid, krevende plasseringer og større design kan koste mer.",
-  },
-];
 
 const artistStyles: ArtistCard[] = [
   {
@@ -510,12 +481,12 @@ const faqItems: FaqItem[] = [
       "Ja. Det meste lages custom rundt ideen din, plassering på kroppen og hvordan tatoveringen skal se ut over tid.",
   },
   {
-    questionEn: "How does pricing work?",
-    questionNo: "Hvordan fungerer pris?",
+    questionEn: "Tattoo prices",
+    questionNo: "Tatoveringspriser",
     answerEn:
-      "Price depends on size, detail, placement, and time. You get a clearer estimate during the consultation.",
+      "Very small and simple tattoos start at NOK 1,500. Many small custom tattoos cost NOK 3,000–4,000; detailed work, difficult placements and larger designs can cost more. The final price depends on design, size, placement, detail and expected working time, and is confirmed before the appointment. Preparation, design adjustment, stencil placement and normal breaks are part of a full-day session. Every project is different. Book a free consultation to go through your idea, placement, expected time and price before you decide.",
     answerNo:
-      "Pris avhenger av størrelse, detaljnivå, plassering og tidsbruk. Du får et tydeligere estimat under konsultasjonen.",
+      "Svært små og enkle tatoveringer starter fra 1 500 kr. Mange mindre custom-design koster vanligvis 3 000–4 000 kr; mer detaljert arbeid, krevende plasseringer og større design kan koste mer. Den endelige prisen avhenger av design, størrelse, plassering, detaljnivå og forventet arbeidstid, og bekreftes før timen. Forberedelser, tilpasning av design, plassering av stencil og normale pauser er en del av en heldagstime. Alle prosjekter er forskjellige. Book en gratis konsultasjon for å gjennomgå idé, plassering, forventet tidsbruk og pris før du bestemmer deg.",
   },
   {
     questionEn: "How long does a tattoo session take?",
@@ -1037,133 +1008,55 @@ export default function Home() {
       </section>
 
       <section
-        id="tattoo-prices"
-        className="motion-reveal border-y border-border/70 bg-card/30"
-      >
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28">
-          <div className="flex flex-col gap-4">
-            <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <BadgeCheckIcon className="size-5" />
-            </div>
-            <div className="flex max-w-3xl flex-col gap-4">
-              <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                <LocalizedText en="Tattoo prices" no="Tatoveringspriser" />
-              </h2>
-              <p className="text-lg leading-8 text-muted-foreground">
-                <LocalizedText
-                  en="Clear prices before we begin. The final price depends on design, size, placement, level of detail and expected working time."
-                  no="Tydelige priser før vi begynner. Den endelige prisen avhenger av design, størrelse, plassering, detaljnivå og forventet arbeidstid."
-                />
-              </p>
-            </div>
-          </div>
-
-          <div className="motion-stagger grid gap-4 md:grid-cols-2 lg:items-stretch">
-            {tattooPricingCards.map((item) => (
-              <Card
-                className="motion-lift motion-reveal relative overflow-hidden border-border/70 bg-background/70"
-                key={item.titleEn}
-              >
-                <CardContent className="flex h-full flex-col gap-5 p-6 sm:p-7 lg:min-h-72">
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
-                      <LocalizedText en={item.titleEn} no={item.titleNo} />
-                    </p>
-                  </div>
-                  <div className="font-display text-4xl font-bold leading-none text-foreground">
-                    {item.priceLinesNo.map((_, index) => (
-                      <span className="block whitespace-nowrap" key={index}>
-                        <LocalizedText
-                          en={item.priceLinesEn[index] ?? ""}
-                          no={item.priceLinesNo[index] ?? ""}
-                        />
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-base leading-7 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="grid gap-6 rounded-lg border border-border/70 bg-background/55 p-5 sm:p-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div className="flex flex-col gap-3 text-base leading-7 text-muted-foreground">
-              <p>
-                <LocalizedText
-                  en="Preparation, design adjustment, stencil placement and normal breaks are part of a full-day session."
-                  no="Forberedelser, tilpasning av design, plassering av stencil og normale pauser er en del av en heldagstime."
-                />
-              </p>
-              <p>
-                <LocalizedText
-                  en="Every project is different. Book a free consultation to go through idea, placement, expected time and price before you decide."
-                  no="Alle prosjekter er forskjellige. Book en gratis konsultasjon for å gjennomgå idé, plassering, forventet tidsbruk og pris før du bestemmer deg."
-                />
-              </p>
-            </div>
-            <Button
-              className="motion-lift-subtle rounded-full"
-              nativeButton={false}
-              render={<a href="#booking" />}
-              size="lg"
-            >
-              <LocalizedText
-                en="Book free consultation"
-                no="Book gratis konsultasjon"
-              />
-              <CalendarDaysIcon data-icon="inline-end" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <section
         id="contact"
         className="motion-reveal mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
       >
         <div
           id="oslo"
-          className="motion-reveal flex scroll-mt-28 flex-col gap-6 border-b border-border/70 pb-12"
+          className="motion-reveal grid scroll-mt-28 gap-8 border-b border-border/70 pb-12 lg:grid-cols-2 lg:items-start"
         >
-          <div className="flex max-w-3xl flex-col gap-3">
-            <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText
-                en="Tattoo studio near you"
-                no="Tatoveringsstudio nær deg"
-              />
-            </h2>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="Coming from Oslo, Strømmen or Lillestrøm? Infinity Tattoo is at Skårersletta 48c in Lørenskog. Triaden offers 2 hours of free parking, only a 2–3 minute walk from the studio."
-                no="Kommer du fra Oslo, Strømmen eller Lillestrøm? Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. På Triaden får du 2 timer gratis parkering, bare 2–3 minutter fra studioet."
-              />
-            </p>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+              <h2 className="font-display text-4xl font-bold sm:text-5xl">
+                <LocalizedText
+                  en="Tattoo studio near you"
+                  no="Tatoveringsstudio nær deg"
+                />
+              </h2>
+              <p className="text-base leading-7 text-muted-foreground">
+                <LocalizedText
+                  en="Coming from Oslo, Strømmen or Lillestrøm? Infinity Tattoo is at Skårersletta 48c in Lørenskog. Triaden offers 2 hours of free parking, only a 2–3 minute walk from the studio."
+                  no="Kommer du fra Oslo, Strømmen eller Lillestrøm? Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. På Triaden får du 2 timer gratis parkering, bare 2–3 minutter fra studioet."
+                />
+              </p>
+            </div>
+            <ul className="flex list-disc flex-col gap-5 pl-5 marker:text-muted-foreground">
+              {serviceAreas.map((item) => (
+                <li key={item.area} className="pl-1">
+                  <Link
+                    className="font-semibold text-foreground underline-offset-4 hover:underline"
+                    href={item.href}
+                  >
+                    {item.area}
+                  </Link>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    <LocalizedText en={item.textEn} no={item.textNo} />
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {serviceAreas.map((item) => (
-              <Link
-                className="group rounded-xl focus-visible:outline-2 focus-visible:outline-ring"
-                href={item.href}
-                key={item.area}
-              >
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardTitle>{item.area}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm leading-6 text-muted-foreground">
-                      <LocalizedText en={item.textEn} no={item.textNo} />
-                    </p>
-                  </CardContent>
-                  <CardFooter className="mt-auto justify-between">
-                    <LocalizedText en="Read more" no="Les mer" />
-                    <MoveUpRightIcon aria-hidden="true" className="size-4" />
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
+          <div className="flex flex-col gap-4">
+            <iframe
+              title="Infinity Tattoo location on Google Maps"
+              aria-label="Infinity Tattoo location on Google Maps"
+              className="block h-56 w-full rounded-3xl border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              scrolling="no"
+              src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
+            />
+            <PanoramaViewer className="h-56 sm:h-56 lg:h-56" />
           </div>
         </div>
 
@@ -1219,20 +1112,6 @@ export default function Home() {
           <LineworkBooking />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="motion-lift-subtle overflow-hidden rounded-3xl">
-            <iframe
-              aria-label="Infinity Tattoo location on Google Maps"
-              className="block h-[25rem] w-full rounded-3xl border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              scrolling="no"
-              src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
-            />
-          </div>
-          <PanoramaViewer />
-        </div>
-
         <div
           id="faq"
           className="motion-reveal scroll-mt-28 rounded-3xl border bg-card/60 p-2"
@@ -1247,7 +1126,16 @@ export default function Home() {
             defaultValue={[faqItems[0].questionEn]}
           >
             {faqItems.map((item) => (
-              <AccordionItem key={item.questionEn} value={item.questionEn}>
+              <AccordionItem
+                id={
+                  item.questionEn === "Tattoo prices"
+                    ? "tattoo-prices"
+                    : undefined
+                }
+                className="scroll-mt-28"
+                key={item.questionEn}
+                value={item.questionEn}
+              >
                 <AccordionTrigger className="py-4 text-base">
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
@@ -1417,19 +1305,21 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3 text-foreground">
-              <span className="relative flex size-10 shrink-0 overflow-hidden rounded-full bg-foreground">
-                <Image
-                  src="/media/brand/infinity.svg"
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="40px"
-                />
-              </span>
+          <div className="flex flex-col items-center gap-6 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8">
+            <span className="relative flex size-12 shrink-0 overflow-hidden rounded-full bg-foreground">
+              <Image
+                src="/media/brand/infinity.svg"
+                alt="Infinity Tattoo logo"
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
+            </span>
+            <div className="grid max-w-full gap-6 text-left md:grid-cols-[auto_auto] md:gap-12">
               <div className="flex flex-col gap-2">
-                <span>© Infinity Tattoo Studio</span>
+                <span className="text-foreground">
+                  © Infinity Tattoo Studio
+                </span>
                 <a
                   className="text-sm text-muted-foreground underline-offset-4 hover:underline"
                   href="https://www.google.com/maps/search/?api=1&query=Sk%C3%A5rersletta%2048c%2C%20L%C3%B8renskog"
@@ -1438,33 +1328,33 @@ export default function Home() {
                 >
                   Skårersletta 48c, 1473 Lørenskog
                 </a>
-                <section
-                  id="opening-hours"
-                  className="mt-2 flex flex-col gap-2 text-sm text-muted-foreground"
-                >
-                  <h2 className="font-semibold text-foreground">
-                    <LocalizedText en="Opening hours" no="Åpningstider" />
-                  </h2>
-                  <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
-                    <dt>
-                      <LocalizedText en="Tuesday–Friday" no="Tirsdag–fredag" />
-                    </dt>
-                    <dd>11:00–18:00</dd>
-                    <dt>
-                      <LocalizedText en="Saturday–Sunday" no="Lørdag–søndag" />
-                    </dt>
-                    <dd>11:00–16:00</dd>
-                    <dt>
-                      <LocalizedText en="Monday" no="Mandag" />
-                    </dt>
-                    <dd>
-                      <LocalizedText en="Closed" no="Stengt" />
-                    </dd>
-                  </dl>
-                </section>
               </div>
+              <section
+                id="opening-hours"
+                className="flex flex-col gap-2 text-sm text-muted-foreground"
+              >
+                <h2 className="font-semibold text-foreground">
+                  <LocalizedText en="Opening hours" no="Åpningstider" />
+                </h2>
+                <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
+                  <dt>
+                    <LocalizedText en="Monday" no="Mandag" />
+                  </dt>
+                  <dd>
+                    <LocalizedText en="Closed" no="Stengt" />
+                  </dd>
+                  <dt>
+                    <LocalizedText en="Tuesday–Friday" no="Tirsdag–fredag" />
+                  </dt>
+                  <dd>11:00–18:00</dd>
+                  <dt>
+                    <LocalizedText en="Saturday–Sunday" no="Lørdag–søndag" />
+                  </dt>
+                  <dd>11:00–16:00</dd>
+                </dl>
+              </section>
             </div>
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <a
                 aria-label="Instagram"
                 className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
