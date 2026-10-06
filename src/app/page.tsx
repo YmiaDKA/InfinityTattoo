@@ -28,12 +28,25 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
-import { galleryImages, testimonials } from "@/lib/site-data";
+import { galleryImages, testimonials, type Testimonial } from "@/lib/site-data";
+
+const reviewColumns: Testimonial[][] = [];
+let pendingShortColumn: Testimonial[] | undefined;
+
+for (const review of testimonials.slice(0, 6)) {
+  const short = Math.max(review.quoteEn.length, review.quoteNo.length) <= 80;
+  if (short && pendingShortColumn) {
+    pendingShortColumn.push(review);
+    pendingShortColumn = undefined;
+  } else {
+    const column = [review];
+    reviewColumns.push(column);
+    if (short) pendingShortColumn = column;
+  }
+}
 
 const showcaseRows = [
-  testimonials
-    .slice(0, 6)
-    .map((review) => ({ type: "review" as const, review })),
+  reviewColumns.map((reviews) => ({ type: "review" as const, reviews })),
   galleryImages
     .filter((image) => image.tag !== "#15")
     .map((image) => ({ type: "image" as const, image })),
@@ -672,38 +685,71 @@ export default function Home() {
             >
               {items.map((item) =>
                 item.type === "review" ? (
-                  <Card
-                    key={item.review.name}
-                    className="h-60 w-80 shrink-0 bg-background/70 sm:h-75 sm:w-96"
+                  <div
+                    key={item.reviews[0].name}
+                    className="flex h-60 w-80 shrink-0 flex-col gap-3 sm:h-75 sm:w-96"
                   >
-                    <CardContent className="flex h-full flex-col gap-4 px-5">
-                      <div
-                        aria-label={`${item.review.rating}/5`}
-                        className="flex gap-1 text-[color:var(--studio-gold)]"
+                    {item.reviews.map((review) => (
+                      <Card
+                        key={`${review.name}-${review.date}`}
+                        className={
+                          item.reviews.length === 2
+                            ? "min-h-0 flex-1 bg-background/70 py-2"
+                            : "h-full bg-background/70"
+                        }
                       >
-                        {Array.from({ length: item.review.rating }).map(
-                          (_, starIndex) => (
-                            <StarIcon
-                              aria-hidden="true"
-                              className="size-4 fill-current"
-                              key={starIndex}
+                        <CardContent
+                          className={
+                            item.reviews.length === 2
+                              ? "flex h-full min-h-0 flex-col gap-1 px-4"
+                              : "flex h-full flex-col gap-4 px-5"
+                          }
+                        >
+                          <div
+                            aria-label={`${review.rating}/5`}
+                            className="flex gap-1 text-[color:var(--studio-gold)]"
+                          >
+                            {Array.from({ length: review.rating }).map(
+                              (_, starIndex) => (
+                                <StarIcon
+                                  aria-hidden="true"
+                                  className={
+                                    item.reviews.length === 2
+                                      ? "size-3 fill-current"
+                                      : "size-4 fill-current"
+                                  }
+                                  key={starIndex}
+                                />
+                              ),
+                            )}
+                          </div>
+                          <p
+                            className={
+                              item.reviews.length === 2
+                                ? "text-sm leading-5 text-foreground"
+                                : "line-clamp-5 text-base leading-6 text-foreground"
+                            }
+                          >
+                            &quot;
+                            <LocalizedText
+                              en={review.quoteEn}
+                              no={review.quoteNo}
                             />
-                          ),
-                        )}
-                      </div>
-                      <p className="line-clamp-5 text-base leading-6 text-foreground">
-                        &quot;
-                        <LocalizedText
-                          en={item.review.quoteEn}
-                          no={item.review.quoteNo}
-                        />
-                        &quot;
-                      </p>
-                      <p className="mt-auto text-sm font-semibold text-muted-foreground">
-                        {item.review.name}
-                      </p>
-                    </CardContent>
-                  </Card>
+                            &quot;
+                          </p>
+                          <p
+                            className={
+                              item.reviews.length === 2
+                                ? "mt-auto text-xs font-semibold text-muted-foreground"
+                                : "mt-auto text-sm font-semibold text-muted-foreground"
+                            }
+                          >
+                            {review.name}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 ) : (
                   <Link
                     key={item.image.src}
