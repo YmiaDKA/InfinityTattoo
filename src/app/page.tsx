@@ -610,7 +610,7 @@ export default function Home() {
                 item.type === "review" ? (
                   <div
                     key={item.reviews[0].name}
-                    className="flex h-60 w-80 shrink-0 flex-col gap-3 sm:h-75 sm:w-96"
+                    className="flex h-72 w-80 shrink-0 flex-col gap-3 sm:h-75 sm:w-96"
                   >
                     {item.reviews.map((review) => (
                       <Card
@@ -636,11 +636,7 @@ export default function Home() {
                               (_, starIndex) => (
                                 <StarIcon
                                   aria-hidden="true"
-                                  className={
-                                    item.reviews.length === 2
-                                      ? "size-3 fill-current"
-                                      : "size-4 fill-current"
-                                  }
+                                  className="size-4 fill-current"
                                   key={starIndex}
                                 />
                               ),
@@ -649,7 +645,7 @@ export default function Home() {
                           <p
                             className={
                               item.reviews.length === 2
-                                ? "text-sm leading-5 text-foreground"
+                                ? "text-base leading-6 text-foreground"
                                 : "line-clamp-5 text-base leading-6 text-foreground"
                             }
                           >
@@ -660,13 +656,7 @@ export default function Home() {
                             />
                             &quot;
                           </p>
-                          <p
-                            className={
-                              item.reviews.length === 2
-                                ? "mt-auto text-xs font-semibold text-muted-foreground"
-                                : "mt-auto text-sm font-semibold text-muted-foreground"
-                            }
-                          >
+                          <p className="mt-auto text-sm font-semibold text-muted-foreground">
                             {review.name}
                           </p>
                         </CardContent>
@@ -725,6 +715,8 @@ export default function Home() {
               <ArtistProfileCard
                 name="Nora"
                 href="/piercing"
+                professionEn="Piercings"
+                professionNo="Piercing"
                 side="left"
                 icon={CircleDotIcon}
                 bioEn="Piercing. Thoughtful placement and calm, personal guidance, from jewellery to aftercare."
@@ -733,6 +725,8 @@ export default function Home() {
             </div>
             <ArtistProfileCard
               name="Filip"
+              professionEn="Tattoo artist"
+              professionNo="Tatovør"
               href="/work"
               image="/media/artist/filippos.jpg"
               icon={PenLineIcon}
@@ -785,6 +779,8 @@ export default function Home() {
               <ArtistProfileCard
                 name="Nora"
                 href="/tooth-gems"
+                professionEn="Tooth Gems"
+                professionNo="Tooth Gems"
                 image="/media/artist/tooth-gems.jpg"
                 side="right"
                 icon={GemIcon}

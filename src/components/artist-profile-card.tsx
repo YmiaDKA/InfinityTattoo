@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 type ArtistProfileCardProps = {
   name: string;
   href: string;
+  professionEn: string;
+  professionNo: string;
   bioEn?: string;
   bioNo?: string;
   image?: string;
@@ -23,6 +25,8 @@ type ArtistProfileCardProps = {
 export function ArtistProfileCard({
   name,
   href,
+  professionEn,
+  professionNo,
   bioEn,
   bioNo,
   image,
@@ -35,13 +39,16 @@ export function ArtistProfileCard({
   return (
     <article
       className={cn(
-        "flex min-w-0 flex-col rounded-3xl border border-border bg-card/80 p-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0",
+        "flex min-w-0 flex-col",
         large && "w-full sm:mx-auto sm:max-w-96",
       )}
     >
-      <div className="relative z-30 mb-2 mt-2 flex min-h-9 items-center justify-between gap-1 px-2 sm:px-3">
-        <h3 className="font-display text-base font-bold text-foreground sm:text-2xl">
-          {name}
+      <div
+        data-artist-heading
+        className="relative z-30 mb-2 mt-2 flex min-h-9 items-center justify-between gap-1 px-2 sm:px-3"
+      >
+        <h3 className="font-display text-sm font-bold text-foreground sm:text-lg">
+          {name} - <LocalizedText en={professionEn} no={professionNo} />
         </h3>
         {instagramHref ? (
           <a
@@ -83,6 +90,7 @@ export function ArtistProfileCard({
               src={image}
               alt={name}
               fill
+              draggable={false}
               className="object-cover object-[50%_18%]"
               sizes="(min-width: 640px) 384px, calc(100vw - 40px)"
             />
@@ -103,6 +111,7 @@ export function ArtistProfileCard({
         </Link>
       </div>
       <div
+        data-artist-bio
         className={cn(
           "relative z-30 flex min-w-0 flex-col gap-2 px-2 pb-2 pt-5 sm:px-0 sm:pb-1",
           side === "right" && "text-right",

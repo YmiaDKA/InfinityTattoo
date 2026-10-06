@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MoveUpRightIcon } from "lucide-react";
+import { ArrowLeftIcon, MoveUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { InstagramPill } from "@/components/instagram-pill";
@@ -27,6 +27,16 @@ export default function WorkPage() {
         id="portfolio-grid"
         className="mx-auto flex max-w-7xl flex-col gap-8 px-5 pb-20 pt-32 sm:px-8 lg:pb-28"
       >
+        <Button
+          className="motion-lift-subtle w-fit rounded-full"
+          nativeButton={false}
+          render={<Link href="/#work" />}
+          size="lg"
+          variant="outline"
+        >
+          <ArrowLeftIcon data-icon="inline-start" />
+          <LocalizedText en="Back" no="Tilbake" />
+        </Button>
         <div className="motion-rise flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div className="flex flex-col gap-3">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
@@ -66,22 +76,22 @@ export default function WorkPage() {
 
         <div className="motion-reveal flex flex-col gap-3 sm:flex-row">
           <Button
+            className="motion-lift-subtle w-fit rounded-full"
+            nativeButton={false}
+            render={<Link href="/#work" />}
+            size="lg"
+            variant="outline"
+          >
+            <ArrowLeftIcon data-icon="inline-start" />
+            <LocalizedText en="Back" no="Tilbake" />
+          </Button>
+          <Button
             className="motion-lift-subtle rounded-full"
             nativeButton={false}
             render={<Link href="/#booking" />}
             size="lg"
           >
             <LocalizedText en="Book consultation" no="Book konsultasjon" />
-            <MoveUpRightIcon data-icon="inline-end" />
-          </Button>
-          <Button
-            className="motion-lift-subtle rounded-full"
-            nativeButton={false}
-            render={<Link href="/#work" />}
-            size="lg"
-            variant="outline"
-          >
-            <LocalizedText en="Back home" no="Til forsiden" />
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
         </div>
