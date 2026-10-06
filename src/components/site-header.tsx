@@ -6,6 +6,7 @@ import { CalendarDaysIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
+import { HeaderNavButton } from "@/components/header-nav-button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { LocalizedText } from "@/components/localized-text";
 import { Button } from "@/components/ui/button";
@@ -201,13 +202,14 @@ export function SiteHeader({
           className="relative z-10 hidden h-12 items-center gap-0.5 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 xl:flex"
         >
           {navItems.map((item) => (
-            <a
-              className="inline-flex h-10 items-center rounded-full px-4 text-sm text-muted-foreground transition hover:bg-muted/50 hover:text-foreground"
-              href={item.href}
+            <HeaderNavButton
+              role="link"
+              nativeButton={false}
+              render={<a href={item.href} />}
               key={item.href}
             >
               <LocalizedText en={item.labelEn} no={item.labelNo} />
-            </a>
+            </HeaderNavButton>
           ))}
         </div>
 

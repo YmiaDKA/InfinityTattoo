@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { HeaderNavButton } from "@/components/header-nav-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,13 +30,11 @@ export function LanguageToggle() {
             ? "Velg språk (Norsk)"
             : "Choose language (English)"
         }
-        render={
-          <Button variant="ghost" size="icon-lg" className="rounded-full" />
-        }
+        render={<HeaderNavButton size="icon-lg" className="size-10 p-0" />}
       >
         <span
           aria-hidden="true"
-          className="flex size-6 items-center justify-center text-xl leading-none"
+          className="flex size-7 items-center justify-center text-2xl leading-none"
         >
           {currentLanguage.flag}
         </span>

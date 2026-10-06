@@ -862,43 +862,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="styles" className="motion-reveal border-y bg-card/30">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-24">
-          <div className="flex flex-col gap-4 lg:max-w-3xl">
-            <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText
-                en="Signature styles"
-                no="Stiler og spesialiteter"
-              />
-            </h2>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="Explore the main tattoo styles at Infinity Tattoo. Each project starts with a consultation around idea, placement, size, references and how the tattoo should age on your skin."
-                no="Utforsk de viktigste stilene hos Infinity Tattoo. Hvert prosjekt starter med konsultasjon rundt idé, plassering, størrelse, referanser og hvordan tatoveringen skal eldes på huden."
-              />
-            </p>
-          </div>
-
-          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {signatureStyles.map((style) => (
-              <Link
-                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-red)] hover:bg-background/80"
-                href={style.href}
-                key={style.href}
-              >
-                <p className="font-display text-xl font-bold text-foreground">
-                  <LocalizedText en={style.titleEn} no={style.titleNo} />
-                </p>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText en={style.textEn} no={style.textNo} />
-                </p>
-                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-red)]" />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="artist" className="motion-reveal bg-card/35">
         <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
           <div className="relative min-h-[30rem] overflow-hidden rounded-lg border bg-card">
@@ -1004,6 +967,43 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="styles" className="motion-reveal border-y bg-card/30">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-24">
+          <div className="flex flex-col gap-4 lg:max-w-3xl">
+            <h2 className="font-display text-4xl font-bold sm:text-5xl">
+              <LocalizedText
+                en="Signature styles"
+                no="Stiler og spesialiteter"
+              />
+            </h2>
+            <p className="text-base leading-7 text-muted-foreground">
+              <LocalizedText
+                en="Explore the main tattoo styles at Infinity Tattoo. Each project starts with a consultation around idea, placement, size, references and how the tattoo should age on your skin."
+                no="Utforsk de viktigste stilene hos Infinity Tattoo. Hvert prosjekt starter med konsultasjon rundt idé, plassering, størrelse, referanser og hvordan tatoveringen skal eldes på huden."
+              />
+            </p>
+          </div>
+
+          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {signatureStyles.map((style) => (
+              <Link
+                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-red)] hover:bg-background/80"
+                href={style.href}
+                key={style.href}
+              >
+                <p className="font-display text-xl font-bold text-foreground">
+                  <LocalizedText en={style.titleEn} no={style.titleNo} />
+                </p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  <LocalizedText en={style.textEn} no={style.textNo} />
+                </p>
+                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-red)]" />
+              </Link>
+            ))}
           </div>
         </div>
       </section>
