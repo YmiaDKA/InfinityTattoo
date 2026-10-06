@@ -1013,7 +1013,7 @@ export default function Home() {
       >
         <div
           id="oslo"
-          className="motion-reveal grid scroll-mt-28 gap-8 border-b border-border/70 pb-12 lg:grid-cols-2 lg:items-start"
+          className="motion-reveal grid scroll-mt-28 gap-8 border-b border-border/70 pb-12 lg:grid-cols-2"
         >
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-3">
@@ -1046,17 +1046,17 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-rows-2 gap-4">
             <iframe
               title="Infinity Tattoo location on Google Maps"
               aria-label="Infinity Tattoo location on Google Maps"
-              className="block h-56 w-full rounded-3xl border-0"
+              className="block h-56 min-h-0 w-full rounded-3xl border-0 lg:h-full"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               scrolling="no"
               src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
             />
-            <PanoramaViewer className="h-56 sm:h-56 lg:h-56" />
+            <PanoramaViewer className="h-56 min-h-0 sm:h-56 lg:h-full" />
           </div>
         </div>
 
@@ -1305,7 +1305,7 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <div className="flex flex-col items-center gap-6 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8">
+          <div className="flex flex-col items-center gap-6 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:grid md:grid-cols-[auto_1fr] md:items-start lg:grid-cols-[auto_1fr_auto]">
             <span className="relative flex size-12 shrink-0 overflow-hidden rounded-full bg-foreground">
               <Image
                 src="/media/brand/infinity.svg"
@@ -1315,7 +1315,7 @@ export default function Home() {
                 sizes="48px"
               />
             </span>
-            <div className="grid max-w-full gap-6 text-left md:grid-cols-[auto_auto] md:gap-12">
+            <div className="grid max-w-full gap-6 text-left md:grid-cols-[auto_auto] md:justify-start md:gap-12">
               <div className="flex flex-col gap-2">
                 <span className="text-foreground">
                   © Infinity Tattoo Studio
@@ -1354,7 +1354,7 @@ export default function Home() {
                 </dl>
               </section>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:col-span-2 md:justify-self-end lg:col-span-1">
               <a
                 aria-label="Instagram"
                 className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
