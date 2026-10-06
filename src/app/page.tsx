@@ -2,6 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarDaysIcon,
+  UserRoundIcon,
+  PaletteIcon,
+  SparklesIcon,
+  LayersIcon,
   CircleDotIcon,
   GemIcon,
   MailIcon,
@@ -58,33 +62,33 @@ const serviceAreas = [
     area: "Lørenskog",
     href: "/#contact",
     textEn:
-      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, portrait tattoos, consultations, and Tooth Gems.",
+      "Find us at Skårersletta 48c, close to Triaden. Open the map for directions all the way to the studio.",
     textNo:
-      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, portrett tatoveringer, konsultasjoner og Tooth Gems.",
+      "Du finner oss på Skårersletta 48c, nær Triaden. Åpne kartet for veibeskrivelse helt frem til studioet.",
   },
   {
     area: "Strømmen",
     href: "/tatovering-strommen",
     textEn:
-      "Minutes from Strømmen for clients who want detailed custom tattoo work without going into central Oslo.",
+      "A short trip from Strømmen to Skårer in Lørenskog. Use Skårersletta 48c as your destination when planning your drive or bus journey.",
     textNo:
-      "Minutter fra Strømmen for kunder som vil ha detaljert custom tatovering uten å dra inn til Oslo sentrum.",
+      "En kort tur fra Strømmen til Skårer i Lørenskog. Bruk Skårersletta 48c som mål når du planlegger reisen med bil eller buss.",
   },
   {
     area: "Lillestrøm",
     href: "/tatovering-lillestrom",
     textEn:
-      "Minutes from Lillestrøm for larger pieces, sleeve tattoos, portraits, cover up planning, and consultations.",
+      "Close to Lillestrøm, with the studio on Skårersletta in Lørenskog. Check the map for your driving route or plan a bus journey towards Triaden.",
     textNo:
-      "Minutter fra Lillestrøm for større prosjekter, sleeve tatoveringer, portretter, cover up planlegging og konsultasjoner.",
+      "Kort vei fra Lillestrøm til studioet på Skårersletta i Lørenskog. Se kjøreruten i kartet eller planlegg en bussreise mot Triaden.",
   },
   {
     area: "Oslo",
     href: "/tatovering-oslo",
     textEn:
-      "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
+      "Travel from Oslo to Skårer in Lørenskog. You can take a bus towards Triaden, then walk to Skårersletta 48c. Check Ruter for departures.",
     textNo:
-      "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
+      "Reis fra Oslo til Skårer i Lørenskog. Du kan ta buss mot Triaden og gå videre til Skårersletta 48c. Sjekk Ruter for avganger.",
   },
 ];
 
@@ -712,7 +716,7 @@ export default function Home() {
 
       <section id="artist" className="motion-reveal scroll-mt-28 bg-background">
         <div className="mx-auto flex max-w-6xl flex-col gap-9 px-5 py-20 sm:px-8 lg:py-24">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">
+          <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
           <div
@@ -723,6 +727,7 @@ export default function Home() {
               <ArtistProfileCard
                 name="Nora"
                 href="/piercing"
+                side="left"
                 icon={CircleDotIcon}
                 bioEn="Piercing. Thoughtful placement and calm, personal guidance, from jewellery to aftercare."
                 bioNo="Piercing. Gjennomtenkt plassering og rolig, personlig veiledning, fra smykke til etterbehandling."
@@ -734,43 +739,55 @@ export default function Home() {
               image="/media/artist/filippos.jpg"
               icon={PenLineIcon}
               large
-              bioEn="Tattoo artist and owner with 4+ years of experience from Greece and Norway. Custom designs built around your idea and your body."
-              bioNo="Tatovør og eier med over 4 års erfaring fra Hellas og Norge. Custom design bygget rundt ideen din og kroppen din."
             >
               <ul
                 id="styles"
-                className="list-disc space-y-1 pl-4 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6"
+                className="space-y-2 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6"
               >
-                <li>
-                  <LocalizedText
-                    en="Realism and portraits"
-                    no="Realisme og portretter"
-                  />
-                </li>
-                <li>
-                  <LocalizedText
-                    en="Black & grey, blackout and cover ups"
-                    no="Black & grey, blackout og cover up"
-                  />
-                </li>
-                <li>
-                  <LocalizedText
-                    en="Sleeves and freehand Maori"
-                    no="Sleeves og freehand Maori"
-                  />
-                </li>
-                <li>
-                  <LocalizedText
-                    en="Fine line, lettering and custom work"
-                    no="Fine line, lettering og custom arbeid"
-                  />
-                </li>
+                {[
+                  {
+                    icon: UserRoundIcon,
+                    en: "Tattoo artist and owner. 4+ years of experience from Greece and Norway.",
+                    no: "Tatovør og eier. Over 4 års erfaring fra Hellas og Norge.",
+                  },
+                  {
+                    icon: PaletteIcon,
+                    en: "Custom designs shaped around your idea and your body.",
+                    no: "Custom design tilpasset ideen din og kroppen din.",
+                  },
+                  {
+                    icon: PenLineIcon,
+                    en: "Realism, portraits, fine line and lettering.",
+                    no: "Realisme, portretter, fine line og lettering.",
+                  },
+                  {
+                    icon: LayersIcon,
+                    en: "Black & grey, blackout and cover ups.",
+                    no: "Black & grey, blackout og cover up.",
+                  },
+                  {
+                    icon: SparklesIcon,
+                    en: "Sleeves and freehand Maori.",
+                    no: "Sleeves og freehand Maori.",
+                  },
+                ].map(({ icon: Icon, en, no }) => (
+                  <li key={en} className="flex items-start gap-2">
+                    <Icon
+                      aria-hidden="true"
+                      className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]"
+                    />
+                    <span>
+                      <LocalizedText en={en} no={no} />
+                    </span>
+                  </li>
+                ))}
               </ul>
             </ArtistProfileCard>
             <div className="pt-10 sm:pt-16">
               <ArtistProfileCard
                 name="Nora"
                 href="/tooth-gems"
+                side="right"
                 icon={GemIcon}
                 bioEn="Tooth Gems. Personal guidance on crystals, placement and a design that suits your smile."
                 bioNo="Tooth Gems. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
@@ -782,7 +799,7 @@ export default function Home() {
 
       <section
         id="contact"
-        className="motion-reveal mx-auto flex max-w-6xl scroll-mt-28 flex-col gap-8 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
+        className="motion-reveal mx-auto flex max-w-6xl scroll-mt-28 flex-col gap-8 border-t border-border/70 px-5 pb-10 pt-12 sm:px-8 lg:pb-14 lg:pt-16"
       >
         <div
           id="oslo"
