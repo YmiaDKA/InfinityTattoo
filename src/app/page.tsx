@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { InstagramPill } from "@/components/instagram-pill";
+import { ArtistCarousel } from "@/components/artist-carousel";
 import { ArtistProfileCard } from "@/components/artist-profile-card";
 import { LineworkBooking } from "@/components/linework-booking";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -719,11 +720,8 @@ export default function Home() {
           <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <div
-            id="services"
-            className="grid scroll-mt-28 grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)_minmax(0,1fr)] items-start gap-2 sm:gap-6 lg:gap-12"
-          >
-            <div className="pt-10 sm:pt-16">
+          <ArtistCarousel>
+            <div className="sm:pt-16">
               <ArtistProfileCard
                 name="Nora"
                 href="/piercing"
@@ -783,7 +781,7 @@ export default function Home() {
                 ))}
               </ul>
             </ArtistProfileCard>
-            <div className="pt-10 sm:pt-16">
+            <div className="sm:pt-16">
               <ArtistProfileCard
                 name="Nora"
                 href="/tooth-gems"
@@ -793,7 +791,7 @@ export default function Home() {
                 bioNo="Tooth Gems. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
               />
             </div>
-          </div>
+          </ArtistCarousel>
         </div>
       </section>
 

@@ -29,14 +29,17 @@ export function ArtistProfileCard({
   icon: Icon,
   large = false,
   side,
-  instagramHref,
+  instagramHref = "https://www.instagram.com/infinitytattoo.lorenskog/",
   children,
 }: ArtistProfileCardProps) {
   return (
     <article
-      className={cn("flex min-w-0 flex-col", large && "w-full max-w-96")}
+      className={cn(
+        "flex min-w-0 flex-col rounded-3xl border border-border bg-card/80 p-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0",
+        large && "w-full sm:max-w-96",
+      )}
     >
-      <div className="relative z-30 mb-3 flex min-h-9 items-center justify-between gap-1">
+      <div className="relative z-30 mb-2 mt-2 flex min-h-9 items-center justify-between gap-1 px-2 sm:px-3">
         <h3 className="font-display text-base font-bold text-foreground sm:text-2xl">
           {name}
         </h3>
@@ -48,11 +51,11 @@ export function ArtistProfileCard({
             aria-label={`${name} Instagram`}
             className="flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
           >
-            <InstagramIcon aria-hidden="true" className="size-5" />
+            <InstagramIcon aria-hidden="true" className="size-4" />
           </a>
         ) : (
           <span className="flex size-9 shrink-0 items-center justify-center text-muted-foreground">
-            <InstagramIcon aria-hidden="true" className="size-5" />
+            <InstagramIcon aria-hidden="true" className="size-4" />
             <span className="sr-only">
               <LocalizedText
                 en="Instagram profile coming soon"
@@ -64,9 +67,9 @@ export function ArtistProfileCard({
       </div>
       <div
         className={cn(
-          "relative aspect-[3/4] shrink-0 overflow-hidden rounded-2xl border border-border bg-card sm:rounded-[2rem]",
+          "relative aspect-[3/4] w-full shrink-0 overflow-hidden rounded-2xl border border-border bg-card sm:rounded-[2rem]",
           large && "z-20",
-          side && "w-[calc(100%+clamp(0px,calc((900px-100vw)*0.1),52px))]",
+          side && "sm:w-[calc(100%+clamp(0px,calc((900px-100vw)*0.1),52px))]",
           side === "right" && "self-end",
         )}
       >
@@ -101,7 +104,7 @@ export function ArtistProfileCard({
       </div>
       <div
         className={cn(
-          "relative z-30 flex min-w-0 flex-col gap-2 pb-1 pt-5",
+          "relative z-30 flex min-w-0 flex-col gap-2 px-2 pb-2 pt-5 sm:px-0 sm:pb-1",
           side === "right" && "text-right",
         )}
       >
