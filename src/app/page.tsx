@@ -35,16 +35,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
 
-const showcaseRows = [0, 1].map((rowIndex) => {
-  const entries = featuredGalleryImages
-    .slice(rowIndex * 3, rowIndex * 3 + 3)
-    .flatMap((image, index) => [
-      { type: "review" as const, review: testimonials[rowIndex * 3 + index] },
-      { type: "image" as const, image },
-    ]);
-  const order = rowIndex === 0 ? [0, 2, 1, 3, 4, 5] : [1, 0, 3, 2, 4, 5];
-  return order.map((index) => entries[index]);
-});
+const showcaseRows = [
+  testimonials
+    .slice(0, 6)
+    .map((review) => ({ type: "review" as const, review })),
+  featuredGalleryImages.map((image) => ({ type: "image" as const, image })),
+];
 
 type ArtistCard = {
   icon?: LucideIcon;
@@ -751,12 +747,24 @@ export default function Home() {
         aria-label="Client reviews"
       >
         <div className="mx-auto mb-7 flex max-w-6xl flex-col gap-3 px-5 text-center sm:px-8">
-          <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-            <LocalizedText
-              en="135+ Google reviews"
-              no="135+ Google-anmeldelser"
+          <div className="flex items-center justify-center gap-4 font-display text-lg font-bold text-foreground sm:gap-6 sm:text-3xl lg:text-4xl">
+            <p>
+              <LocalizedText
+                en="Over 1000+ projects"
+                no="Over 1000+ prosjekter"
+              />
+            </p>
+            <span
+              aria-hidden="true"
+              className="h-10 w-px shrink-0 bg-border sm:h-12"
             />
-          </p>
+            <p>
+              <LocalizedText
+                en="135+ Google reviews"
+                no="135+ Google-anmeldelser"
+              />
+            </p>
+          </div>
           <p className="mx-auto max-w-2xl text-sm leading-6 text-muted-foreground">
             <LocalizedText
               en="Trusted by clients from Lørenskog, Strømmen, Lillestrøm and Oslo for custom tattoo work, clear consultation, and precise execution."
@@ -773,8 +781,8 @@ export default function Home() {
               repeat={2}
               aria-label={
                 rowIndex === 0
-                  ? "Reviews and tattoo projects moving left"
-                  : "Reviews and tattoo projects moving right"
+                  ? "Client reviews moving left"
+                  : "Tattoo projects moving right"
               }
               className="motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
             >

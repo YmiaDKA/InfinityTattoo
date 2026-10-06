@@ -34,7 +34,10 @@ export function LanguageToggle() {
           <Button variant="ghost" size="icon-lg" className="rounded-full" />
         }
       >
-        <span aria-hidden="true" className="text-xl">
+        <span
+          aria-hidden="true"
+          className="flex size-6 items-center justify-center text-xl leading-none"
+        >
           {currentLanguage.flag}
         </span>
       </DropdownMenuTrigger>
