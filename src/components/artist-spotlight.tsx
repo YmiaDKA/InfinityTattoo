@@ -32,23 +32,16 @@ export function ArtistSpotlight({
 }) {
   return (
     <article className="relative isolate mx-auto flex h-full w-full max-w-lg flex-col overflow-hidden rounded-3xl border bg-card/60 lg:max-w-none">
-      <div
-        className={cn(
-          "relative",
-          mirrored
-            ? "h-96 sm:h-[26rem] lg:h-96"
-            : "h-[26rem] sm:h-[30rem] lg:h-[34rem]",
-        )}
-      >
+      <div className="relative h-[32rem] sm:h-[36rem] lg:h-[34rem]">
         <p className="relative z-20 px-6 pt-6 text-center text-sm font-semibold text-foreground sm:text-base">
           <LocalizedText en={professionEn} no={professionNo} />
         </p>
         <h3
           className={cn(
-            "artist-name pointer-events-none relative z-0 mt-3 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight",
+            "artist-name pointer-events-none relative z-0 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight",
             mirrored
-              ? "artist-name-red text-[clamp(4rem,12vw,6rem)] lg:text-[4.5rem]"
-              : "artist-name-gold text-[clamp(5rem,15vw,8rem)]",
+              ? "artist-name-red mt-3 text-[clamp(4rem,12vw,6rem)] lg:text-[4.5rem]"
+              : "artist-name-gold mt-1 text-[clamp(5rem,15vw,8rem)]",
           )}
         >
           {name}
@@ -57,8 +50,8 @@ export function ArtistSpotlight({
           href={href}
           aria-label={name}
           className={cn(
-            "artist-cutout absolute inset-x-4 bottom-0 top-20 mx-auto focus-visible:outline-2 focus-visible:outline-ring",
-            mirrored ? "max-w-80" : "max-w-lg",
+            "artist-cutout absolute bottom-0 top-20 mx-auto focus-visible:outline-2 focus-visible:outline-ring",
+            mirrored ? "inset-x-0" : "inset-x-4 max-w-lg",
           )}
         >
           <Image
@@ -67,7 +60,12 @@ export function ArtistSpotlight({
             width={width}
             height={height}
             draggable={false}
-            className="h-full w-full object-contain object-top"
+            className={cn(
+              "w-full",
+              mirrored
+                ? "absolute bottom-0 h-auto"
+                : "h-full object-contain object-bottom",
+            )}
             sizes={
               mirrored
                 ? "(min-width: 1024px) 28vw, (min-width: 640px) 440px, 84vw"

@@ -1,7 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { SparklesIcon } from "lucide-react";
+import { useState } from "react";
 
 import { LocalizedText } from "@/components/localized-text";
 import { cn } from "@/lib/utils";
@@ -9,17 +8,15 @@ import { toothGemSizes } from "@/lib/tooth-gems";
 
 export function ToothGemSizeGuide() {
   const [activeCode, setActiveCode] = useState(toothGemSizes[3].code);
-  const activeSize = useMemo(
-    () => toothGemSizes.find((item) => item.code === activeCode) ?? toothGemSizes[3],
-    [activeCode],
-  );
+  const activeSize =
+    toothGemSizes.find((item) => item.code === activeCode) ?? toothGemSizes[3];
   const gemRadius = activeSize.diameter * 13.5;
 
   return (
     <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8 lg:pb-24">
-      <div className="motion-reveal rounded-lg border bg-card/70 p-5 sm:p-6">
+      <div className="motion-reveal">
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div className="relative mx-auto flex aspect-[0.78] w-full max-w-[25rem] items-center justify-center overflow-hidden rounded-lg border border-border/70 bg-[radial-gradient(circle_at_50%_36%,rgba(255,255,255,0.16),rgba(255,255,255,0.04)_38%,transparent_68%)] p-5 shadow-2xl shadow-black/30">
+          <div className="relative mx-auto flex aspect-[0.78] w-full max-w-[25rem] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_36%,rgba(255,255,255,0.16),rgba(255,255,255,0.04)_38%,transparent_68%)] p-5">
             <svg
               aria-label={`${activeSize.code} ${activeSize.size} tooth gem size on a tooth`}
               className="relative z-10 h-full max-h-[32rem] w-full max-w-[24rem] drop-shadow-[0_2rem_3rem_rgba(0,0,0,0.55)]"
@@ -27,7 +24,13 @@ export function ToothGemSizeGuide() {
               viewBox="0 0 420 560"
             >
               <defs>
-                <linearGradient id="toothBody" x1="120" x2="320" y1="44" y2="496">
+                <linearGradient
+                  id="toothBody"
+                  x1="120"
+                  x2="320"
+                  y1="44"
+                  y2="496"
+                >
                   <stop offset="0%" stopColor="#ffffff" />
                   <stop offset="48%" stopColor="#e5e5e5" />
                   <stop offset="100%" stopColor="#f8f8f8" />
@@ -79,15 +82,13 @@ export function ToothGemSizeGuide() {
                   r={gemRadius + 3}
                   transform="translate(1.5 3)"
                 />
-                <circle
-                  fill="rgba(255,255,255,0.4)"
-                  r={gemRadius + 1.5}
-                />
+                <circle fill="rgba(255,255,255,0.4)" r={gemRadius + 1.5} />
                 <g clipPath="url(#gemClip)">
                   <circle fill="url(#gemShine)" r={gemRadius} />
                   {Array.from({ length: 10 }).map((_, index) => {
                     const angle = (Math.PI * 2 * index) / 10 - Math.PI / 2;
-                    const nextAngle = (Math.PI * 2 * (index + 1)) / 10 - Math.PI / 2;
+                    const nextAngle =
+                      (Math.PI * 2 * (index + 1)) / 10 - Math.PI / 2;
                     const x1 = Math.cos(angle) * gemRadius;
                     const y1 = Math.sin(angle) * gemRadius;
                     const x2 = Math.cos(nextAngle) * gemRadius;
@@ -95,7 +96,11 @@ export function ToothGemSizeGuide() {
                     return (
                       <path
                         d={`M 0 0 L ${x1} ${y1} L ${x2} ${y2} Z`}
-                        fill={index % 2 === 0 ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.24)"}
+                        fill={
+                          index % 2 === 0
+                            ? "rgba(255,255,255,0.3)"
+                            : "rgba(0,0,0,0.24)"
+                        }
                         key={index}
                         opacity={index < 4 ? 0.9 : 0.72}
                       />
@@ -121,13 +126,6 @@ export function ToothGemSizeGuide() {
                   stroke="rgba(255,255,255,0.82)"
                   strokeWidth="1.2"
                 />
-                <path
-                  d={`M ${gemRadius * 0.56} ${-gemRadius * 1.65} L ${gemRadius * 0.56} ${-gemRadius * 0.8} M ${gemRadius * 0.14} ${-gemRadius * 1.23} L ${gemRadius} ${-gemRadius * 1.23}`}
-                  opacity="0.92"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeWidth="1.9"
-                />
               </g>
             </svg>
             <div className="pointer-events-none absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-background/85 to-transparent p-5">
@@ -137,7 +135,9 @@ export function ToothGemSizeGuide() {
               <p className="mt-1 font-display text-5xl font-bold text-white">
                 {activeSize.code}
               </p>
-              <p className="text-2xl font-semibold text-white/85">{activeSize.size}</p>
+              <p className="text-2xl font-semibold text-white/85">
+                {activeSize.size}
+              </p>
             </div>
           </div>
 
@@ -147,7 +147,10 @@ export function ToothGemSizeGuide() {
                 <LocalizedText en="Compare the shine" no="Sammenlign shine" />
               </p>
               <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
-                <LocalizedText en="Choose your gem size" no="Velg gem størrelse" />
+                <LocalizedText
+                  en="Choose your gem size"
+                  no="Velg gem størrelse"
+                />
               </h2>
               <p className="mt-3 text-base leading-7 text-muted-foreground">
                 <LocalizedText
@@ -157,7 +160,7 @@ export function ToothGemSizeGuide() {
               </p>
             </div>
 
-            <div className="rounded-lg border border-border/70 bg-background/60 p-5">
+            <div className="py-2">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-display text-3xl font-bold text-foreground">
@@ -167,7 +170,6 @@ export function ToothGemSizeGuide() {
                     {activeSize.size}
                   </p>
                 </div>
-                <SparklesIcon className="mt-1 size-6 shrink-0 text-[color:var(--studio-gold)]" />
               </div>
               <p className="mt-4 text-sm leading-6 text-muted-foreground">
                 <LocalizedText en={activeSize.textEn} no={activeSize.textNo} />
@@ -184,6 +186,7 @@ export function ToothGemSizeGuide() {
                       : "border-border/70 bg-background/35 text-muted-foreground hover:text-foreground",
                   )}
                   key={item.code}
+                  aria-pressed={item.code === activeSize.code}
                   onClick={() => setActiveCode(item.code)}
                   onFocus={() => setActiveCode(item.code)}
                   onMouseEnter={() => setActiveCode(item.code)}

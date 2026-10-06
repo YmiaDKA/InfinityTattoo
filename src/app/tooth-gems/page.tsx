@@ -1,22 +1,20 @@
-import Image from "next/image";
 import {
   BadgeCheckIcon,
   CalendarDaysIcon,
   GemIcon,
   MoveUpRightIcon,
   ShieldCheckIcon,
-  SparklesIcon,
 } from "lucide-react";
 import Link from "next/link";
 
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
+import { ToothGemGallery } from "@/components/tooth-gem-gallery";
 import { ToothGemSizeGuide } from "@/components/tooth-gem-size-guide";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   noraHighlights,
-  supremeGemzGallery,
   toothGemDesigns,
   toothGemPrices,
 } from "@/lib/tooth-gems";
@@ -37,11 +35,10 @@ export default function ToothGemsPage() {
     <main className="min-h-screen bg-background">
       <SiteHeader bookingExternal bookingHref={supremeGemzBookingUrl} />
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:pb-24">
+      <ToothGemGallery />
+
+      <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:pb-24">
         <div className="motion-rise flex flex-col gap-6">
-          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <SparklesIcon className="size-5" />
-          </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
               Tooth Gems
@@ -57,7 +54,13 @@ export default function ToothGemsPage() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<a href={supremeGemzBookingUrl} rel="noreferrer" target="_blank" />}
+              render={
+                <a
+                  href={supremeGemzBookingUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                />
+              }
               size="lg"
             >
               <LocalizedText en="Book Tooth Gems" no="Book Tooth Gems" />
@@ -66,7 +69,7 @@ export default function ToothGemsPage() {
             <Button
               className="motion-lift-subtle rounded-full"
               nativeButton={false}
-              render={<Link href="/#tooth-gems" />}
+              render={<Link href="/#services" />}
               size="lg"
               variant="outline"
             >
@@ -78,7 +81,10 @@ export default function ToothGemsPage() {
 
         <div className="motion-stagger grid gap-3 sm:grid-cols-3">
           {toothGemPrices.map((item) => (
-            <Card className="motion-lift motion-reveal bg-card/70" key={item.titleEn}>
+            <Card
+              className="motion-lift motion-reveal bg-card/70"
+              key={item.titleEn}
+            >
               <CardContent className="flex min-h-40 flex-col gap-3 p-5">
                 <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
                   <LocalizedText en={item.titleEn} no={item.titleNo} />
@@ -113,7 +119,10 @@ export default function ToothGemsPage() {
 
           <div className="motion-stagger grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {toothGemDesigns.map((item) => (
-              <Card className="motion-lift motion-reveal bg-background/70" key={item.titleEn}>
+              <Card
+                className="motion-lift motion-reveal bg-background/70"
+                key={item.titleEn}
+              >
                 <CardContent className="flex min-h-56 flex-col gap-4 p-5">
                   <p className="font-display text-xl font-bold text-foreground">
                     <LocalizedText en={item.titleEn} no={item.titleNo} />
@@ -134,7 +143,7 @@ export default function ToothGemsPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:py-24">
+      <section className="mx-auto max-w-3xl px-5 py-16 sm:px-8 lg:py-24">
         <div className="flex flex-col gap-6">
           <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <GemIcon className="size-5" />
@@ -178,32 +187,6 @@ export default function ToothGemsPage() {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="motion-stagger grid grid-cols-2 gap-3">
-          {supremeGemzGallery.map((image, index) => (
-            <div
-              className={[
-                "motion-lift relative overflow-hidden rounded-lg border border-border/70 bg-card/40",
-                index === 0 ? "col-span-2 aspect-[1.35]" : "aspect-[0.86]",
-                index === 2 || index === 5 ? "sm:aspect-[1.2]" : "",
-              ].join(" ")}
-              key={image.src}
-            >
-              <Image
-                alt={image.alt}
-                className="object-cover"
-                fill
-                loading="eager"
-                sizes={
-                  index === 0
-                    ? "(min-width: 1024px) 620px, 90vw"
-                    : "(min-width: 1024px) 300px, 45vw"
-                }
-                src={image.src}
-              />
-            </div>
-          ))}
         </div>
       </section>
     </main>
