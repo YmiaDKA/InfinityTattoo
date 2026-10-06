@@ -11,12 +11,21 @@ import { SiteHeader } from "@/components/site-header";
 import { ToothGemGallery } from "@/components/tooth-gem-gallery";
 import { ToothGemSizeGuide } from "@/components/tooth-gem-size-guide";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   noraHighlights,
   toothGemDesigns,
   toothGemPrices,
 } from "@/lib/tooth-gems";
+
+const toothGemOptions = [
+  ...toothGemPrices.map((item) => ({
+    ...item,
+    priceEn: item.price,
+    priceNo: item.price,
+  })),
+  ...toothGemDesigns,
+];
 
 const supremeGemzBookingUrl = "https://booking.linework.com/supreme-gemz";
 
@@ -36,58 +45,32 @@ export default function ToothGemsPage() {
 
       <ToothGemGallery />
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-10 sm:px-8 lg:grid-cols-2 lg:items-start lg:pb-24">
+      <section className="mx-auto flex max-w-6xl flex-col gap-12 px-5 pb-16 pt-10 sm:px-8 lg:pb-24">
         <div className="motion-rise flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
-            <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
-              Tooth Gems
-            </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-              <LocalizedText
-                en="A separate cosmetic jewelry service inside Infinity Tattoo Studio. Clean crystal placement, small high shine details, and custom design options made to look polished on their own."
-                no="En egen kosmetisk smykkeservice hos Infinity Tattoo Studio. Ren krystallplassering, små detaljer med shine og custom design som får et eget premium uttrykk."
-              />
-            </p>
-          </div>
-          <div className="flex flex-col gap-5">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-                SUPREME.GEMZ
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold">Nora, 25</h2>
-              <p className="mt-2 text-lg font-semibold text-[color:var(--studio-gold)]">
-                Piercing / Tooth Gems
-              </p>
-            </div>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="Nora specializes in piercing jewelry styling and Swarovski crystal Tooth Gems, using quality materials chosen for skin and teeth safety. Tooth Gems are placed with dental approved equipment and real Swarovski crystals or 18k gold/white gold options."
-                no="Nora jobber med styling av piercing smykker og Swarovski Tooth Gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth Gems settes med dental godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull."
-              />
-            </p>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="From consultation and treatment to aftercare, the focus is that you feel informed, comfortable, and confident about placement, materials, healing, and long term results."
-                no="Fra konsultasjon og behandling til etterbehandling er fokuset at du føler deg godt informert og trygg på plassering, materialer, healing og resultat over tid."
-              />
-            </p>
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              {noraHighlights.map((item, index) => (
-                <div
-                  className="flex items-start gap-2 rounded-lg border border-border/70 bg-card/45 p-3 text-sm text-foreground"
-                  key={item.titleEn}
-                >
-                  {index < 2 ? (
-                    <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
-                  ) : (
-                    <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
-                  )}
-                  <LocalizedText en={item.titleEn} no={item.titleNo} />
-                </div>
-              ))}
-            </div>
-          </div>
+          <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
+            Tooth Gems
+          </h1>
+          <p className="max-w-3xl text-base leading-7 text-muted-foreground">
+            <LocalizedText
+              en="A separate cosmetic jewelry service inside Infinity Tattoo Studio. Clean crystal placement, small high shine details, and custom design options made to look polished on their own. Nora, 25, of SUPREME.GEMZ specializes in piercing jewelry styling and Swarovski crystal Tooth Gems, using quality materials chosen for skin and teeth safety. Tooth Gems are placed with dental approved equipment and real Swarovski crystals or 18k gold/white gold options. From consultation and treatment to aftercare, the focus is that you feel informed, comfortable, and confident about placement, materials, healing, and long term results."
+              no="En egen kosmetisk smykkeservice hos Infinity Tattoo Studio. Ren krystallplassering, små detaljer med shine og custom design som får et eget premium uttrykk. Nora, 25, fra SUPREME.GEMZ jobber med styling av piercing smykker og Swarovski Tooth Gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth Gems settes med dental godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull. Fra konsultasjon og behandling til etterbehandling er fokuset at du føler deg godt informert og trygg på plassering, materialer, healing og resultat over tid."
+            />
+          </p>
+          <ul className="flex max-w-3xl flex-wrap gap-x-6 gap-y-3">
+            {noraHighlights.map((item, index) => (
+              <li
+                className="flex items-start gap-2 text-sm text-foreground"
+                key={item.titleEn}
+              >
+                {index < 2 ? (
+                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
+                ) : (
+                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
+                )}
+                <LocalizedText en={item.titleEn} no={item.titleNo} />
+              </li>
+            ))}
+          </ul>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               className="motion-lift-subtle rounded-full"
@@ -117,30 +100,13 @@ export default function ToothGemsPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-8">
-          <div className="motion-stagger grid gap-3 sm:grid-cols-3">
-            {toothGemPrices.map((item) => (
-              <Card
-                className="motion-lift motion-reveal bg-card/70"
-                key={item.titleEn}
-              >
-                <CardContent className="flex min-h-40 flex-col gap-3 p-5">
-                  <p className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
-                    <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </p>
-                  <p className="font-display text-4xl font-bold text-foreground">
-                    {item.price}
-                  </p>
-                  <p className="mt-auto text-sm leading-6 text-muted-foreground">
-                    <LocalizedText en={item.textEn} no={item.textNo} />
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div className="flex flex-col gap-6">
           <div className="motion-reveal flex flex-col gap-3">
             <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText en="Design options" no="Designvalg" />
+              <LocalizedText
+                en="Designs and prices"
+                no="Designvalg og priser"
+              />
             </h2>
             <p className="max-w-2xl text-base leading-7 text-muted-foreground">
               <LocalizedText
@@ -149,16 +115,15 @@ export default function ToothGemsPage() {
               />
             </p>
           </div>
-          <div className="motion-stagger grid gap-3 sm:grid-cols-2">
-            {toothGemDesigns.map((item) => (
-              <Card
-                className="motion-lift motion-reveal bg-background/70"
-                key={item.titleEn}
-              >
-                <CardContent className="flex min-h-56 flex-col gap-4 p-5">
-                  <p className="font-display text-xl font-bold text-foreground">
+          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {toothGemOptions.map((item) => (
+              <Card className="motion-reveal min-h-48" key={item.titleEn}>
+                <CardHeader>
+                  <CardTitle>
                     <LocalizedText en={item.titleEn} no={item.titleNo} />
-                  </p>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col gap-4">
                   <p className="font-display text-3xl font-bold text-[color:var(--studio-gold)]">
                     <LocalizedText
                       en={item.priceEn ?? item.price}
