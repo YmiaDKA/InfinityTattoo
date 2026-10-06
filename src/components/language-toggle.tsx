@@ -38,7 +38,7 @@ export function LanguageToggle({
         render={
           <HeaderNavButton
             size="icon-lg"
-            className={`group relative size-10 p-0 hover:bg-transparent dark:hover:bg-transparent aria-expanded:bg-transparent ${isScrolled ? "xl:size-16" : "xl:size-12"}`}
+            className={`group relative size-10 border-0 p-0 hover:bg-transparent dark:hover:bg-transparent aria-expanded:bg-transparent ${isScrolled ? "xl:size-16" : "xl:size-12"}`}
           />
         }
       >
