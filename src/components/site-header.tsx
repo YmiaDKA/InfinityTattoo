@@ -117,6 +117,9 @@ export function SiteHeader({
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8">
+      <div className="absolute right-5 top-6 z-20 hidden xl:block sm:right-8">
+        <LanguageToggle />
+      </div>
       <nav
         ref={navRef}
         className={cn(
@@ -234,9 +237,6 @@ export function SiteHeader({
             </span>
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
-          <div className="hidden xl:block">
-            <LanguageToggle />
-          </div>
         </motion.div>
       </nav>
     </header>

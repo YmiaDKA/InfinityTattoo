@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -35,6 +34,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
 import { featuredGalleryImages, testimonials } from "@/lib/site-data";
+
+const showcaseRows = [0, 1].map((rowIndex) => {
+  const entries = featuredGalleryImages
+    .slice(rowIndex * 3, rowIndex * 3 + 3)
+    .flatMap((image, index) => [
+      { type: "review" as const, review: testimonials[rowIndex * 3 + index] },
+      { type: "image" as const, image },
+    ]);
+  const order = rowIndex === 0 ? [0, 2, 1, 3, 4, 5] : [1, 0, 3, 2, 4, 5];
+  return order.map((index) => entries[index]);
+});
 
 type ArtistCard = {
   icon?: LucideIcon;
@@ -755,7 +765,7 @@ export default function Home() {
           </p>
         </div>
         <div id="work" className="scroll-mt-28 flex flex-col gap-2">
-          {[0, 1].map((rowIndex) => (
+          {showcaseRows.map((items, rowIndex) => (
             <Marquee
               key={rowIndex}
               reverse={rowIndex === 1}
@@ -768,56 +778,56 @@ export default function Home() {
               }
               className="motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
             >
-              {featuredGalleryImages
-                .slice(rowIndex * 3, rowIndex * 3 + 3)
-                .map((image, index) => {
-                  const testimonial = testimonials[rowIndex * 3 + index];
-                  return (
-                    <Fragment key={image.src}>
-                      <Card className="h-60 w-80 shrink-0 bg-background/70 sm:h-75 sm:w-96">
-                        <CardContent className="flex h-full flex-col gap-4 px-5">
-                          <div
-                            aria-label={`${testimonial.rating}/5`}
-                            className="flex gap-1 text-[color:var(--studio-red)]"
-                          >
-                            {Array.from({ length: testimonial.rating }).map(
-                              (_, starIndex) => (
-                                <StarIcon
-                                  aria-hidden="true"
-                                  className="size-4 fill-current"
-                                  key={starIndex}
-                                />
-                              ),
-                            )}
-                          </div>
-                          <p className="line-clamp-5 text-base leading-6 text-foreground">
-                            &quot;
-                            <LocalizedText
-                              en={testimonial.quoteEn}
-                              no={testimonial.quoteNo}
-                            />
-                            &quot;
-                          </p>
-                          <p className="mt-auto text-sm font-semibold text-muted-foreground">
-                            {testimonial.name}
-                          </p>
-                        </CardContent>
-                      </Card>
-                      <Link
-                        href="/work"
-                        className="relative h-60 w-48 shrink-0 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-ring sm:h-75 sm:w-60"
+              {items.map((item) =>
+                item.type === "review" ? (
+                  <Card
+                    key={item.review.name}
+                    className="h-60 w-80 shrink-0 bg-background/70 sm:h-75 sm:w-96"
+                  >
+                    <CardContent className="flex h-full flex-col gap-4 px-5">
+                      <div
+                        aria-label={`${item.review.rating}/5`}
+                        className="flex gap-1 text-[color:var(--studio-red)]"
                       >
-                        <Image
-                          src={image.src}
-                          alt={image.alt}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 640px) 240px, 192px"
+                        {Array.from({ length: item.review.rating }).map(
+                          (_, starIndex) => (
+                            <StarIcon
+                              aria-hidden="true"
+                              className="size-4 fill-current"
+                              key={starIndex}
+                            />
+                          ),
+                        )}
+                      </div>
+                      <p className="line-clamp-5 text-base leading-6 text-foreground">
+                        &quot;
+                        <LocalizedText
+                          en={item.review.quoteEn}
+                          no={item.review.quoteNo}
                         />
-                      </Link>
-                    </Fragment>
-                  );
-                })}
+                        &quot;
+                      </p>
+                      <p className="mt-auto text-sm font-semibold text-muted-foreground">
+                        {item.review.name}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Link
+                    key={item.image.src}
+                    href="/work"
+                    className="relative h-60 w-48 shrink-0 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-ring sm:h-75 sm:w-60"
+                  >
+                    <Image
+                      src={item.image.src}
+                      alt={item.image.alt}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 640px) 240px, 192px"
+                    />
+                  </Link>
+                ),
+              )}
             </Marquee>
           ))}
         </div>
@@ -829,7 +839,7 @@ export default function Home() {
             size="lg"
             variant="outline"
           >
-            <LocalizedText en="Read all" no="Les alle" />
+            <LocalizedText en="Read all reviews" no="Les alle anmeldelser" />
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
           <Button
@@ -838,7 +848,7 @@ export default function Home() {
             render={<Link href="/work" />}
             size="lg"
           >
-            <LocalizedText en="Open projects" no="Åpne prosjekter" />
+            <LocalizedText en="See all projects" no="Se alle prosjekter" />
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
         </div>
