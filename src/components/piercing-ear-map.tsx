@@ -207,7 +207,7 @@ export function PiercingEarMap() {
                 className={cn(
                   "absolute z-10 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border bg-background/85 text-foreground shadow-lg shadow-black/30 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:size-8",
                   isActive
-                    ? "scale-110 border-[color:var(--studio-red)] bg-background text-[color:var(--studio-red)]"
+                    ? "scale-110 border-[color:var(--studio-gold)] bg-background text-[color:var(--studio-gold)]"
                     : "border-white/35 opacity-0 hover:scale-110 hover:border-white/70 hover:opacity-100 focus-visible:opacity-100",
                 )}
                 key={spot.id}
@@ -246,7 +246,7 @@ export function PiercingEarMap() {
             <p className="font-display text-3xl font-bold text-foreground">
               <LocalizedText en={activeSpot.titleEn} no={activeSpot.titleNo} />
             </p>
-            <p className="mt-2 font-display text-4xl font-bold text-[color:var(--studio-red)]">
+            <p className="mt-2 font-display text-4xl font-bold text-[color:var(--studio-gold)]">
               <LocalizedText en={activeSpot.priceEn} no={activeSpot.priceNo} />
             </p>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -260,7 +260,7 @@ export function PiercingEarMap() {
                 className={cn(
                   "rounded-lg border px-3 py-2 text-left text-xs transition",
                   spot.id === activeSpot.id
-                    ? "border-[color:var(--studio-red)] bg-background text-foreground"
+                    ? "border-[color:var(--studio-gold)] bg-background text-foreground"
                     : "border-border/70 bg-background/35 text-muted-foreground hover:text-foreground",
                 )}
                 key={spot.id}

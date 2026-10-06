@@ -77,18 +77,18 @@
   --card-foreground: oklch(0.94 0.012 75);
   --popover: oklch(0.14 0.006 28);
   --popover-foreground: oklch(0.94 0.012 75);
-  --primary: oklch(0.94 0.012 75);
+  --primary: var(--studio-gold);
   --primary-foreground: oklch(0.14 0.006 28);
   --secondary: oklch(0.22 0.007 28);
   --secondary-foreground: oklch(0.94 0.012 75);
   --muted: oklch(0.23 0.006 28);
   --muted-foreground: oklch(0.72 0.012 75);
-  --accent: oklch(0.28 0.035 22);
+  --accent: oklch(0.28 0.035 82);
   --accent-foreground: oklch(0.94 0.012 75);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.72 0.012 75);
+  --ring: var(--studio-gold);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -103,8 +103,8 @@
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
-  --studio-red: oklch(0.48 0.13 25);
-  --studio-red-soft: oklch(0.34 0.08 25 / 46%);
+  --studio-gold: #b08d45;
+  --studio-gold-soft: oklch(0.34 0.055 82 / 46%);
 }
 
 @layer base {
@@ -126,8 +126,8 @@
   }
 
   ::selection {
-    background: var(--studio-red);
-    color: var(--foreground);
+    background: var(--studio-gold);
+    color: var(--primary-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -289,13 +289,13 @@
   }
 
   .motion-lift:hover {
-    border-color: color-mix(in oklch, var(--studio-red) 48%, var(--border));
+    border-color: color-mix(in oklch, var(--studio-gold) 48%, var(--border));
     box-shadow: 0 1.35rem 3.5rem rgb(0 0 0 / 32%);
     transform: translateY(-0.32rem);
   }
 
   .motion-lift-subtle:hover {
-    border-color: color-mix(in oklch, var(--studio-red) 36%, var(--border));
+    border-color: color-mix(in oklch, var(--studio-gold) 36%, var(--border));
     transform: translateY(-0.16rem);
   }
 

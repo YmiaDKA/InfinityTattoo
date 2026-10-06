@@ -149,7 +149,7 @@ export function AreaLandingPage({
             {serviceSignals.map((item) => (
               <Card className="motion-lift motion-reveal bg-background/70" key={item.titleEn}>
                 <CardContent className="flex min-h-48 flex-col gap-4 p-5">
-                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
+                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-gold)]" />
                   <p className="font-display text-xl font-bold text-foreground">
                     <LocalizedText en={item.titleEn} no={item.titleNo} />
                   </p>

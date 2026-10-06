@@ -113,7 +113,7 @@ export default function FreehandMaoriTattooPage() {
             sizes="(min-width: 1024px) 46vw, 92vw"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background via-background/70 to-transparent px-5 pb-5 pt-24">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-red)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--studio-gold)]">
               Freehand Maori / body flow
             </p>
             <p className="mt-2 font-display text-2xl font-bold text-foreground">
@@ -150,7 +150,7 @@ export default function FreehandMaoriTattooPage() {
                   className="motion-lift-subtle flex items-center gap-3 rounded-lg border border-border/70 bg-background/55 p-4"
                   key={item}
                 >
-                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-red)]" />
+                  <ShieldCheckIcon className="size-5 text-[color:var(--studio-gold)]" />
                   <p className="font-medium text-foreground">{item}</p>
                 </div>
               ))}

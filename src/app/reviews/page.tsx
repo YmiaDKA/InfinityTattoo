@@ -65,7 +65,7 @@ export default function ReviewsPage() {
           <div className="motion-rise flex min-w-0 flex-col gap-8">
             <div className="flex min-w-0 flex-col gap-5">
               <div className="flex w-fit items-center gap-2 rounded-full border border-foreground/10 bg-background/55 px-3 py-2 text-sm font-semibold text-foreground/85 backdrop-blur">
-                <StarIcon className="size-4 fill-current text-[color:var(--studio-red)]" />
+                <StarIcon className="size-4 fill-current text-[color:var(--studio-gold)]" />
                 <LocalizedText
                   en="135+ Google reviews"
                   no="135+ Google-anmeldelser"
@@ -82,11 +82,11 @@ export default function ReviewsPage() {
               </p>
               <div className="grid grid-cols-2 gap-2.5 text-sm font-semibold text-foreground/85 sm:max-w-md">
                 <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-                  <MapPinIcon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <MapPinIcon className="size-4 shrink-0 text-[color:var(--studio-gold)]" />
                   Lørenskog
                 </div>
                 <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-                  <ShieldCheckIcon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <ShieldCheckIcon className="size-4 shrink-0 text-[color:var(--studio-gold)]" />
                   <LocalizedText en="Calm studio" no="Rolig studio" />
                 </div>
               </div>

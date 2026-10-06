@@ -163,11 +163,11 @@ export function ToothGemSizeGuide() {
                   <p className="font-display text-3xl font-bold text-foreground">
                     {activeSize.code}
                   </p>
-                  <p className="mt-1 font-display text-4xl font-bold text-[color:var(--studio-red)]">
+                  <p className="mt-1 font-display text-4xl font-bold text-[color:var(--studio-gold)]">
                     {activeSize.size}
                   </p>
                 </div>
-                <SparklesIcon className="mt-1 size-6 shrink-0 text-[color:var(--studio-red)]" />
+                <SparklesIcon className="mt-1 size-6 shrink-0 text-[color:var(--studio-gold)]" />
               </div>
               <p className="mt-4 text-sm leading-6 text-muted-foreground">
                 <LocalizedText en={activeSize.textEn} no={activeSize.textNo} />
@@ -180,7 +180,7 @@ export function ToothGemSizeGuide() {
                   className={cn(
                     "rounded-lg border px-3 py-2 text-left transition",
                     item.code === activeSize.code
-                      ? "border-[color:var(--studio-red)] bg-background text-foreground"
+                      ? "border-[color:var(--studio-gold)] bg-background text-foreground"
                       : "border-border/70 bg-background/35 text-muted-foreground hover:text-foreground",
                   )}
                   key={item.code}

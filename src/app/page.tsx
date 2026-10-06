@@ -613,21 +613,21 @@ export default function Home() {
               <span className="inline-flex items-center gap-1.5">
                 <PenLineIcon
                   aria-hidden="true"
-                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
+                  className="size-4 shrink-0 text-[color:var(--studio-gold)]"
                 />
                 <LocalizedText en="Tattoos" no="Tatovering" />
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <CircleDotIcon
                   aria-hidden="true"
-                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
+                  className="size-4 shrink-0 text-[color:var(--studio-gold)]"
                 />
                 Piercing
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <GemIcon
                   aria-hidden="true"
-                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
+                  className="size-4 shrink-0 text-[color:var(--studio-gold)]"
                 />
                 Tooth gems
               </span>
@@ -714,7 +714,7 @@ export default function Home() {
                     <CardContent className="flex h-full flex-col gap-4 px-5">
                       <div
                         aria-label={`${item.review.rating}/5`}
-                        className="flex gap-1 text-[color:var(--studio-red)]"
+                        className="flex gap-1 text-[color:var(--studio-gold)]"
                       >
                         {Array.from({ length: item.review.rating }).map(
                           (_, starIndex) => (
@@ -839,7 +839,7 @@ export default function Home() {
           <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {signatureStyles.map((style) => (
               <Link
-                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-red)] hover:bg-background/80"
+                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-gold)] hover:bg-background/80"
                 href={style.href}
                 key={style.href}
               >
@@ -849,7 +849,7 @@ export default function Home() {
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   <LocalizedText en={style.textEn} no={style.textNo} />
                 </p>
-                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-red)]" />
+                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-gold)]" />
               </Link>
             ))}
           </div>
@@ -923,14 +923,14 @@ export default function Home() {
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
           >
-            <MailIcon className="size-5 text-[color:var(--studio-red)]" />
+            <MailIcon className="size-5 text-[color:var(--studio-gold)]" />
             infinitytattoo99@gmail.com
           </a>
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="tel:+4740344775"
           >
-            <PhoneIcon className="size-5 text-[color:var(--studio-red)]" />
+            <PhoneIcon className="size-5 text-[color:var(--studio-gold)]" />
             +47 40 34 47 75
           </a>
           <a
@@ -943,14 +943,14 @@ export default function Home() {
               en="Book free consultation"
               no="Book gratis konsultasjon"
             />
-            <MoveUpRightIcon className="size-4 text-[color:var(--studio-red)]" />
+            <MoveUpRightIcon className="size-4 text-[color:var(--studio-gold)]" />
           </a>
         </div>
 
         <div className="motion-lift-subtle relative scroll-mt-28 overflow-hidden rounded-3xl bg-card/80 p-2 [overflow-anchor:none]">
           <BorderBeam
             borderWidth={1}
-            colorFrom="var(--studio-red)"
+            colorFrom="var(--studio-gold)"
             colorTo="var(--foreground)"
             duration={9}
             size={240}
@@ -998,7 +998,7 @@ export default function Home() {
                         <li>
                           Fresh Fitness,{" "}
                           <a
-                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-gold)]"
                             href={item.parkingLinks.freshFitness}
                             rel="noreferrer"
                             target="_blank"
@@ -1010,7 +1010,7 @@ export default function Home() {
                         <li>
                           Triaden Senter Uteparkering,{" "}
                           <a
-                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                            className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-gold)]"
                             href={item.parkingLinks.triaden}
                             rel="noreferrer"
                             target="_blank"
@@ -1037,7 +1037,7 @@ export default function Home() {
                         no="Infinity Tattoo ligger på "
                       />
                       <a
-                        className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-red)]"
+                        className="text-foreground underline underline-offset-4 transition hover:text-[color:var(--studio-gold)]"
                         href={item.locationLink}
                         rel="noreferrer"
                         target="_blank"

@@ -118,7 +118,7 @@ export default function ToothGemsPage() {
                   <p className="font-display text-xl font-bold text-foreground">
                     <LocalizedText en={item.titleEn} no={item.titleNo} />
                   </p>
-                  <p className="font-display text-3xl font-bold text-[color:var(--studio-red)]">
+                  <p className="font-display text-3xl font-bold text-[color:var(--studio-gold)]">
                     <LocalizedText
                       en={item.priceEn ?? item.price}
                       no={item.priceNo ?? item.price}
@@ -146,7 +146,7 @@ export default function ToothGemsPage() {
             <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
               Nora, 25
             </h2>
-            <p className="mt-2 text-lg font-semibold text-[color:var(--studio-red)]">
+            <p className="mt-2 text-lg font-semibold text-[color:var(--studio-gold)]">
               Piercing / Tooth gems
             </p>
           </div>
@@ -170,9 +170,9 @@ export default function ToothGemsPage() {
                 key={item.titleEn}
               >
                 {index < 2 ? (
-                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
                 ) : (
-                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
                 )}
                 <LocalizedText en={item.titleEn} no={item.titleNo} />
               </div>

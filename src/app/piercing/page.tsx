@@ -123,7 +123,7 @@ export default function PiercingPage() {
             <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">
               Nora, 25
             </h2>
-            <p className="mt-2 text-lg font-semibold text-[color:var(--studio-red)]">
+            <p className="mt-2 text-lg font-semibold text-[color:var(--studio-gold)]">
               Piercing / Tooth gems
             </p>
           </div>
@@ -147,9 +147,9 @@ export default function PiercingPage() {
                 key={item.titleEn}
               >
                 {index < 2 ? (
-                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <BadgeCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
                 ) : (
-                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-red)]" />
+                  <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]" />
                 )}
                 <LocalizedText en={item.titleEn} no={item.titleNo} />
               </div>
@@ -205,9 +205,9 @@ export default function PiercingPage() {
                     <p className="font-display text-2xl font-bold text-foreground">
                       <LocalizedText en={item.titleEn} no={item.titleNo} />
                     </p>
-                    <CircleDotIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-red)]" />
+                    <CircleDotIcon className="mt-1 size-5 shrink-0 text-[color:var(--studio-gold)]" />
                   </div>
-                  <p className="font-display text-3xl font-bold text-[color:var(--studio-red)]">
+                  <p className="font-display text-3xl font-bold text-[color:var(--studio-gold)]">
                     {item.price}
                   </p>
                   <p className="mt-auto text-sm leading-6 text-muted-foreground">

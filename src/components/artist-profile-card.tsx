@@ -70,7 +70,7 @@ export function ArtistProfileCard({
           </div>
         )}
         <span className="absolute -bottom-px -right-px flex size-16 items-center justify-center rounded-tl-[1.5rem] sm:size-20 sm:rounded-tl-[2rem] border-l border-t border-border bg-background p-2">
-          <span className="flex size-11 items-center justify-center rounded-full sm:size-14 bg-foreground text-background transition-colors group-hover:bg-[color:var(--studio-red)] group-hover:text-white">
+          <span className="flex size-11 items-center justify-center rounded-full sm:size-14 bg-foreground text-background transition-colors group-hover:bg-[color:var(--studio-gold)] group-hover:text-primary-foreground">
             <MoveUpRightIcon aria-hidden="true" className="size-6" />
           </span>
         </span>
