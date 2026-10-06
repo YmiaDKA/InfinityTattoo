@@ -121,7 +121,9 @@ export function SiteHeader({
         ref={navRef}
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 xl:grid-cols-[1fr_auto_1fr]",
-          isScrolled ? "max-xl:shadow-2xl max-xl:shadow-black/20" : "px-0",
+          isScrolled
+            ? "max-xl:grid-cols-[minmax(0,1fr)_auto] max-xl:shadow-2xl max-xl:shadow-black/20"
+            : "px-0",
         )}
         aria-label="Main navigation"
       >
@@ -183,9 +185,12 @@ export function SiteHeader({
 
         <div
           ref={mobilePickerRef}
-          className="relative z-10 -translate-x-3.5 justify-self-center xl:hidden"
+          className={cn(
+            "relative z-10 justify-self-center xl:hidden",
+            isScrolled && "hidden",
+          )}
         >
-          <LanguageToggle />
+          {!isScrolled ? <LanguageToggle /> : null}
         </div>
 
         <div
