@@ -785,6 +785,7 @@ export default function Home() {
               <ArtistProfileCard
                 name="Nora"
                 href="/tooth-gems"
+                image="/media/artist/tooth-gems.jpg"
                 side="right"
                 icon={GemIcon}
                 bioEn="Tooth Gems. Personal guidance on crystals, placement and a design that suits your smile."
