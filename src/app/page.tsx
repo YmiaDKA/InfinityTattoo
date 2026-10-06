@@ -1156,7 +1156,7 @@ export default function Home() {
                 />
               </p>
               <Button
-                className="motion-lift-subtle rounded-full"
+                className="rounded-full"
                 nativeButton={false}
                 render={
                   <a
@@ -1236,7 +1236,7 @@ export default function Home() {
                 </dd>
               </dl>
             </section>
-            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-self-end lg:flex-col">
+            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-self-end lg:flex-col lg:items-end">
               <a
                 aria-label="Instagram"
                 className="lg:order-2 motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
