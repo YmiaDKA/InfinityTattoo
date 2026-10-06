@@ -126,7 +126,7 @@ export function SiteHeader({
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8 xl:pr-28">
       <div className="absolute right-5 top-5 z-20 hidden h-16 items-center sm:right-8 xl:flex">
-        <LanguageToggle isScrolled={isScrolled} />
+        <LanguageToggle />
       </div>
       <nav
         ref={navRef}

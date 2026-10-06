@@ -17,11 +17,7 @@ const languages: { value: Language; name: string; flag: string }[] = [
   { value: "EN", name: "English", flag: "🇬🇧" },
 ];
 
-export function LanguageToggle({
-  isScrolled = false,
-}: {
-  isScrolled?: boolean;
-}) {
+export function LanguageToggle() {
   const activeLanguage = useLanguage();
   const currentLanguage = languages.find(
     (language) => language.value === activeLanguage,
@@ -38,13 +34,13 @@ export function LanguageToggle({
         render={
           <HeaderNavButton
             size="icon-lg"
-            className={`group relative size-10 border-0 p-0 hover:bg-transparent dark:hover:bg-transparent aria-expanded:bg-transparent ${isScrolled ? "xl:size-16" : "xl:size-12"}`}
+            className="group relative size-10 border-0 p-0 hover:bg-transparent dark:hover:bg-transparent aria-expanded:bg-transparent xl:size-16"
           />
         }
       >
         <HeaderPillSurface
           data-desktop="true"
-          data-scrolled={isScrolled ? "true" : "false"}
+          data-scrolled="true"
           className="inset-0 opacity-0 group-hover:opacity-100 group-aria-expanded:opacity-100 group-focus-visible:opacity-100"
         />
         <span
@@ -54,7 +50,12 @@ export function LanguageToggle({
           {currentLanguage.flag}
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={8} className="min-w-40">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        positionMethod="fixed"
+        className="min-w-40"
+      >
         <DropdownMenuGroup>
           <DropdownMenuRadioGroup
             value={activeLanguage}
