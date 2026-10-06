@@ -20,8 +20,6 @@ const navItems = [
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
 
-const expandedContentInset = 6;
-const expandedLogoOffset = 3;
 const mobileExpandedContentInset = 14;
 
 type SiteHeaderProps = {
@@ -53,7 +51,7 @@ export function SiteHeader({
     let lastValue = false;
 
     const updateViewport = () => {
-      setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+      setIsDesktop(window.matchMedia("(min-width: 1280px)").matches);
     };
 
     const measurePill = () => {
@@ -65,19 +63,21 @@ export function SiteHeader({
         return;
       }
 
-      const nextIsDesktop = window.matchMedia("(min-width: 768px)").matches;
+      const nextIsDesktop = window.matchMedia("(min-width: 1280px)").matches;
       const navRect = nav.getBoundingClientRect();
       const itemRect = items.getBoundingClientRect();
       const mobileRect = mobilePicker.getBoundingClientRect();
-      const canExpand = nextIsDesktop ? itemRect.width > 0 : mobileRect.width > 0;
-      const expandedWidth = nextIsDesktop
-        ? Math.min(navRect.width, 896)
-        : navRect.width;
+      const canExpand = nextIsDesktop
+        ? itemRect.width > 0
+        : mobileRect.width > 0;
+      const expandedWidth = navRect.width;
       const expandedLeft = nextIsDesktop
         ? (navRect.width - expandedWidth) / 2
         : 0;
       const expandedHeight = nextIsDesktop ? 56 : navRect.height;
-      const expandedTop = nextIsDesktop ? (navRect.height - expandedHeight) / 2 : 0;
+      const expandedTop = nextIsDesktop
+        ? (navRect.height - expandedHeight) / 2
+        : 0;
       const collapsedRect = nextIsDesktop ? itemRect : mobileRect;
 
       setPillBounds({
@@ -116,19 +116,12 @@ export function SiteHeader({
   }, []);
 
   return (
-    <header
-      className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8"
-    >
-      <div className="absolute right-5 top-6 z-20 hidden md:block sm:right-8">
-        <LanguageToggle large />
-      </div>
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8">
       <nav
         ref={navRef}
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 md:grid-cols-[1fr_auto_1fr]",
-          isScrolled
-            ? "max-md:shadow-2xl max-md:shadow-black/20"
-            : "px-0"
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 xl:grid-cols-[1fr_auto_1fr]",
+          isScrolled ? "max-xl:shadow-2xl max-xl:shadow-black/20" : "px-0",
         )}
         aria-label="Main navigation"
       >
@@ -138,7 +131,9 @@ export function SiteHeader({
             data-desktop={isDesktop ? "true" : "false"}
             data-scrolled={isScrolled ? "true" : "false"}
             animate={{
-              height: isScrolled ? pillBounds.expandedHeight : pillBounds.height,
+              height: isScrolled
+                ? pillBounds.expandedHeight
+                : pillBounds.height,
               left: isScrolled ? pillBounds.expandedLeft : pillBounds.left,
               top: isScrolled ? pillBounds.expandedTop : pillBounds.top,
               width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
@@ -155,13 +150,7 @@ export function SiteHeader({
         ) : null}
         <motion.div
           animate={{
-            x: isScrolled
-              ? isDesktop
-                ? (pillBounds?.expandedLeft ?? 0) +
-                  expandedContentInset +
-                  expandedLogoOffset
-                : mobileExpandedContentInset
-              : 0,
+            x: isScrolled ? (isDesktop ? 0 : mobileExpandedContentInset) : 0,
           }}
           className="relative z-10 min-w-0 justify-self-start"
           initial={false}
@@ -174,7 +163,7 @@ export function SiteHeader({
             <span
               className={cn(
                 "relative flex size-9 shrink-0 overflow-hidden rounded-full bg-foreground transition-transform sm:size-11",
-                isScrolled && "md:-translate-x-1"
+                isScrolled && "xl:-translate-x-1",
               )}
             >
               <Image
@@ -194,14 +183,14 @@ export function SiteHeader({
 
         <div
           ref={mobilePickerRef}
-          className="relative z-10 -translate-x-3.5 justify-self-center md:hidden"
+          className="relative z-10 -translate-x-3.5 justify-self-center xl:hidden"
         >
           <LanguageToggle />
         </div>
 
         <div
           ref={navItemsRef}
-          className="relative z-10 hidden h-12 items-center gap-0.5 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 md:flex"
+          className="relative z-10 hidden h-12 items-center gap-0.5 rounded-full border border-transparent bg-transparent px-1 transition-colors duration-75 xl:flex"
         >
           {navItems.map((item) => (
             <a
@@ -216,18 +205,14 @@ export function SiteHeader({
 
         <motion.div
           animate={{
-            x: isScrolled
-              ? isDesktop
-                ? -((pillBounds?.expandedLeft ?? 0) + expandedContentInset)
-                : -mobileExpandedContentInset
-              : 0,
+            x: isScrolled ? (isDesktop ? 0 : -mobileExpandedContentInset) : 0,
           }}
           className="relative z-10 flex items-center gap-2 justify-self-end"
           initial={false}
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
           <Button
-            className="min-h-11 gap-2 rounded-full px-4 !py-2.5 text-sm sm:min-h-12 sm:px-6 sm:text-base md:px-8"
+            className="min-h-11 gap-2 rounded-full px-4 !py-2.5 text-sm sm:min-h-12 sm:px-6 sm:text-base xl:px-8"
             nativeButton={false}
             render={
               bookingExternal ? (
@@ -238,12 +223,15 @@ export function SiteHeader({
             }
             size="lg"
           >
-            <span className="md:hidden">Book</span>
-            <span className="hidden md:inline">
+            <span className="xl:hidden">Book</span>
+            <span className="hidden xl:inline">
               <LocalizedText en="Book session" no="Book time" />
             </span>
             <CalendarDaysIcon data-icon="inline-end" />
           </Button>
+          <div className="hidden xl:block">
+            <LanguageToggle />
+          </div>
         </motion.div>
       </nav>
     </header>
