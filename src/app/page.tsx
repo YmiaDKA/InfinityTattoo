@@ -1019,10 +1019,7 @@ export default function Home() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-3">
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                <LocalizedText
-                  en="Tattoo studio near you"
-                  no="Tatoveringsstudio nær deg"
-                />
+                <LocalizedText en="The Studio" no="Studioet" />
               </h2>
             </div>
             <ul className="flex list-disc flex-col gap-5 pl-5 marker:text-muted-foreground">

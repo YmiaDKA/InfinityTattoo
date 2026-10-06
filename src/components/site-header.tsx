@@ -6,6 +6,7 @@ import { CalendarDaysIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
+import { HeaderPillSurface } from "@/components/header-pill-surface";
 import { HeaderNavButton } from "@/components/header-nav-button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { LocalizedText } from "@/components/localized-text";
@@ -20,8 +21,6 @@ const navItems = [
   { labelEn: "Contact", labelNo: "Kontakt", href: "/#contact" },
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
-
-const mobileExpandedContentInset = 14;
 
 type SiteHeaderProps = {
   bookingExternal?: boolean;
@@ -75,7 +74,7 @@ export function SiteHeader({
       const expandedLeft = nextIsDesktop
         ? (navRect.width - expandedWidth) / 2
         : 0;
-      const expandedHeight = nextIsDesktop ? 56 : navRect.height;
+      const expandedHeight = navRect.height;
       const expandedTop = nextIsDesktop
         ? (navRect.height - expandedHeight) / 2
         : 0;
@@ -102,6 +101,13 @@ export function SiteHeader({
       }
     };
 
+    const resizeObserver = new ResizeObserver(measurePill);
+    [navRef.current, navItemsRef.current, mobilePickerRef.current].forEach(
+      (element) => {
+        if (element) resizeObserver.observe(element);
+      },
+    );
+
     measurePill();
     updateViewport();
     updateScrollState();
@@ -110,6 +116,7 @@ export function SiteHeader({
     window.addEventListener("scroll", updateScrollState, { passive: true });
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", measurePill);
       window.removeEventListener("resize", updateViewport);
@@ -117,23 +124,22 @@ export function SiteHeader({
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8">
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-5 pt-5 sm:px-8 xl:pr-28">
       <div className="absolute right-5 top-5 z-20 hidden h-16 items-center sm:right-8 xl:flex">
-        <LanguageToggle />
+        <LanguageToggle isScrolled={isScrolled} />
       </div>
       <nav
         ref={navRef}
         className={cn(
-          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full sm:gap-3 xl:grid-cols-[1fr_auto_1fr]",
+          "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full px-3 sm:gap-3 xl:grid-cols-[1fr_auto_1fr]",
           isScrolled
             ? "max-xl:grid-cols-[minmax(0,1fr)_auto] max-xl:shadow-2xl max-xl:shadow-black/20"
-            : "px-0",
+            : "",
         )}
         aria-label="Main navigation"
       >
         {pillBounds ? (
-          <motion.span
-            aria-hidden="true"
+          <HeaderPillSurface
             data-desktop={isDesktop ? "true" : "false"}
             data-scrolled={isScrolled ? "true" : "false"}
             animate={{
@@ -144,7 +150,7 @@ export function SiteHeader({
               top: isScrolled ? pillBounds.expandedTop : pillBounds.top,
               width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
             }}
-            className="header-pill-surface pointer-events-none absolute z-0 block rounded-full border shadow-2xl shadow-black/20 backdrop-blur-2xl"
+            className="z-0 block"
             initial={false}
             transition={{
               height: { type: "spring", duration: 0.42, bounce: 0.08 },
@@ -156,7 +162,7 @@ export function SiteHeader({
         ) : null}
         <motion.div
           animate={{
-            x: isScrolled ? (isDesktop ? 0 : mobileExpandedContentInset) : 0,
+            x: 0,
           }}
           className="relative z-10 min-w-0 justify-self-start"
           initial={false}
@@ -215,7 +221,7 @@ export function SiteHeader({
 
         <motion.div
           animate={{
-            x: isScrolled ? (isDesktop ? 0 : -mobileExpandedContentInset) : 0,
+            x: 0,
           }}
           className="relative z-10 flex items-center gap-2 justify-self-end"
           initial={false}
