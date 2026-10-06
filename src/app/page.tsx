@@ -789,7 +789,7 @@ export default function Home() {
             </Card>
           ))}
         </Marquee>
-        <div className="mt-6 flex justify-center px-5">
+        <div className="my-6 flex flex-wrap justify-center gap-3 px-5">
           <Button
             className="motion-lift-subtle rounded-full"
             nativeButton={false}
@@ -797,10 +797,43 @@ export default function Home() {
             size="lg"
             variant="outline"
           >
-            Read all
+            <LocalizedText en="Read all" no="Les alle" />
+            <MoveUpRightIcon data-icon="inline-end" />
+          </Button>
+          <Button
+            className="motion-lift-subtle rounded-full"
+            nativeButton={false}
+            render={<Link href="/work" />}
+            size="lg"
+          >
+            <LocalizedText en="Open projects" no="Åpne prosjekter" />
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
         </div>
+        <Marquee
+          id="work"
+          aria-label="Recent tattoo projects"
+          reverse
+          pauseOnHover
+          repeat={2}
+          className="scroll-mt-28 motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
+        >
+          {featuredGalleryImages.map((image) => (
+            <Link
+              href="/work"
+              className="relative aspect-[4/5] w-40 shrink-0 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-ring sm:w-60"
+              key={image.src}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                sizes="(min-width: 640px) 240px, 160px"
+              />
+            </Link>
+          ))}
+        </Marquee>
       </section>
 
       <section id="styles" className="motion-reveal border-y bg-card/30">
@@ -837,64 +870,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section
-        id="work"
-        className="motion-reveal mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-28"
-      >
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <h2 className="font-display text-4xl font-bold sm:text-5xl">
-            <LocalizedText en="Recent projects" no="Nylige prosjekter" />
-          </h2>
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
-            <Button
-              className="motion-lift-subtle rounded-full"
-              nativeButton={false}
-              render={
-                <a
-                  href="https://www.instagram.com/infinitytattoo.lorenskog/"
-                  rel="noreferrer"
-                  target="_blank"
-                />
-              }
-              size="lg"
-              variant="outline"
-            >
-              <InstagramIcon data-icon="inline-start" />
-              Instagram
-            </Button>
-            <Button
-              className="motion-lift-subtle rounded-full"
-              nativeButton={false}
-              render={<Link href="/work" />}
-              size="lg"
-            >
-              View all
-              <MoveUpRightIcon data-icon="inline-end" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="motion-stagger grid grid-cols-2 gap-3 lg:grid-cols-3">
-          {featuredGalleryImages.map((image) => (
-            <div
-              className="group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card transition duration-300 hover:-translate-y-1 hover:border-foreground/30"
-              key={image.src}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 30vw, 45vw"
-              />
-              <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] font-medium tracking-[0.14em] text-foreground/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                {image.tag}
-              </span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -1023,12 +998,6 @@ export default function Home() {
                   no="Tatoveringsstudio nær deg"
                 />
               </h2>
-              <p className="text-base leading-7 text-muted-foreground">
-                <LocalizedText
-                  en="Coming from Oslo, Strømmen or Lillestrøm? Infinity Tattoo is at Skårersletta 48c in Lørenskog. Triaden offers 2 hours of free parking, only a 2–3 minute walk from the studio."
-                  no="Kommer du fra Oslo, Strømmen eller Lillestrøm? Infinity Tattoo ligger på Skårersletta 48c i Lørenskog. På Triaden får du 2 timer gratis parkering, bare 2–3 minutter fra studioet."
-                />
-              </p>
             </div>
             <ul className="flex list-disc flex-col gap-5 pl-5 marker:text-muted-foreground">
               {serviceAreas.map((item) => (
