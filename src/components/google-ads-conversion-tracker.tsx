@@ -5,6 +5,7 @@ import { useEffect } from "react";
 const bookingConversionSendTo = "AW-18110021666/29TSCIuY498cEKKAxLtD";
 const infinityBookingUrl = "https://booking.linework.com/infinity";
 const bookingIntentStorageKey = "infinity_tattoo_booking_intent_tracked";
+const bookingCompleteStorageKey = "infinity_tattoo_booking_complete_tracked";
 
 declare global {
   interface Window {
@@ -27,20 +28,47 @@ export function GoogleAdsConversionTracker() {
     };
 
     const trackBookingIntent = (source: string) => {
+      if (sessionStorage.getItem(bookingIntentStorageKey)) {
+        return;
+      }
+
+      sessionStorage.setItem(bookingIntentStorageKey, "true");
       trackEvent("booking_intent", {
         booking_source: source,
         booking_provider: "linework",
         booking_url: infinityBookingUrl,
       });
+    };
 
-      if (!window.gtag || sessionStorage.getItem(bookingIntentStorageKey)) {
+    const trackBookingComplete = (source: string) => {
+      if (sessionStorage.getItem(bookingCompleteStorageKey)) {
         return;
       }
 
-      sessionStorage.setItem(bookingIntentStorageKey, "true");
+      sessionStorage.setItem(bookingCompleteStorageKey, "true");
+      trackEvent("booking_complete", {
+        booking_source: source,
+        booking_provider: "linework",
+        booking_url: infinityBookingUrl,
+      });
       trackEvent("conversion", {
         send_to: bookingConversionSendTo,
       });
+    };
+
+    const isLineworkCompletionMessage = (data: unknown) => {
+      const normalizedData =
+        typeof data === "string"
+          ? data.toLowerCase()
+          : JSON.stringify(data)?.toLowerCase() ?? "";
+
+      return (
+        normalizedData.includes("complete") ||
+        normalizedData.includes("confirmation") ||
+        normalizedData.includes("confirmed") ||
+        normalizedData.includes("success") ||
+        normalizedData.includes("booked")
+      );
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -73,6 +101,10 @@ export function GoogleAdsConversionTracker() {
             ? "object"
             : typeof event.data,
       });
+
+      if (isLineworkCompletionMessage(event.data)) {
+        trackBookingComplete("linework-message");
+      }
     };
 
     const bookingFrame = document.querySelector<HTMLIFrameElement>(
