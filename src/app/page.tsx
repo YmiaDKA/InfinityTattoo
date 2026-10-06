@@ -16,8 +16,8 @@ import {
 } from "lucide-react";
 
 import { InstagramPill } from "@/components/instagram-pill";
-import { ArtistCarousel } from "@/components/artist-carousel";
-import { ArtistProfileCard } from "@/components/artist-profile-card";
+import { StudioAddress } from "@/components/studio-address";
+import { ArtistSpotlight } from "@/components/artist-spotlight";
 import { LineworkBooking } from "@/components/linework-booking";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { LocalizedText } from "@/components/localized-text";
@@ -58,38 +58,31 @@ const showcaseRows = [
     .map((image) => ({ type: "image" as const, image })),
 ];
 
+// Approximate road distances from the town centres, rounded for the area overview.
 const serviceAreas = [
   {
     area: "Lørenskog",
     href: "/#contact",
-    textEn:
-      "Find us at Skårersletta 48c, close to Triaden. Open the map for directions all the way to the studio.",
-    textNo:
-      "Du finner oss på Skårersletta 48c, nær Triaden. Åpne kartet for veibeskrivelse helt frem til studioet.",
+    textEn: "On Skårer in Lørenskog, close to Triaden.",
+    textNo: "På Skårer i Lørenskog, nær Triaden.",
   },
   {
     area: "Strømmen",
     href: "/tatovering-strommen",
-    textEn:
-      "A short trip from Strømmen to Skårer in Lørenskog. Use Skårersletta 48c as your destination when planning your drive or bus journey.",
-    textNo:
-      "En kort tur fra Strømmen til Skårer i Lørenskog. Bruk Skårersletta 48c som mål når du planlegger reisen med bil eller buss.",
+    textEn: "About 5 km from central Strømmen.",
+    textNo: "Ca. 5 km fra Strømmen sentrum.",
   },
   {
     area: "Lillestrøm",
     href: "/tatovering-lillestrom",
-    textEn:
-      "Close to Lillestrøm, with the studio on Skårersletta in Lørenskog. Check the map for your driving route or plan a bus journey towards Triaden.",
-    textNo:
-      "Kort vei fra Lillestrøm til studioet på Skårersletta i Lørenskog. Se kjøreruten i kartet eller planlegg en bussreise mot Triaden.",
+    textEn: "About 8 km from central Lillestrøm.",
+    textNo: "Ca. 8 km fra Lillestrøm sentrum.",
   },
   {
     area: "Oslo",
     href: "/tatovering-oslo",
-    textEn:
-      "Travel from Oslo to Skårer in Lørenskog. You can take a bus towards Triaden, then walk to Skårersletta 48c. Check Ruter for departures.",
-    textNo:
-      "Reis fra Oslo til Skårer i Lørenskog. Du kan ta buss mot Triaden og gå videre til Skårersletta 48c. Sjekk Ruter for avganger.",
+    textEn: "About 17 km from central Oslo.",
+    textNo: "Ca. 17 km fra Oslo sentrum.",
   },
 ];
 
@@ -710,36 +703,27 @@ export default function Home() {
           <h2 className="text-center font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <ArtistCarousel>
-            <div className="sm:pt-16">
-              <ArtistProfileCard
-                name="Nora"
-                href="/piercing"
-                professionEn="Piercings"
-                professionNo="Piercing"
-                side="left"
-                icon={CircleDotIcon}
-                bioEn="Piercing. Thoughtful placement and calm, personal guidance, from jewellery to aftercare."
-                bioNo="Piercing. Gjennomtenkt plassering og rolig, personlig veiledning, fra smykke til etterbehandling."
-              />
-            </div>
-            <ArtistProfileCard
+          <div
+            id="services"
+            className="flex scroll-mt-28 flex-col gap-14 sm:gap-16 lg:gap-0"
+          >
+            <ArtistSpotlight
               name="Filip"
               professionEn="Tattoo artist"
               professionNo="Tatovør"
               href="/work"
-              image="/media/artist/filippos.jpg"
-              icon={PenLineIcon}
-              large
+              image="/media/artist/filip-cutout.png"
+              width={1230}
+              height={1687}
             >
               <ul
                 id="styles"
-                className="space-y-2 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6"
+                className="space-y-3 text-sm leading-6 text-muted-foreground"
               >
                 {[
                   {
                     icon: UserRoundIcon,
-                    en: "Tattoo artist and owner. 4+ years of experience from Greece and Norway.",
+                    en: "Artist and owner. 4+ years of experience from Greece and Norway.",
                     no: "Tatovør og eier. Over 4 års erfaring fra Hellas og Norge.",
                   },
                   {
@@ -766,7 +750,7 @@ export default function Home() {
                   <li key={en} className="flex items-start gap-2">
                     <Icon
                       aria-hidden="true"
-                      className="mt-0.5 size-4 shrink-0 text-[color:var(--studio-gold)]"
+                      className="mt-1 size-4 shrink-0 text-[color:var(--studio-gold)]"
                     />
                     <span>
                       <LocalizedText en={en} no={no} />
@@ -774,21 +758,56 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-            </ArtistProfileCard>
-            <div className="sm:pt-16">
-              <ArtistProfileCard
-                name="Nora"
-                href="/tooth-gems"
-                professionEn="Tooth Gems"
-                professionNo="Tooth Gems"
-                image="/media/artist/tooth-gems.jpg"
-                side="right"
-                icon={GemIcon}
-                bioEn="Tooth Gems. Personal guidance on crystals, placement and a design that suits your smile."
-                bioNo="Tooth Gems. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
-              />
-            </div>
-          </ArtistCarousel>
+            </ArtistSpotlight>
+            <ArtistSpotlight
+              name="Nora"
+              professionEn="Piercing & Tooth Gems"
+              professionNo="Piercing & Tooth Gems"
+              href="/tooth-gems"
+              image="/media/artist/nora-cutout.png"
+              width={1576}
+              height={1539}
+              mirrored
+            >
+              <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
+                {[
+                  {
+                    icon: CircleDotIcon,
+                    en: "Piercing with thoughtful placement and personal guidance.",
+                    no: "Piercing med gjennomtenkt plassering og personlig veiledning.",
+                  },
+                  {
+                    icon: GemIcon,
+                    en: "Tooth Gems with crystals and designs that suit your smile.",
+                    no: "Tooth Gems med krystaller og design som passer smilet ditt.",
+                  },
+                  {
+                    icon: SparklesIcon,
+                    en: "Help choosing jewellery, crystals and placement.",
+                    no: "Hjelp til å velge smykker, krystaller og plassering.",
+                  },
+                  {
+                    icon: UserRoundIcon,
+                    en: "Calm guidance from your first visit through aftercare.",
+                    no: "Rolig veiledning fra første besøk til etterbehandling.",
+                  },
+                ].map(({ icon: Icon, en, no }) => (
+                  <li
+                    key={en}
+                    className="flex flex-row-reverse items-start gap-2"
+                  >
+                    <Icon
+                      aria-hidden="true"
+                      className="mt-1 size-4 shrink-0 text-[#d85a42]"
+                    />
+                    <span>
+                      <LocalizedText en={en} no={no} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </ArtistSpotlight>
+          </div>
         </div>
       </section>
 
@@ -805,6 +824,7 @@ export default function Home() {
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
                 <LocalizedText en="The Studio" no="Studioet" />
               </h2>
+              <StudioAddress />
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
                 <LocalizedText
                   en="A hygienic, private and calm studio, with space for longer sessions, without the hassle of city centre parking."

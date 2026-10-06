@@ -18,6 +18,7 @@ export function InstagramPill({ className }: { className?: string }) {
       Instagram
       <MoveUpRightIcon
         aria-hidden="true"
+        data-icon="inline-end"
         className="size-4 text-[color:var(--studio-gold)]"
       />
     </a>
