@@ -4,19 +4,14 @@ import {
   CalendarDaysIcon,
   CircleDotIcon,
   GemIcon,
-  ContrastIcon,
-  BadgeCheckIcon,
-  Maximize2Icon,
   MailIcon,
   MoveUpRightIcon,
   PenLineIcon,
   PhoneIcon,
-  ShieldCheckIcon,
   StarIcon,
-  SquareIcon,
-  type LucideIcon,
 } from "lucide-react";
 
+import { ArtistProfileCard } from "@/components/artist-profile-card";
 import { LineworkBooking } from "@/components/linework-booking";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { LocalizedText } from "@/components/localized-text";
@@ -29,7 +24,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,89 +35,6 @@ const showcaseRows = [
     .slice(0, 6)
     .map((review) => ({ type: "review" as const, review })),
   featuredGalleryImages.map((image) => ({ type: "image" as const, image })),
-];
-
-type ArtistCard = {
-  icon?: LucideIcon;
-  emoji?: string;
-  titleEn: string;
-  titleNo: string;
-  textEn: string;
-  textNo: string;
-  href?: string;
-};
-
-const artistStyles: ArtistCard[] = [
-  {
-    icon: Maximize2Icon,
-    titleEn: "Large-scale realism",
-    titleNo: "Realisme i stor skala",
-    textEn:
-      "Sleeves, portraits, and statement pieces built with depth and contrast.",
-    textNo:
-      "Sleeves, portretter og større prosjekter bygget med dybde og kontrast.",
-  },
-  {
-    icon: ContrastIcon,
-    titleEn: "Black & grey focus",
-    titleNo: "Black & grey fokus",
-    textEn:
-      "Clean contrast, smooth shading, and structure made to hold over time.",
-    textNo:
-      "Ren kontrast, myk shading og struktur som er laget for å holde over tid.",
-  },
-  {
-    icon: SquareIcon,
-    titleEn: "Blackout work",
-    titleNo: "Blackout arbeid",
-    textEn:
-      "Bold blackout and heavy blackwork pieces planned with clean edges, coverage, and body flow.",
-    textNo:
-      "Sterke blackout og heavy blackwork prosjekter planlagt med rene kanter, dekning og kroppsflyt.",
-  },
-  {
-    icon: PenLineIcon,
-    titleEn: "Freehand Maori",
-    titleNo: "Freehand Maori",
-    textEn:
-      "Custom Maori and Polynesian-inspired flow work drawn directly around your body and placement.",
-    textNo:
-      "Sterk Maori og Polynesian-inspirert flyt tegnet direkte rundt kroppen og plasseringen din.",
-    href: "/freehand-maori-tattoo",
-  },
-];
-
-const artistStudio: ArtistCard[] = [
-  {
-    icon: BadgeCheckIcon,
-    titleEn: "4+ years tattooing",
-    titleNo: "4+ år med tatovering",
-    textEn:
-      "Focused experience with custom pieces, larger projects, and clean execution.",
-    textNo:
-      "Fokusert erfaring med custom motiver, større prosjekter og presist arbeid.",
-  },
-  {
-    emoji: "🇬🇷 🇳🇴",
-    titleEn: "Greece + Norway",
-    titleNo: "Hellas + Norge",
-    textEn: "Experience in Greece and Norway.",
-    textNo: "Erfaring fra Hellas og Norge.",
-  },
-  {
-    icon: ShieldCheckIcon,
-    titleEn: "Safe & hygienic studio",
-    titleNo: "Trygt og hygienisk studio",
-    textEn: "Professional hygiene throughout your session.",
-    textNo: "Profesjonell hygiene gjennom hele behandlingen.",
-  },
-  {
-    icon: ShieldCheckIcon,
-    titleEn: "Clear communication",
-    titleNo: "Tydelig kommunikasjon",
-    textEn: "Clear plans for design, size, timing, and expectations.",
-    textNo: "Tydelige planer for design, størrelse, tid og forventninger.",
-  },
 ];
 
 const signatureStyles = [
@@ -870,110 +781,39 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="artist" className="motion-reveal bg-card/35">
-        <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-28">
-          <div className="relative min-h-[30rem] overflow-hidden rounded-lg border bg-card">
-            <Image
-              src="/media/artist/filippos.jpg"
-              alt="Filip, artist and owner of Infinity Tattoo Studio"
-              fill
-              className="object-cover object-[50%_18%]"
-              sizes="(min-width: 1024px) 38vw, 92vw"
+      <section id="artist" className="motion-reveal scroll-mt-28 bg-background">
+        <div className="mx-auto flex max-w-6xl flex-col gap-9 px-5 py-20 sm:px-8 lg:py-24">
+          <h2 className="font-display text-4xl font-bold sm:text-5xl">
+            <LocalizedText en="Our artists" no="Artistene våre" />
+          </h2>
+          <div className="grid gap-9 lg:grid-cols-[1.15fr_1fr] lg:gap-8">
+            <ArtistProfileCard
+              label="TATTOO"
+              name="Filip"
+              href="/work"
+              image="/media/artist/filippos.jpg"
+              icon={PenLineIcon}
+              large
+              bioEn="Artist and owner with 4+ years of experience from Greece and Norway. Custom realism, black & grey, blackout and freehand Maori."
+              bioNo="Artist og eier med over 4 års erfaring fra Hellas og Norge. Custom realisme, black & grey, blackout og freehand Maori."
             />
-          </div>
-          <div className="flex min-h-[30rem] flex-col gap-6">
-            <div className="flex flex-col gap-3">
-              <Badge variant="secondary" className="w-fit">
-                <LocalizedText en="Artist & owner" no="Artist og eier" />
-              </Badge>
-              <h2 className="font-display text-4xl font-bold sm:text-5xl">
-                Filip
-              </h2>
-              <p className="text-lg leading-8 text-muted-foreground">
-                <LocalizedText
-                  en="Filip is the artist and owner behind Infinity Tattoo Studio in Lørenskog. With 4+ years of tattooing experience from both Greece and Norway, he specializes in large-scale realism, black & grey portraits, blackout work, freehand Maori work, and custom designs built entirely around your idea, your body, and how the piece will age on your skin. No templates. No shortcuts. Just precise, intentional work from the first consultation to the final result."
-                  no="Filip er artisten og eieren bak Infinity Tattoo Studio i Lørenskog. Med 4+ års erfaring med tatovering fra både Hellas og Norge spesialiserer han seg på realisme i stor skala, black & grey portretter, blackout, freehand Maori og custom design bygget rundt ideen din, kroppen din og hvordan tatoveringen skal eldes på huden. Ingen maler. Ingen snarveier. Bare presist, bevisst arbeid fra første konsultasjon til ferdig resultat."
-                />
-              </p>
-            </div>
-            <div id="studio" className="mt-auto flex flex-col gap-5">
-              <div className="flex flex-col gap-3">
-                <h3 className="pl-2 font-display text-xl font-bold text-foreground">
-                  <LocalizedText en="Styles" no="Stil" />
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {artistStyles.map((item) => {
-                    const Icon = item.icon;
-                    const card = (
-                      <>
-                        <div className="flex items-center gap-3">
-                          {Icon ? (
-                            <Icon className="size-5 text-[color:var(--studio-red)]" />
-                          ) : null}
-                        </div>
-                        <p className="mt-3 font-display text-lg font-bold text-foreground">
-                          <LocalizedText en={item.titleEn} no={item.titleNo} />
-                        </p>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                          <LocalizedText en={item.textEn} no={item.textNo} />
-                        </p>
-                        {item.href ? (
-                          <MoveUpRightIcon className="absolute bottom-4 right-4 size-4 text-muted-foreground" />
-                        ) : null}
-                      </>
-                    );
-
-                    return item.href ? (
-                      <Link
-                        className="motion-lift-subtle relative rounded-lg border border-border/70 bg-background/35 p-4"
-                        href={item.href}
-                        key={item.titleEn}
-                      >
-                        {card}
-                      </Link>
-                    ) : (
-                      <div
-                        className="motion-lift-subtle relative rounded-lg border border-border/70 bg-background/35 p-4"
-                        key={item.titleEn}
-                      >
-                        {card}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <h3 className="pl-2 font-display text-xl font-bold text-foreground">
-                  <LocalizedText en="Studio" no="Studio" />
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {artistStudio.map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <div
-                        className="motion-lift-subtle rounded-lg border border-border/70 bg-background/35 p-4"
-                        key={item.titleEn}
-                      >
-                        <div className="flex h-5 items-center gap-1 text-lg leading-none">
-                          {item.emoji ? (
-                            item.emoji
-                          ) : Icon ? (
-                            <Icon className="size-5 text-[color:var(--studio-red)]" />
-                          ) : null}
-                        </div>
-                        <p className="mt-3 font-display text-lg font-bold text-foreground">
-                          <LocalizedText en={item.titleEn} no={item.titleNo} />
-                        </p>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                          <LocalizedText en={item.textEn} no={item.textNo} />
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="grid gap-9 sm:grid-cols-2 lg:grid-cols-1 lg:gap-7">
+              <ArtistProfileCard
+                label="PIERCING"
+                name="Piercing"
+                href="/piercing"
+                icon={CircleDotIcon}
+                bioEn="Thoughtful placement and calm, personal guidance, from choosing your jewellery to aftercare."
+                bioNo="Gjennomtenkt plassering og rolig, personlig veiledning, fra valg av smykke til etterbehandling."
+              />
+              <ArtistProfileCard
+                label="TOOTH GEM"
+                name="Tooth gems"
+                href="/tooth-gems"
+                icon={GemIcon}
+                bioEn="A little sparkle, your way. Personal guidance on crystals, placement and a design that suits your smile."
+                bioNo="Litt ekstra glans, på din måte. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
+              />
             </div>
           </div>
         </div>
@@ -1029,6 +869,12 @@ export default function Home() {
               <h2 className="font-display text-4xl font-bold sm:text-5xl">
                 <LocalizedText en="The Studio" no="Studioet" />
               </h2>
+              <p className="max-w-xl text-sm leading-6 text-muted-foreground">
+                <LocalizedText
+                  en="A hygienic, private and calm studio, with space for longer sessions—without the hassle of city-centre parking."
+                  no="Et hygienisk, privat og rolig studio med god plass til lengre økter – uten stresset med sentrumsparkering."
+                />
+              </p>
             </div>
             <ul className="flex list-disc flex-col gap-5 pl-5 marker:text-muted-foreground">
               {serviceAreas.map((item) => (
