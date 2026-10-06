@@ -705,7 +705,7 @@ export default function Home() {
           </h2>
           <div
             id="services"
-            className="flex scroll-mt-28 flex-col gap-14 sm:gap-16 lg:gap-0"
+            className="flex scroll-mt-28 flex-col gap-14 sm:gap-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-0"
           >
             <ArtistSpotlight
               name="Filip"
@@ -718,7 +718,7 @@ export default function Home() {
             >
               <ul
                 id="styles"
-                className="space-y-3 text-sm leading-6 text-muted-foreground"
+                className="space-y-3 text-base leading-7 text-muted-foreground"
               >
                 {[
                   {
@@ -769,7 +769,7 @@ export default function Home() {
               height={1539}
               mirrored
             >
-              <ul className="space-y-3 text-sm leading-6 text-muted-foreground">
+              <ul className="space-y-3 text-base leading-7 text-muted-foreground">
                 {[
                   {
                     icon: CircleDotIcon,
