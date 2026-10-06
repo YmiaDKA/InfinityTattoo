@@ -14,10 +14,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { labelEn: "Work", labelNo: "Arbeid", href: "/#work" },
-  { labelEn: "Artist", labelNo: "Artist", href: "/#artist" },
-  { labelEn: "Piercing", labelNo: "Piercing", href: "/piercing" },
-  { labelEn: "Tooth gems", labelNo: "Tooth gems", href: "/tooth-gems" },
+  { labelEn: "Work", labelNo: "Arbeid", href: "/work" },
+  {
+    labelEn: "Piercing & tooth gems",
+    labelNo: "Piercing & tooth gems",
+    href: "/#services",
+  },
+  { labelEn: "Studio", labelNo: "Studio", href: "/#oslo" },
   { labelEn: "Contact", labelNo: "Kontakt", href: "/#contact" },
   { labelEn: "FAQ", labelNo: "FAQ", href: "/#faq" },
 ];
@@ -223,7 +226,7 @@ export function SiteHeader({
           transition={{ type: "spring", duration: 0.42, bounce: 0.08 }}
         >
           <Button
-            className="min-h-11 gap-2 rounded-full px-4 !py-2.5 text-sm sm:min-h-12 sm:px-6 sm:text-base xl:px-8"
+            className="min-h-11 gap-2 rounded-full px-4 !py-2.5 text-sm sm:min-h-12 sm:px-6 sm:text-base xl:pl-6 xl:pr-10"
             nativeButton={false}
             render={
               bookingExternal ? (

@@ -16,7 +16,7 @@ import { testimonials, type Testimonial } from "@/lib/site-data";
 export const metadata: Metadata = {
   title: "Anmeldelser | Infinity Tattoo Lørenskog",
   description:
-    "Les kundeanmeldelser for Infinity Tattoo i Lørenskog. Studioet har 135+ Google-anmeldelser og lager custom realisme, black and grey og større prosjekter.",
+    "Les kundeanmeldelser for Infinity Tattoo i Lørenskog. Studioet har 135+ Google anmeldelser og lager custom realisme, black and grey og større prosjekter.",
   alternates: {
     canonical: "https://infinitytattoo.no/reviews",
   },
@@ -76,7 +76,7 @@ export default function ReviewsPage() {
                 <StarIcon className="size-4 fill-current text-[color:var(--studio-gold)]" />
                 <LocalizedText
                   en="135+ Google reviews"
-                  no="135+ Google-anmeldelser"
+                  no="135+ Google anmeldelser"
                 />
               </div>
               <h1 className="font-display text-[3.45rem] font-bold leading-[0.92] sm:text-7xl">
@@ -85,20 +85,23 @@ export default function ReviewsPage() {
               <p className="max-w-2xl text-xl leading-8 text-muted-foreground">
                 <LocalizedText
                   en="Clients choose Infinity Tattoo for custom work, clear consultation, and a calm studio experience in Lørenskog."
-                  no="Kunder velger Infinity Tattoo for custom arbeid, tydelig konsultasjon og en rolig studio-opplevelse i Lørenskog."
+                  no="Kunder velger Infinity Tattoo for custom arbeid, tydelig konsultasjon og en rolig studio opplevelse i Lørenskog."
                 />
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   className="motion-lift-subtle rounded-full max-sm:min-h-14 max-sm:w-full max-sm:text-base"
                   nativeButton={false}
-                  render={<Link href="/#booking" />}
+                  render={
+                    <a
+                      href="https://booking.linework.com/infinity"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  }
                   size="lg"
                 >
-                  <LocalizedText
-                    en="Book free consultation"
-                    no="Book gratis konsultasjon"
-                  />
+                  <LocalizedText en="Open in a new tab" no="Åpne i ny fane" />
                   <CalendarDaysIcon data-icon="inline-end" />
                 </Button>
                 <Button

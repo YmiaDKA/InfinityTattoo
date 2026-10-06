@@ -12,7 +12,7 @@ export const galleryImages = [
   {
     src: "/media/gallery/infinity/infinity-29.webp",
     tag: "#01",
-    alt: "Black and grey geisha portrait tattoo close-up",
+    alt: "Black and grey geisha portrait tattoo close up",
   },
   {
     src: "/media/gallery/infinity/infinity-12.jpg",
@@ -77,7 +77,7 @@ export const galleryImages = [
   {
     src: "/media/gallery/infinity/infinity-27.webp",
     tag: "#14",
-    alt: "Black and grey realism tattoo close-up",
+    alt: "Black and grey realism tattoo close up",
   },
   {
     src: "/media/gallery/infinity/infinity-28.webp",

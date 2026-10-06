@@ -44,7 +44,7 @@ const signatureStyles = [
     titleEn: "Realistic tattoos",
     titleNo: "Realistisk tatovering",
     textEn:
-      "Detailed custom realism planned around contrast, reference quality and long-term readability.",
+      "Detailed custom realism planned around contrast, reference quality and long term readability.",
     textNo:
       "Detaljert custom realisme planlagt rundt kontrast, referansekvalitet og langvarig lesbarhet.",
     href: "/realistisk-tatovering",
@@ -86,11 +86,11 @@ const signatureStyles = [
     href: "/sleeve-tatovering",
   },
   {
-    titleEn: "Cover-ups",
-    titleNo: "Cover-up",
-    textEn: "Realistic cover-up planning for old, faded or unwanted tattoos.",
+    titleEn: "Cover ups",
+    titleNo: "Cover up",
+    textEn: "Realistic cover up planning for old, faded or unwanted tattoos.",
     textNo:
-      "Realistisk cover-up planlegging for gamle, falmede eller uønskede tatoveringer.",
+      "Realistisk cover up planlegging for gamle, falmede eller uønskede tatoveringer.",
     href: "/cover-up-tatovering",
   },
   {
@@ -108,16 +108,16 @@ const signatureStyles = [
     textEn:
       "Names, quotes and script tattoos planned around font choice, spacing, placement and healed readability.",
     textNo:
-      "Navn, sitater og script-tatoveringer planlagt rundt fontvalg, avstand, plassering og lesbarhet etter healing.",
+      "Navn, sitater og script tatoveringer planlagt rundt fontvalg, avstand, plassering og lesbarhet etter healing.",
     href: "/lettering-tatovering",
   },
   {
     titleEn: "Freehand Maori",
     titleNo: "Freehand Maori",
     textEn:
-      "Large-scale Maori and Polynesian-inspired flow work drawn around the body.",
+      "Large scale Maori and Polynesian inspired flow work drawn around the body.",
     textNo:
-      "Maori og Polynesian-inspirert arbeid i stor skala, tegnet rundt kroppen.",
+      "Maori og Polynesian inspirert arbeid i stor skala, tegnet rundt kroppen.",
     href: "/freehand-maori-tattoo",
   },
 ];
@@ -143,9 +143,9 @@ const serviceAreas = [
     area: "Lillestrøm",
     href: "/tatovering-lillestrom",
     textEn:
-      "Minutes from Lillestrøm for larger pieces, sleeve tattoos, portraits, cover-up planning, and consultations.",
+      "Minutes from Lillestrøm for larger pieces, sleeve tattoos, portraits, cover up planning, and consultations.",
     textNo:
-      "Minutter fra Lillestrøm for større prosjekter, sleeve tatoveringer, portretter, cover-up planlegging og konsultasjoner.",
+      "Minutter fra Lillestrøm for større prosjekter, sleeve tatoveringer, portretter, cover up planlegging og konsultasjoner.",
   },
   {
     area: "Oslo",
@@ -381,7 +381,7 @@ const faqItems: FaqItem[] = [
     questionEn: "How do I book and prepare for my first tattoo?",
     questionNo: "Hvordan booker og forbereder jeg min første tatovering?",
     answerEn:
-      "Use the booking calendar above and choose a consultation length that fits your idea. Tattoo consultations are free, and you can share references, placement details, size and budget during the consultation.\n\nBring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.\n\nStart by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
+      "Use the booking calendar above and choose a consultation length that fits your idea. Tattoo consultations are free, and you can share references, placement details, size and budget during the consultation.\n\nBring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.\n\nStart by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
     answerNo:
       "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Tatoveringskonsultasjoner er gratis, og du kan dele referanser, plassering, størrelse og budsjett under konsultasjonen.\n\nHa klare referansebilder, plassering, omtrent størrelse og detaljer som er viktige for designet.\n\nStart med å booke en konsultasjon. Du trenger ikke å ha alt klart; ta med en grov idé, en følelse eller noen referansebilder, så utvikler vi konseptet sammen. Førstegangskunder er alltid velkomne hos Infinity Tattoo, og vi guider deg gjennom hele prosessen.",
   },
@@ -389,7 +389,7 @@ const faqItems: FaqItem[] = [
     questionEn: "Do you do custom designs?",
     questionNo: "Lager dere custom design?",
     answerEn:
-      "Yes. Most work is custom, built around your idea, body placement, and the long-term look of the tattoo.",
+      "Yes. Most work is custom, built around your idea, body placement, and the long term look of the tattoo.",
     answerNo:
       "Ja. Det meste lages custom rundt ideen din, plassering på kroppen og hvordan tatoveringen skal se ut over tid.",
   },
@@ -397,23 +397,23 @@ const faqItems: FaqItem[] = [
     questionEn: "Tattoo prices",
     questionNo: "Tatoveringspriser",
     answerEn:
-      "Very small and simple tattoos start at NOK 1,500. Many small custom tattoos cost NOK 3,000–4,000; detailed work, difficult placements and larger designs can cost more. The final price depends on design, size, placement, detail and expected working time, and is confirmed before the appointment. Preparation, design adjustment, stencil placement and normal breaks are part of a full-day session. Every project is different. Book a free consultation to go through your idea, placement, expected time and price before you decide.",
+      "Very small and simple tattoos start at NOK 1,500. Many small custom tattoos cost NOK 3,000 to 4,000; detailed work, difficult placements and larger designs can cost more. The final price depends on design, size, placement, detail and expected working time, and is confirmed before the appointment. Preparation, design adjustment, stencil placement and normal breaks are part of a full day session. Every project is different. Book a free consultation to go through your idea, placement, expected time and price before you decide.",
     answerNo:
-      "Svært små og enkle tatoveringer starter fra 1 500 kr. Mange mindre custom-design koster vanligvis 3 000–4 000 kr; mer detaljert arbeid, krevende plasseringer og større design kan koste mer. Den endelige prisen avhenger av design, størrelse, plassering, detaljnivå og forventet arbeidstid, og bekreftes før timen. Forberedelser, tilpasning av design, plassering av stencil og normale pauser er en del av en heldagstime. Alle prosjekter er forskjellige. Book en gratis konsultasjon for å gjennomgå idé, plassering, forventet tidsbruk og pris før du bestemmer deg.",
+      "Svært små og enkle tatoveringer starter fra 1 500 kr. Mange mindre custom design koster vanligvis 3 000 til 4 000 kr; mer detaljert arbeid, krevende plasseringer og større design kan koste mer. Den endelige prisen avhenger av design, størrelse, plassering, detaljnivå og forventet arbeidstid, og bekreftes før timen. Forberedelser, tilpasning av design, plassering av stencil og normale pauser er en del av en heldagstime. Alle prosjekter er forskjellige. Book en gratis konsultasjon for å gjennomgå idé, plassering, forventet tidsbruk og pris før du bestemmer deg.",
   },
   {
     questionEn: "How long does a tattoo session take?",
     questionNo: "Hvor lang tid tar en tatoveringstime?",
     answerEn:
-      "Session length depends on the size and complexity of the piece. A small tattoo can take 1-2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5-6 hours each. We'll give you a clear time estimate during your consultation.",
+      "Session length depends on the size and complexity of the piece. A small tattoo can take 1 to 2 hours, while larger realistic work or full sleeves are split across multiple sessions of 5 to 6 hours each. We'll give you a clear time estimate during your consultation.",
     answerNo:
-      "Tidsbruken avhenger av størrelsen og hvor detaljert motivet er. En liten tatovering kan ta 1-2 timer, mens større realistiske prosjekter eller hele ermer deles opp i flere økter på 5-6 timer. Du får et tydelig tidsestimat under konsultasjonen.",
+      "Tidsbruken avhenger av størrelsen og hvor detaljert motivet er. En liten tatovering kan ta 1 til 2 timer, mens større realistiske prosjekter eller hele ermer deles opp i flere økter på 5 til 6 timer. Du får et tydelig tidsestimat under konsultasjonen.",
   },
   {
-    questionEn: "Do you do touch-ups?",
+    questionEn: "Do you do touch ups?",
     questionNo: "Utfører dere etterjusteringer?",
     answerEn:
-      "Yes. If your tattoo needs a touch-up after healing, contact us within 1 month of your session. Touch-ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
+      "Yes. If your tattoo needs a touch up after healing, contact us within 1 month of your session. Touch ups on work done at Infinity Tattoo are free of charge, as long as aftercare instructions were followed correctly.",
     answerNo:
       "Ja. Hvis tatoveringen trenger en etterjustering etter at den har grodd, ta kontakt innen én måned etter timen. Etterjusteringer på arbeid gjort hos Infinity Tattoo er gratis så lenge etterbehandlingen er fulgt riktig.",
   },
@@ -421,9 +421,9 @@ const faqItems: FaqItem[] = [
     questionEn: "How do deposits, rescheduling and cancellations work?",
     questionNo: "Hvordan fungerer depositum, flytting og avbestilling?",
     answerEn:
-      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.\n\nLife happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.\n\nIf you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
+      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500 to 1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non refundable.\n\nLife happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.\n\nIf you cancel your appointment entirely, the deposit is non refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
     answerNo:
-      "Ja. Det kreves depositum for å sikre bookingen og dekke tiden som brukes på spesialdesignet. Depositumet er vanligvis 500-1000 kr, avhengig av prosjektets størrelse. Det trekkes fra sluttprisen og refunderes ikke.\n\nVi forstår at ting kan skje. Hvis du må flytte timen, ta kontakt minst 48 timer før avtalen, så flyttes depositumet til den nye datoen. Ved avbestilling senere enn 48 timer før timen går depositumet tapt.\n\nHvis du avbestiller timen helt, refunderes ikke depositumet. Det dekker tiden som er brukt på designet og tiden som ble holdt av til deg. Ta gjerne kontakt hvis du er usikker før timen, så prøver vi heller å finne en løsning.",
+      "Ja. Det kreves depositum for å sikre bookingen og dekke tiden som brukes på spesialdesignet. Depositumet er vanligvis 500 til 1000 kr, avhengig av prosjektets størrelse. Det trekkes fra sluttprisen og refunderes ikke.\n\nVi forstår at ting kan skje. Hvis du må flytte timen, ta kontakt minst 48 timer før avtalen, så flyttes depositumet til den nye datoen. Ved avbestilling senere enn 48 timer før timen går depositumet tapt.\n\nHvis du avbestiller timen helt, refunderes ikke depositumet. Det dekker tiden som er brukt på designet og tiden som ble holdt av til deg. Ta gjerne kontakt hvis du er usikker før timen, så prøver vi heller å finne en løsning.",
   },
   {
     questionEn: "Does getting a tattoo hurt, and which placements hurt least?",
@@ -454,9 +454,9 @@ const faqItems: FaqItem[] = [
     questionEn: "Where can I park?",
     questionNo: "Hvor kan jeg parkere?",
     answerEn:
-      "You can park for 2 hours free near the studio at Fresh Fitness, Skårersletta 60, or Triaden Senter Uteparkering, Skårersletta 70. Triaden is usually only a 2-3 minute walk from the studio.",
+      "You can park for 2 hours free near the studio at Fresh Fitness, Skårersletta 60, or Triaden Senter Uteparkering, Skårersletta 70. Triaden is usually only a 2 to 3 minute walk from the studio.",
     answerNo:
-      "Du kan parkere gratis i 2 timer nær studioet ved Fresh Fitness, Skårersletta 60, eller Triaden Senter Uteparkering, Skårersletta 70. Triaden er vanligvis bare 2-3 minutter å gå fra studioet.",
+      "Du kan parkere gratis i 2 timer nær studioet ved Fresh Fitness, Skårersletta 60, eller Triaden Senter Uteparkering, Skårersletta 70. Triaden er vanligvis bare 2 til 3 minutter å gå fra studioet.",
     parkingLinks: {
       freshFitness: "https://maps.app.goo.gl/MixgmVqLpSrBzwrU9",
       triaden: "https://maps.app.goo.gl/YW4AmZ3ZmcSbbQom8",
@@ -474,16 +474,16 @@ const faqItems: FaqItem[] = [
 
 const aftercareItems = [
   {
-    questionEn: "Days 1-3: the fresh wound phase",
-    questionNo: "Dag 1-3: ferskt sår",
+    questionEn: "Days 1 to 3: the fresh wound phase",
+    questionNo: "Dag 1 til 3: ferskt sår",
     answerEn:
-      "Your tattoo is an open wound. Redness, swelling, and tenderness are normal. Wash your hands before touching it, remove the wrap after 2-4 hours, wash gently with fragrance-free soap, pat dry with clean paper towel, apply a very thin layer of aftercare balm, and wear loose soft clothing. Do not re-wrap, touch it with unwashed hands, soak it, use too much cream, expose it to direct sun, or let tight clothing rub against it.",
+      "Your tattoo is an open wound. Redness, swelling, and tenderness are normal. Wash your hands before touching it, remove the wrap after 2 to 4 hours, wash gently with fragrance free soap, pat dry with clean paper towel, apply a very thin layer of aftercare balm, and wear loose soft clothing. Do not re wrap, touch it with unwashed hands, soak it, use too much cream, expose it to direct sun, or let tight clothing rub against it.",
     answerNo:
-      "Tatoveringen er et åpent sår. Rødhet, hevelse og ømhet er normalt. Vask hendene før du tar på den, fjern plasten etter 2-4 timer, vask forsiktig med parfymefri såpe, klapp tørr med rent papir, bruk et veldig tynt lag aftercare balm, og bruk myke løse klær. Ikke pakk den inn på nytt, ta på den med uvaskede hender, bløtlegg den, bruk for mye krem, utsett den for direkte sol, eller la stramme klær gnisse.",
+      "Tatoveringen er et åpent sår. Rødhet, hevelse og ømhet er normalt. Vask hendene før du tar på den, fjern plasten etter 2 til 4 timer, vask forsiktig med parfymefri såpe, klapp tørr med rent papir, bruk et veldig tynt lag aftercare balm, og bruk myke løse klær. Ikke pakk den inn på nytt, ta på den med uvaskede hender, bløtlegg den, bruk for mye krem, utsett den for direkte sol, eller la stramme klær gnisse.",
   },
   {
-    questionEn: "Days 4-7: itching and peeling",
-    questionNo: "Dag 4-7: kløe og flassing",
+    questionEn: "Days 4 to 7: itching and peeling",
+    questionNo: "Dag 4 til 7: kløe og flassing",
     answerEn:
       "The skin will begin to peel and flake like a sunburn. The itching can be intense, but this is healing. Continue washing twice daily, let flakes fall off naturally, tap gently if it itches, and stay hydrated. Do not pick, peel, scratch, use scented lotion, swim, use a sauna, or shave over the tattoo.",
     answerNo:
@@ -498,20 +498,20 @@ const aftercareItems = [
       "Flassingen har stort sett stoppet, men tatoveringen kan se matt eller blek ut. Det er et tynt lag død hud over den nye tatoveringen, og det forsvinner når huden slipper. Fortsett å fukte daglig, hold området rent, vær tålmodig, og bruk SPF hvis den eksponeres for lys. Ikke vurder sluttresultatet ennå, skrubb området, tren hardt over tatoveringen, eller gå i solen uten beskyttelse.",
   },
   {
-    questionEn: "Weeks 3-4: surface healed",
-    questionNo: "Uke 3-4: overflaten er grodd",
+    questionEn: "Weeks 3 to 4: surface healed",
+    questionNo: "Uke 3 til 4: overflaten er grodd",
     answerEn:
-      "The outer skin is healed and the tattoo should look sharp again. The deeper layers can still take 3-6 months to settle fully. Keep moisturizing, apply SPF 50 outdoors, resume normal activities, and evaluate later if a touch-up is needed. Do not skip sunscreen, book a touch-up before it is fully healed, or stop moisturizing.",
+      "The outer skin is healed and the tattoo should look sharp again. The deeper layers can still take 3 to 6 months to settle fully. Keep moisturizing, apply SPF 50 outdoors, resume normal activities, and evaluate later if a touch up is needed. Do not skip sunscreen, book a touch up before it is fully healed, or stop moisturizing.",
     answerNo:
-      "Ytre hudlag er grodd og tatoveringen bør se skarp ut igjen. Dypere hudlag kan fortsatt bruke 3-6 måneder på å stabilisere seg helt. Fortsett å fukte, bruk SPF 50 ute, gå tilbake til normale aktiviteter, og vurder senere om touch-up trengs. Ikke dropp solkrem, book touch-up før den er helt grodd, eller slutt å fukte.",
+      "Ytre hudlag er grodd og tatoveringen bør se skarp ut igjen. Dypere hudlag kan fortsatt bruke 3 til 6 måneder på å stabilisere seg helt. Fortsett å fukte, bruk SPF 50 ute, gå tilbake til normale aktiviteter, og vurder senere om touch up trengs. Ikke dropp solkrem, book touch up før den er helt grodd, eller slutt å fukte.",
   },
   {
     questionEn: "Recommended products",
     questionNo: "Anbefalte produkter",
     answerEn:
-      "Use a tattoo aftercare balm in thin layers 2-3 times daily. Use mild fragrance-free soap from any pharmacy and avoid alcohol, heavy perfumes, or exfoliating agents. Once healed, SPF 50 is essential every time the tattoo is exposed to sunlight.",
+      "Use a tattoo aftercare balm in thin layers 2 to 3 times daily. Use mild fragrance free soap from any pharmacy and avoid alcohol, heavy perfumes, or exfoliating agents. Once healed, SPF 50 is essential every time the tattoo is exposed to sunlight.",
     answerNo:
-      "Bruk tattoo aftercare balm i tynne lag 2-3 ganger daglig. Bruk mild parfymefri såpe fra apotek, og unngå alkohol, sterke parfymer eller eksfolierende ingredienser. Når tatoveringen er grodd, er SPF 50 viktig hver gang den eksponeres for sollys.",
+      "Bruk tattoo aftercare balm i tynne lag 2 til 3 ganger daglig. Bruk mild parfymefri såpe fra apotek, og unngå alkohol, sterke parfymer eller eksfolierende ingredienser. Når tatoveringen er grodd, er SPF 50 viktig hver gang den eksponeres for sollys.",
   },
   {
     questionEn: "Always avoid",
@@ -522,20 +522,20 @@ const aftercareItems = [
       "Unngå bading og bløtlegging i minst 3 uker, direkte sollys, badstue og damp, alkohol 24 timer før og tidlig i healing, stramme klær, plukking og kløing. Bløtlegging trekker ut blekk, UV bleker tatoveringer, varme irriterer huden, og plukking kan gi arr.",
   },
   {
-    questionEn: "Long-term care",
+    questionEn: "Long term care",
     questionNo: "Langsiktig pleie",
     answerEn:
-      "Moisturize daily to keep skin hydrated and the tattoo vibrant. Use SPF 50 every time the tattoo is exposed to sunlight. Stay hydrated so the skin holds ink better. Touch-ups may be needed after years depending on sun exposure and skin type.",
+      "Moisturize daily to keep skin hydrated and the tattoo vibrant. Use SPF 50 every time the tattoo is exposed to sunlight. Stay hydrated so the skin holds ink better. Touch ups may be needed after years depending on sun exposure and skin type.",
     answerNo:
-      "Fukt huden daglig for å holde tatoveringen levende. Bruk SPF 50 hver gang tatoveringen eksponeres for sollys. Hold deg hydrert, slik at huden holder bedre på blekket. Touch-ups kan bli aktuelt etter flere år, avhengig av soleksponering og hudtype.",
+      "Fukt huden daglig for å holde tatoveringen levende. Bruk SPF 50 hver gang tatoveringen eksponeres for sollys. Hold deg hydrert, slik at huden holder bedre på blekket. Touch ups kan bli aktuelt etter flere år, avhengig av soleksponering og hudtype.",
   },
   {
     questionEn: "Signs of infection",
     questionNo: "Tegn på infeksjon",
     answerEn:
-      "Some redness and swelling in the first 2-3 days is normal. Contact a doctor if redness, swelling, or heat increases after day 3, if yellow or green discharge appears, if you get fever or chills, red streaks, severe worsening pain, or raised hard lumps under the skin. If anything feels unusual, message the studio early.",
+      "Some redness and swelling in the first 2 to 3 days is normal. Contact a doctor if redness, swelling, or heat increases after day 3, if yellow or green discharge appears, if you get fever or chills, red streaks, severe worsening pain, or raised hard lumps under the skin. If anything feels unusual, message the studio early.",
     answerNo:
-      "Noe rødhet og hevelse de første 2-3 dagene er normalt. Kontakt lege hvis rødhet, hevelse eller varme øker etter dag 3, hvis gul eller grønn væske kommer fra tatoveringen, hvis du får feber eller frysninger, røde striper, sterk økende smerte, eller harde hevelser under huden. Hvis noe føles uvanlig, kontakt studioet tidlig.",
+      "Noe rødhet og hevelse de første 2 til 3 dagene er normalt. Kontakt lege hvis rødhet, hevelse eller varme øker etter dag 3, hvis gul eller grønn væske kommer fra tatoveringen, hvis du får feber eller frysninger, røde striper, sterk økende smerte, eller harde hevelser under huden. Hvis noe føles uvanlig, kontakt studioet tidlig.",
   },
 ];
 
@@ -599,13 +599,16 @@ export default function Home() {
             <Button
               className="motion-lift-subtle rounded-full max-sm:min-h-14 max-sm:text-lg"
               nativeButton={false}
-              render={<a href="#booking" />}
+              render={
+                <a
+                  href="https://booking.linework.com/infinity"
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              }
               size="lg"
             >
-              <LocalizedText
-                en="Book free consultation"
-                no="Book gratis konsultasjon"
-              />
+              <LocalizedText en="Open in a new tab" no="Åpne i ny fane" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button
@@ -642,7 +645,7 @@ export default function Home() {
             <p>
               <LocalizedText
                 en="135+ Google reviews"
-                no="135+ Google-anmeldelser"
+                no="135+ Google anmeldelser"
               />
             </p>
           </div>
@@ -748,7 +751,7 @@ export default function Home() {
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <div className="grid items-start gap-9 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-16">
+          <div className="grid items-start justify-items-center gap-9 lg:justify-items-stretch lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-16">
             <ArtistProfileCard
               label="TATTOO"
               name="Filip"
@@ -759,7 +762,10 @@ export default function Home() {
               bioEn="Artist and owner with 4+ years of experience from Greece and Norway. Custom realism, black & grey, blackout and freehand Maori."
               bioNo="Artist og eier med over 4 års erfaring fra Hellas og Norge. Custom realisme, black & grey, blackout og freehand Maori."
             />
-            <div className="grid w-full max-w-[34rem] grid-cols-2 items-start gap-4 sm:gap-6">
+            <div
+              id="services"
+              className="grid w-full max-w-[34rem] scroll-mt-28 grid-cols-2 items-start gap-4 sm:gap-6"
+            >
               <ArtistProfileCard
                 label="PIERCING"
                 name="Piercing"
@@ -833,8 +839,8 @@ export default function Home() {
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground">
                 <LocalizedText
-                  en="A hygienic, private and calm studio, with space for longer sessions—without the hassle of city-centre parking."
-                  no="Et hygienisk, privat og rolig studio med god plass til lengre økter – uten stresset med sentrumsparkering."
+                  en="A hygienic, private and calm studio, with space for longer sessions, without the hassle of city centre parking."
+                  no="Et hygienisk, privat og rolig studio med god plass til lengre økter, uten stresset med sentrumsparkering."
                 />
               </p>
             </div>
@@ -854,17 +860,17 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="grid grid-rows-2 gap-4">
+          <div className="grid self-start gap-4">
             <iframe
               title="Infinity Tattoo location on Google Maps"
               aria-label="Infinity Tattoo location on Google Maps"
-              className="block h-56 min-h-0 w-full rounded-3xl border-0 lg:h-full"
+              className="block aspect-[4/3] h-auto min-h-0 w-full rounded-3xl border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               scrolling="no"
               src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
             />
-            <PanoramaViewer className="h-56 min-h-0 sm:h-56 lg:h-full" />
+            <PanoramaViewer className="aspect-[4/3] h-auto min-h-0 sm:h-auto lg:h-auto" />
           </div>
         </div>
 
@@ -880,7 +886,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="mailto:infinitytattoo99@gmail.com"
@@ -897,14 +903,20 @@ export default function Home() {
           </a>
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
+            href="https://www.instagram.com/infinitytattoo.lorenskog/"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <InstagramIcon className="size-5 text-[color:var(--studio-gold)]" />
+            Instagram
+          </a>
+          <a
+            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="https://booking.linework.com/infinity"
             rel="noreferrer"
             target="_blank"
           >
-            <LocalizedText
-              en="Book free consultation"
-              no="Book gratis konsultasjon"
-            />
+            <LocalizedText en="Open in a new tab" no="Åpne i ny fane" />
             <MoveUpRightIcon className="size-4 text-[color:var(--studio-gold)]" />
           </a>
         </div>
@@ -980,8 +992,8 @@ export default function Home() {
                             Skårersletta 70
                           </a>{" "}
                           <LocalizedText
-                            en="(2-3 min walk)"
-                            no="(2-3 min gange)"
+                            en="(2 to 3 min walk)"
+                            no="(2 til 3 min gange)"
                           />
                         </li>
                       </ul>
@@ -1024,7 +1036,7 @@ export default function Home() {
               <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
                 <LocalizedText
                   en="Follow the steps below through the healing period. If the artist gives you personal instructions, follow those first."
-                  no="Følg stegene under gjennom healing-perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
+                  no="Følg stegene under gjennom healing perioden. Hvis artisten gir deg personlige instrukser, følger du dem først."
                 />
               </p>
             </div>
@@ -1152,20 +1164,30 @@ export default function Home() {
                     <LocalizedText en="Closed" no="Stengt" />
                   </dd>
                   <dt>
-                    <LocalizedText en="Tuesday–Friday" no="Tirsdag–fredag" />
+                    <LocalizedText
+                      en="Tuesday to Friday"
+                      no="Tirsdag til fredag"
+                    />
                   </dt>
-                  <dd>11:00–18:00</dd>
+                  <dd>
+                    <LocalizedText en="11:00 to 18:00" no="11:00 til 18:00" />
+                  </dd>
                   <dt>
-                    <LocalizedText en="Saturday–Sunday" no="Lørdag–søndag" />
+                    <LocalizedText
+                      en="Saturday to Sunday"
+                      no="Lørdag til søndag"
+                    />
                   </dt>
-                  <dd>11:00–16:00</dd>
+                  <dd>
+                    <LocalizedText en="11:00 to 16:00" no="11:00 til 16:00" />
+                  </dd>
                 </dl>
               </section>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:col-span-2 md:justify-self-end lg:col-span-1">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:col-span-2 md:justify-self-end lg:col-span-1 lg:flex-col">
               <a
                 aria-label="Instagram"
-                className="motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
+                className="lg:order-2 motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
                 href="https://www.instagram.com/infinitytattoo.lorenskog/"
                 rel="noreferrer"
                 target="_blank"

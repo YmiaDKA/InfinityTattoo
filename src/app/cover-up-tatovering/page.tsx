@@ -15,10 +15,10 @@ export default function CoverUpTatoveringPage() {
   return (
     <StyleLandingPage
       headline="Cover up tatovering"
-      introEn="Cover-up tattoo planning in Lørenskog for clients who want a realistic solution for old, faded or unwanted tattoos."
-      introNo="Cover-up tatovering i Lørenskog for deg som ønsker en realistisk løsning på gamle, falmede eller uønskede tatoveringer."
-      planningEn="A good cover-up starts with honesty. We look at the old tattoo, darkness, scar tissue, size and whether laser lightening may be needed first."
-      planningNo="En god cover-up starter ærlig. Vi vurderer gammel tatovering, mørkhet, arrvev, størrelse og om laser kan være lurt først."
+      introEn="Cover up tattoo planning in Lørenskog for clients who want a realistic solution for old, faded or unwanted tattoos."
+      introNo="Cover up tatovering i Lørenskog for deg som ønsker en realistisk løsning på gamle, falmede eller uønskede tatoveringer."
+      planningEn="A good cover up starts with honesty. We look at the old tattoo, darkness, scar tissue, size and whether laser lightening may be needed first."
+      planningNo="En god cover up starter ærlig. Vi vurderer gammel tatovering, mørkhet, arrvev, størrelse og om laser kan være lurt først."
       fitEn="The new design usually needs to be larger, darker or more structured than the old tattoo, so the result looks intentional."
       fitNo="Det nye designet må ofte være større, mørkere eller mer strukturert enn den gamle tatoveringen, så resultatet ser bevisst ut."
       imageOffset={0}

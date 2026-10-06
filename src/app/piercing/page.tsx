@@ -50,7 +50,7 @@ export default function PiercingPage() {
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText
                 en="A separate piercing service at Infinity Tattoo Studio in Lørenskog. Clean placement, calm guidance, clear prices, and personal guidance from Nora at your appointment."
-                no="En egen piercing-service hos Infinity Tattoo Studio i Lørenskog. Ren plassering, rolig veiledning, tydelige priser og personlig veiledning fra Nora på timen."
+                no="En egen piercing service hos Infinity Tattoo Studio i Lørenskog. Ren plassering, rolig veiledning, tydelige priser og personlig veiledning fra Nora på timen."
               />
             </p>
           </div>
@@ -135,8 +135,8 @@ export default function PiercingPage() {
           </p>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="All piercing jewelry sold in studio is allergy friendly, with options in titanium, stainless steel and 18-24k gold plating. The focus is safe work, clear communication and comfort from placement to the finished service."
-              no="Alle piercing-smykker som selges i studio er allergivennlige, med valg i titanium, kirurgisk stål og 18-24k gullbelagt. Fokuset er trygt arbeid, tydelig kommunikasjon og komfort fra plassering til ferdig behandling."
+              en="All piercing jewelry sold in studio is allergy friendly, with options in titanium, stainless steel and 18 to 24k gold plating. The focus is safe work, clear communication and comfort from placement to the finished service."
+              no="Alle piercing smykker som selges i studio er allergivennlige, med valg i titanium, kirurgisk stål og 18 til 24k gullbelagt. Fokuset er trygt arbeid, tydelig kommunikasjon og komfort fra plassering til ferdig behandling."
             />
           </p>
 

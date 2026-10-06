@@ -48,7 +48,7 @@ export default function ToothGemsPage() {
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText
-                en="A separate cosmetic jewelry service inside Infinity Tattoo Studio. Clean crystal placement, small high-shine details, and custom design options made to look polished on their own."
+                en="A separate cosmetic jewelry service inside Infinity Tattoo Studio. Clean crystal placement, small high shine details, and custom design options made to look polished on their own."
                 no="En egen kosmetisk smykkeservice hos Infinity Tattoo Studio. Ren krystallplassering, små detaljer med shine og custom design som får et eget premium uttrykk."
               />
             </p>
@@ -152,13 +152,13 @@ export default function ToothGemsPage() {
           </div>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="Nora specializes in piercing jewelry styling and Swarovski crystal tooth gems, using quality materials chosen for skin and teeth safety. Tooth gems are placed with dental-approved equipment and real Swarovski crystals or 18k gold/white gold options."
-              no="Nora jobber med styling av piercing smykker og Swarovski tooth gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth gems settes med dental-godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull."
+              en="Nora specializes in piercing jewelry styling and Swarovski crystal tooth gems, using quality materials chosen for skin and teeth safety. Tooth gems are placed with dental approved equipment and real Swarovski crystals or 18k gold/white gold options."
+              no="Nora jobber med styling av piercing smykker og Swarovski tooth gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth gems settes med dental godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull."
             />
           </p>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="From consultation and treatment to aftercare, the focus is that you feel informed, comfortable, and confident about placement, materials, healing, and long-term results."
+              en="From consultation and treatment to aftercare, the focus is that you feel informed, comfortable, and confident about placement, materials, healing, and long term results."
               no="Fra konsultasjon og behandling til etterbehandling er fokuset at du føler deg godt informert og trygg på plassering, materialer, healing og resultat over tid."
             />
           </p>

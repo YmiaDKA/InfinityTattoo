@@ -36,8 +36,8 @@ const serviceSignals = [
   {
     titleEn: "Freehand Maori",
     titleNo: "Freehand Maori",
-    textEn: "Large-scale Maori and Polynesian-inspired flow work drawn for the body.",
-    textNo: "Maori og Polynesian-inspirert arbeid i stor skala, tegnet for kroppen.",
+    textEn: "Large scale Maori and Polynesian inspired flow work drawn for the body.",
+    textNo: "Maori og Polynesian inspirert arbeid i stor skala, tegnet for kroppen.",
   },
   {
     titleEn: "Fine line",

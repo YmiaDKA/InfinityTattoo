@@ -17,7 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = {
   title: "Freehand Maori Tatovering Norge | Infinity Tattoo",
   description:
-    "Freehand Maori tatovering og Polynesian-inspirert tattoo i stor skala i Lørenskog, minutter fra Strømmen og Lillestrøm.",
+    "Freehand Maori tatovering og Polynesian inspirert tattoo i stor skala i Lørenskog, minutter fra Strømmen og Lillestrøm.",
   alternates: {
     canonical: "https://infinitytattoo.no/freehand-maori-tattoo",
   },
@@ -30,10 +30,10 @@ const processItems = [
     textEn:
       "The design is shaped around your shoulder, arm, chest, back, leg, or sleeve placement so the flow feels built into the body.",
     textNo:
-      "Designet formes rundt skulder, arm, bryst, rygg, bein eller sleeve-plassering slik at flyten sitter naturlig på kroppen.",
+      "Designet formes rundt skulder, arm, bryst, rygg, bein eller sleeve plassering slik at flyten sitter naturlig på kroppen.",
   },
   {
-    titleEn: "Large-scale planning",
+    titleEn: "Large scale planning",
     titleNo: "Planlagt i stor skala",
     textEn:
       "Freehand Maori work needs balance, rhythm, spacing, and strong negative space before the first line is tattooed.",
@@ -44,9 +44,9 @@ const processItems = [
     titleEn: "Custom, not copied",
     titleNo: "Custom, ikke kopiert",
     textEn:
-      "The goal is a bold Maori and Polynesian-inspired tattoo that respects the style while being made for your body and project.",
+      "The goal is a bold Maori and Polynesian inspired tattoo that respects the style while being made for your body and project.",
     textNo:
-      "Målet er en sterk Maori og Polynesian-inspirert tatovering som respekterer stilen, men er laget for kroppen din og prosjektet ditt.",
+      "Målet er en sterk Maori og Polynesian inspirert tatovering som respekterer stilen, men er laget for kroppen din og prosjektet ditt.",
   },
 ];
 
@@ -75,8 +75,8 @@ export default function FreehandMaoriTattooPage() {
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText
-                en="Large-scale freehand Maori and Polynesian-inspired tattoo work in Norway, drawn around the body for flow, balance, and long-term impact."
-                no="Freehand Maori og Polynesian-inspirerte tatoveringer i stor skala i Norge, tegnet rundt kroppen for flyt, balanse og langvarig uttrykk."
+                en="Large scale freehand Maori and Polynesian inspired tattoo work in Norway, drawn around the body for flow, balance, and long term impact."
+                no="Freehand Maori og Polynesian inspirerte tatoveringer i stor skala i Norge, tegnet rundt kroppen for flyt, balanse og langvarig uttrykk."
               />
             </p>
           </div>

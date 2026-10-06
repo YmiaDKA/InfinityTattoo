@@ -20,7 +20,7 @@ export default function BlackoutTatoveringPage() {
       planningEn="Blackout work needs planning around coverage, skin response, old tattoos, edges, healing and how the black areas flow with the body."
       planningNo="Blackout må planlegges rundt dekning, hudrespons, gamle tatoveringer, kanter, healing og hvordan de sorte flatene følger kroppen."
       fitEn="A good blackout project is not just filling skin. It needs shape, balance, negative space and a clear reason for where the black starts and stops."
-      fitNo="Et bra blackout-prosjekt handler ikke bare om å fylle hud. Det trenger form, balanse, negativ space og en tydelig grunn til hvor det sorte starter og stopper."
+      fitNo="Et bra blackout prosjekt handler ikke bare om å fylle hud. Det trenger form, balanse, negativ space og en tydelig grunn til hvor det sorte starter og stopper."
       imageOffset={2}
       signals={[
         {

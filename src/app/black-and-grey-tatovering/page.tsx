@@ -19,8 +19,8 @@ export default function BlackAndGreyTatoveringPage() {
       introNo="Black and grey tatovering i Lørenskog med ren shading, kontrollert kontrast og custom komposisjon for kunder fra Oslo, Strømmen og Lillestrøm."
       planningEn="Black and grey work depends on smooth transitions, strong darks, soft midtones and enough open skin so the tattoo stays readable."
       planningNo="Black and grey handler om myke overganger, sterke mørke partier, rolige mellomtoner og nok åpen hud til at tatoveringen holder seg lesbar."
-      fitEn="The design is planned around the shape of the area, whether it is a portrait, sleeve, cover-up or larger realism piece."
-      fitNo="Designet planlegges rundt formen på området, enten det er portrett, sleeve, cover-up eller større realisme."
+      fitEn="The design is planned around the shape of the area, whether it is a portrait, sleeve, cover up or larger realism piece."
+      fitNo="Designet planlegges rundt formen på området, enten det er portrett, sleeve, cover up eller større realisme."
       imageOffset={1}
       signals={[
         {

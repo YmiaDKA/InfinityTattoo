@@ -15,7 +15,7 @@ export default function LetteringTatoveringPage() {
   return (
     <StyleLandingPage
       headline="Lettering tatovering"
-      introEn="Lettering tattoos in Lørenskog for names, quotes, script and text-based ideas where spacing, font choice and placement need to feel intentional."
+      introEn="Lettering tattoos in Lørenskog for names, quotes, script and text based ideas where spacing, font choice and placement need to feel intentional."
       introNo="Lettering tatovering i Lørenskog for navn, sitater, script og tekstbaserte ideer der avstand, fontvalg og plassering må føles riktig."
       planningEn="Good lettering starts with the words, but the final result depends on size, letter spacing, line weight, placement and how the text will heal over time."
       planningNo="God lettering starter med ordene, men sluttresultatet avhenger av størrelse, bokstavavstand, linjetykkelse, plassering og hvordan teksten gror over tid."
