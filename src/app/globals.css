@@ -77,8 +77,8 @@
   --card-foreground: oklch(0.94 0.012 75);
   --popover: oklch(0.14 0.006 28);
   --popover-foreground: oklch(0.94 0.012 75);
-  --primary: var(--studio-gold);
-  --primary-foreground: oklch(0.14 0.006 28);
+  --primary: #8b6b31;
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.22 0.007 28);
   --secondary-foreground: oklch(0.94 0.012 75);
   --muted: oklch(0.23 0.006 28);
@@ -126,7 +126,7 @@
   }
 
   ::selection {
-    background: var(--studio-gold);
+    background: var(--primary);
     color: var(--primary-foreground);
   }
 

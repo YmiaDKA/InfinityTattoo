@@ -27,7 +27,12 @@ export function ArtistProfileCard({
   large = false,
 }: ArtistProfileCardProps) {
   return (
-    <article className="relative isolate flex min-w-0 flex-col pt-7">
+    <article
+      className={cn(
+        "relative isolate flex min-w-0 flex-col pt-7",
+        large && "w-full max-w-96",
+      )}
+    >
       <span
         aria-hidden="true"
         className={cn(
@@ -44,7 +49,7 @@ export function ArtistProfileCard({
         aria-label={name}
         className={cn(
           "group relative block overflow-hidden rounded-[2rem] border border-border bg-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring",
-          large ? "h-80 sm:h-96" : "h-52 sm:h-80",
+          "aspect-[3/4]",
         )}
       >
         {image ? (
@@ -53,7 +58,7 @@ export function ArtistProfileCard({
             alt={name}
             fill
             className="object-cover object-[50%_18%]"
-            sizes="(min-width: 1024px) 50vw, 92vw"
+            sizes="(min-width: 640px) 384px, calc(100vw - 40px)"
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-muted/40 to-background px-3 pb-12 text-center sm:px-5">
@@ -70,7 +75,7 @@ export function ArtistProfileCard({
           </div>
         )}
         <span className="absolute -bottom-px -right-px flex size-16 items-center justify-center rounded-tl-[1.5rem] sm:size-20 sm:rounded-tl-[2rem] border-l border-t border-border bg-background p-2">
-          <span className="flex size-11 items-center justify-center rounded-full sm:size-14 bg-foreground text-background transition-colors group-hover:bg-[color:var(--studio-gold)] group-hover:text-primary-foreground">
+          <span className="flex size-11 items-center justify-center rounded-full sm:size-14 bg-foreground text-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
             <MoveUpRightIcon aria-hidden="true" className="size-6" />
           </span>
         </span>

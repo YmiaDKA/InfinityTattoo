@@ -376,20 +376,12 @@ type FaqItem = {
 
 const faqItems: FaqItem[] = [
   {
-    questionEn: "How do I book a consultation?",
-    questionNo: "Hvordan booker jeg konsultasjon?",
+    questionEn: "How do I book and prepare for my first tattoo?",
+    questionNo: "Hvordan booker og forbereder jeg min første tatovering?",
     answerEn:
-      "Use the booking calendar above and choose a consultation length that fits your idea. Tattoo consultations are free, and you can share references, placement details, size and budget during the consultation.",
+      "Use the booking calendar above and choose a consultation length that fits your idea. Tattoo consultations are free, and you can share references, placement details, size and budget during the consultation.\n\nBring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.\n\nStart by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
     answerNo:
-      "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Tatoveringskonsultasjoner er gratis, og du kan dele referanser, plassering, størrelse og budsjett under konsultasjonen.",
-  },
-  {
-    questionEn: "What should I bring?",
-    questionNo: "Hva bør jeg ha klart?",
-    answerEn:
-      "Bring clear reference images, placement ideas, approximate size, and any meaning or details that matter for the design.",
-    answerNo:
-      "Ha klare referansebilder, plassering, omtrent størrelse og detaljer som er viktige for designet.",
+      "Bruk bookingkalenderen over og velg en konsultasjon som passer ideen din. Tatoveringskonsultasjoner er gratis, og du kan dele referanser, plassering, størrelse og budsjett under konsultasjonen.\n\nHa klare referansebilder, plassering, omtrent størrelse og detaljer som er viktige for designet.\n\nStart med å booke en konsultasjon. Du trenger ikke å ha alt klart; ta med en grov idé, en følelse eller noen referansebilder, så utvikler vi konseptet sammen. Førstegangskunder er alltid velkomne hos Infinity Tattoo, og vi guider deg gjennom hele prosessen.",
   },
   {
     questionEn: "Do you do custom designs?",
@@ -424,52 +416,20 @@ const faqItems: FaqItem[] = [
       "Ja. Hvis tatoveringen trenger en etterjustering etter at den har grodd, ta kontakt innen én måned etter timen. Etterjusteringer på arbeid gjort hos Infinity Tattoo er gratis så lenge etterbehandlingen er fulgt riktig.",
   },
   {
-    questionEn: "Do you require a deposit?",
-    questionNo: "Kreves det depositum?",
+    questionEn: "How do deposits, rescheduling and cancellations work?",
+    questionNo: "Hvordan fungerer depositum, flytting og avbestilling?",
     answerEn:
-      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.",
+      "Yes. A deposit is required to secure your booking and cover the time spent on your custom design. The deposit amount is typically NOK 500-1000 depending on the size of the project. Your deposit is deducted from the final price of your tattoo and it is non-refundable.\n\nLife happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.\n\nIf you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
     answerNo:
-      "Ja. Det kreves depositum for å sikre bookingen og dekke tiden som brukes på spesialdesignet. Depositumet er vanligvis 500-1000 kr, avhengig av prosjektets størrelse. Det trekkes fra sluttprisen og refunderes ikke.",
+      "Ja. Det kreves depositum for å sikre bookingen og dekke tiden som brukes på spesialdesignet. Depositumet er vanligvis 500-1000 kr, avhengig av prosjektets størrelse. Det trekkes fra sluttprisen og refunderes ikke.\n\nVi forstår at ting kan skje. Hvis du må flytte timen, ta kontakt minst 48 timer før avtalen, så flyttes depositumet til den nye datoen. Ved avbestilling senere enn 48 timer før timen går depositumet tapt.\n\nHvis du avbestiller timen helt, refunderes ikke depositumet. Det dekker tiden som er brukt på designet og tiden som ble holdt av til deg. Ta gjerne kontakt hvis du er usikker før timen, så prøver vi heller å finne en løsning.",
   },
   {
-    questionEn: "What happens if I need to reschedule?",
-    questionNo: "Hva skjer hvis jeg må flytte timen?",
+    questionEn: "Does getting a tattoo hurt, and which placements hurt least?",
+    questionNo: "Gjør det vondt å ta tatovering, og hvor er det minst vondt?",
     answerEn:
-      "Life happens, we understand. If you need to reschedule, contact us at least 48 hours before your appointment and your deposit will be transferred to your new date. Cancellations with less than 48 hours notice will forfeit the deposit.",
+      "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.\n\nThe outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
     answerNo:
-      "Vi forstår at ting kan skje. Hvis du må flytte timen, ta kontakt minst 48 timer før avtalen, så flyttes depositumet til den nye datoen. Ved avbestilling senere enn 48 timer før timen går depositumet tapt.",
-  },
-  {
-    questionEn: "What if I want to cancel completely?",
-    questionNo: "Hva om jeg må avbestille helt?",
-    answerEn:
-      "If you cancel your appointment entirely, the deposit is non-refundable. This covers the design time and the slot that was held for you. If you have any concerns before your appointment, always reach out to us. We'd rather find a solution than lose you as a client.",
-    answerNo:
-      "Hvis du avbestiller timen helt, refunderes ikke depositumet. Det dekker tiden som er brukt på designet og tiden som ble holdt av til deg. Ta gjerne kontakt hvis du er usikker før timen, så prøver vi heller å finne en løsning.",
-  },
-  {
-    questionEn: "I've never had a tattoo before, where do I start?",
-    questionNo: "Jeg har aldri tatt tatovering før, hvor starter jeg?",
-    answerEn:
-      "Start by booking a consultation. You don't need to have everything figured out, just bring a rough idea, a feeling, or some reference images and we'll build the concept together. First-time clients are always welcome at Infinity Tattoo and we'll walk you through every step of the process so you know exactly what to expect.",
-    answerNo:
-      "Start med å booke en konsultasjon. Du trenger ikke å ha alt klart; ta med en grov idé, en følelse eller noen referansebilder, så utvikler vi konseptet sammen. Førstegangskunder er alltid velkomne hos Infinity Tattoo, og vi guider deg gjennom hele prosessen.",
-  },
-  {
-    questionEn: "Does getting a tattoo hurt?",
-    questionNo: "Gjør det vondt å ta tatovering?",
-    answerEn:
-      "Honestly yes, but it's very manageable for most people. Pain varies depending on placement. Areas like the outer arm, thigh, and back are generally easier. Areas like the ribs, inner arm, hands, and neck are more sensitive. Most clients are surprised by how bearable it actually is once they're in the chair. We work at a pace that's comfortable for you.",
-    answerNo:
-      "Ærlig talt, ja, men for de fleste er det godt håndterbart. Smerten varierer etter plassering. Utsiden av armen, låret og ryggen er vanligvis enklere, mens ribbein, innsiden av armen, hender og nakke er mer følsomt. Vi jobber i et tempo som er komfortabelt for deg.",
-  },
-  {
-    questionEn: "What are the least painful places to get tattooed?",
-    questionNo: "Hvor er det minst vondt å ta tatovering?",
-    answerEn:
-      "The outer upper arm, outer thigh, shoulder, calf, and upper back are generally the least painful areas. These are also great placements for large realistic pieces. If you're getting your first tattoo and want to ease into it, these are the spots we'd recommend starting with.",
-    answerNo:
-      "Utsiden av overarmen, utsiden av låret, skulderen, leggen og øvre del av ryggen er vanligvis blant de minst smertefulle områdene. Dette er også gode plasseringer for større realistiske motiver. For en førstegangstatovering kan dette være fine steder å starte.",
+      "Ærlig talt, ja, men for de fleste er det godt håndterbart. Smerten varierer etter plassering. Utsiden av armen, låret og ryggen er vanligvis enklere, mens ribbein, innsiden av armen, hender og nakke er mer følsomt. Vi jobber i et tempo som er komfortabelt for deg.\n\nUtsiden av overarmen, utsiden av låret, skulderen, leggen og øvre del av ryggen er vanligvis blant de minst smertefulle områdene. Dette er også gode plasseringer for større realistiske motiver. For en førstegangstatovering kan dette være fine steder å starte.",
   },
   {
     questionEn: "Can I get tattooed if I have health concerns?",
@@ -786,7 +746,7 @@ export default function Home() {
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <div className="grid gap-9 lg:grid-cols-[1.15fr_1fr] lg:gap-8">
+          <div className="grid items-start gap-9 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-16">
             <ArtistProfileCard
               label="TATTOO"
               name="Filip"
@@ -797,7 +757,7 @@ export default function Home() {
               bioEn="Artist and owner with 4+ years of experience from Greece and Norway. Custom realism, black & grey, blackout and freehand Maori."
               bioNo="Artist og eier med over 4 års erfaring fra Hellas og Norge. Custom realisme, black & grey, blackout og freehand Maori."
             />
-            <div className="grid grid-cols-2 items-start gap-3 sm:gap-5">
+            <div className="grid w-full max-w-[34rem] grid-cols-2 items-start gap-4 sm:gap-6">
               <ArtistProfileCard
                 label="PIERCING"
                 name="Piercing"
@@ -985,7 +945,7 @@ export default function Home() {
                 <AccordionTrigger className="py-4 text-base">
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="whitespace-pre-line text-muted-foreground">
                   {item.parkingLinks ? (
                     <div className="flex flex-col gap-4">
                       <p>
