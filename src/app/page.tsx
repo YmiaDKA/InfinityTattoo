@@ -4,7 +4,6 @@ import {
   CalendarDaysIcon,
   ContrastIcon,
   BadgeCheckIcon,
-  GemIcon,
   Maximize2Icon,
   MailIcon,
   MapPinIcon,
@@ -12,7 +11,6 @@ import {
   PenLineIcon,
   PhoneIcon,
   ShieldCheckIcon,
-  SparklesIcon,
   StarIcon,
   SquareIcon,
   type LucideIcon,
@@ -264,45 +262,6 @@ const serviceAreas = [
       "Infinity Tattoo also works with clients from Oslo who want precise custom design in a calm studio setting.",
     textNo:
       "Infinity Tattoo tar også imot kunder fra Oslo som ønsker presist custom design i et rolig studio.",
-  },
-];
-
-const mobileServiceLinks = [
-  {
-    icon: PenLineIcon,
-    labelEn: "Tattoo work",
-    labelNo: "Tatovering",
-    href: "#work",
-  },
-  {
-    icon: GemIcon,
-    labelEn: "Piercing",
-    labelNo: "Piercing",
-    href: "/piercing",
-  },
-  {
-    icon: SparklesIcon,
-    labelEn: "Tooth gems",
-    labelNo: "Tooth gems",
-    href: "/tooth-gems",
-  },
-  {
-    icon: StarIcon,
-    labelEn: "Reviews",
-    labelNo: "Anmeldelser",
-    href: "#reviews",
-  },
-  {
-    icon: MapPinIcon,
-    labelEn: "Contact",
-    labelNo: "Kontakt",
-    href: "#contact",
-  },
-  {
-    icon: CalendarDaysIcon,
-    labelEn: "Book",
-    labelNo: "Book",
-    href: "#booking",
   },
 ];
 
@@ -760,21 +719,21 @@ export default function Home() {
                 no="Custom realistiske tatoveringer i Lørenskog, nær Strømmen, Lillestrøm og Oslo, for deg som vil ha presisjon, detaljer og et design som faktisk passer huden din."
               />
             </p>
-            <p className="motion-rise motion-delay-2 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-              <LocalizedText
-                en="Free consultation in a calm private studio."
-                no="Gratis konsultasjon i et rolig privat studio."
-              />
-            </p>
-          </div>
-          <div className="motion-rise motion-delay-3 grid grid-cols-2 gap-2.5 text-xs font-semibold text-foreground/85 sm:hidden">
-            <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-              <MapPinIcon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
-              Lørenskog
-            </div>
-            <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-              <StarIcon className="size-4 shrink-0 fill-current text-[color:var(--studio-red)]" />
-              <LocalizedText en="135+ reviews" no="135+ anmeldelser" />
+            <div className="motion-rise motion-delay-3 flex flex-wrap items-center justify-start gap-4 text-xs font-semibold text-foreground/85 sm:hidden">
+              <span className="inline-flex items-center gap-1.5">
+                <MapPinIcon
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
+                />
+                Lørenskog
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <StarIcon
+                  aria-hidden="true"
+                  className="size-4 shrink-0 fill-current text-[color:var(--studio-red)]"
+                />
+                <LocalizedText en="135+ reviews" no="135+ anmeldelser" />
+              </span>
             </div>
           </div>
           <div className="motion-rise motion-delay-3 flex flex-col gap-3 sm:flex-row">
@@ -801,25 +760,6 @@ export default function Home() {
               <MoveUpRightIcon data-icon="inline-end" />
             </Button>
           </div>
-          <nav
-            aria-label="Quick service navigation"
-            className="motion-rise motion-delay-4 grid grid-cols-2 gap-2 md:hidden"
-          >
-            {mobileServiceLinks.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  className="motion-lift-subtle flex min-h-[3.25rem] items-center gap-2.5 rounded-lg border border-foreground/10 bg-background/72 px-3.5 text-base font-semibold text-foreground shadow-xl shadow-black/10 backdrop-blur transition hover:border-foreground/40"
-                  href={item.href}
-                  key={item.href}
-                >
-                  <Icon className="size-4 shrink-0 text-[color:var(--studio-red)]" />
-                  <LocalizedText en={item.labelEn} no={item.labelNo} />
-                </Link>
-              );
-            })}
-          </nav>
         </div>
       </section>
 
@@ -966,12 +906,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredGalleryImages.map((image, index) => (
+        <div className="motion-stagger grid grid-cols-2 gap-3 lg:grid-cols-3">
+          {featuredGalleryImages.map((image) => (
             <div
-              className={`group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card transition duration-300 hover:-translate-y-1 hover:border-foreground/30 ${
-                index > 2 ? "hidden sm:block" : ""
-              }`}
+              className="group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card transition duration-300 hover:-translate-y-1 hover:border-foreground/30"
               key={image.src}
             >
               <Image
@@ -979,7 +917,7 @@ export default function Home() {
                 alt={image.alt}
                 fill
                 className="object-cover"
-                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
+                sizes="(min-width: 1024px) 30vw, 45vw"
               />
               <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] font-medium tracking-[0.14em] text-foreground/80 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 {image.tag}
@@ -1479,57 +1417,9 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <section
-            id="opening-hours"
-            className="mb-8 grid gap-4 rounded-3xl border border-border/70 bg-card/45 p-5 sm:p-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <CalendarDaysIcon className="size-5" />
-              </div>
-              <div>
-                <h2 className="font-display text-2xl font-bold text-foreground">
-                  <LocalizedText en="Studio hours" no="Åpningstider" />
-                </h2>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText
-                    en="Plan your free consultation or tattoo session around the studio week."
-                    no="Planlegg gratis konsultasjon eller tatoveringstime rundt studioets åpningstider."
-                  />
-                </p>
-              </div>
-            </div>
-            <div className="grid gap-3 text-sm sm:grid-cols-3">
-              <div className="rounded-lg border border-border/70 bg-background/35 p-4">
-                <p className="text-muted-foreground">
-                  <LocalizedText en="Tuesday-Friday" no="Tirsdag-fredag" />
-                </p>
-                <p className="mt-2 font-display text-2xl font-bold text-foreground">
-                  11:00-18:00
-                </p>
-              </div>
-              <div className="rounded-lg border border-border/70 bg-background/35 p-4">
-                <p className="text-muted-foreground">
-                  <LocalizedText en="Saturday-Sunday" no="Lørdag-søndag" />
-                </p>
-                <p className="mt-2 font-display text-2xl font-bold text-foreground">
-                  11:00-16:00
-                </p>
-              </div>
-              <div className="rounded-lg border border-border/70 bg-background/35 p-4">
-                <p className="text-muted-foreground">
-                  <LocalizedText en="Monday" no="Mandag" />
-                </p>
-                <p className="mt-2 font-display text-2xl font-bold text-foreground">
-                  <LocalizedText en="Closed" no="Stengt" />
-                </p>
-              </div>
-            </div>
-          </section>
-
           <div className="flex flex-col gap-8 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-3 text-foreground">
-              <span className="relative flex size-10 overflow-hidden rounded-full bg-foreground">
+            <div className="flex items-start gap-3 text-foreground">
+              <span className="relative flex size-10 shrink-0 overflow-hidden rounded-full bg-foreground">
                 <Image
                   src="/media/brand/infinity.svg"
                   alt=""
@@ -1548,6 +1438,30 @@ export default function Home() {
                 >
                   Skårersletta 48c, 1473 Lørenskog
                 </a>
+                <section
+                  id="opening-hours"
+                  className="mt-2 flex flex-col gap-2 text-sm text-muted-foreground"
+                >
+                  <h2 className="font-semibold text-foreground">
+                    <LocalizedText en="Opening hours" no="Åpningstider" />
+                  </h2>
+                  <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
+                    <dt>
+                      <LocalizedText en="Tuesday–Friday" no="Tirsdag–fredag" />
+                    </dt>
+                    <dd>11:00–18:00</dd>
+                    <dt>
+                      <LocalizedText en="Saturday–Sunday" no="Lørdag–søndag" />
+                    </dt>
+                    <dd>11:00–16:00</dd>
+                    <dt>
+                      <LocalizedText en="Monday" no="Mandag" />
+                    </dt>
+                    <dd>
+                      <LocalizedText en="Closed" no="Stengt" />
+                    </dd>
+                  </dl>
+                </section>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-4">
