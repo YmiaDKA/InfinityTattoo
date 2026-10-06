@@ -2,11 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarDaysIcon,
+  CircleDotIcon,
+  GemIcon,
   ContrastIcon,
   BadgeCheckIcon,
   Maximize2Icon,
   MailIcon,
-  MapPinIcon,
   MoveUpRightIcon,
   PenLineIcon,
   PhoneIcon,
@@ -699,18 +700,25 @@ export default function Home() {
             </p>
             <div className="motion-rise motion-delay-3 flex flex-wrap items-center justify-start gap-4 text-xs font-semibold text-foreground/85 sm:hidden">
               <span className="inline-flex items-center gap-1.5">
-                <MapPinIcon
+                <PenLineIcon
                   aria-hidden="true"
                   className="size-4 shrink-0 text-[color:var(--studio-red)]"
                 />
-                Lørenskog
+                <LocalizedText en="Tattoos" no="Tatovering" />
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <StarIcon
+                <CircleDotIcon
                   aria-hidden="true"
-                  className="size-4 shrink-0 fill-current text-[color:var(--studio-red)]"
+                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
                 />
-                <LocalizedText en="135+ reviews" no="135+ anmeldelser" />
+                Piercing
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <GemIcon
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-[color:var(--studio-red)]"
+                />
+                Tooth gems
               </span>
             </div>
           </div>

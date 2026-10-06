@@ -41,7 +41,7 @@ export function LanguageToggle() {
         <HeaderPillSurface
           data-desktop="true"
           data-scrolled="true"
-          className="inset-0 opacity-0 group-hover:opacity-100 group-aria-expanded:opacity-100 group-focus-visible:opacity-100"
+          className="inset-0 hidden opacity-0 xl:block group-hover:opacity-100 group-aria-expanded:opacity-100 group-focus-visible:opacity-100"
         />
         <span
           aria-hidden="true"

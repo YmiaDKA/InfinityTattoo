@@ -132,9 +132,7 @@ export function SiteHeader({
         ref={navRef}
         className={cn(
           "relative grid h-16 w-full max-w-[68rem] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full px-3 sm:gap-3 xl:grid-cols-[1fr_auto_1fr]",
-          isScrolled
-            ? "max-xl:grid-cols-[minmax(0,1fr)_auto] max-xl:shadow-2xl max-xl:shadow-black/20"
-            : "",
+          isScrolled ? "max-xl:shadow-2xl max-xl:shadow-black/20" : "",
         )}
         aria-label="Main navigation"
       >
@@ -150,7 +148,7 @@ export function SiteHeader({
               top: isScrolled ? pillBounds.expandedTop : pillBounds.top,
               width: isScrolled ? pillBounds.expandedWidth : pillBounds.width,
             }}
-            className="z-0 block"
+            className={cn("z-0 block", !isScrolled && "max-xl:hidden")}
             initial={false}
             transition={{
               height: { type: "spring", duration: 0.42, bounce: 0.08 },
@@ -195,12 +193,9 @@ export function SiteHeader({
 
         <div
           ref={mobilePickerRef}
-          className={cn(
-            "relative z-10 justify-self-center xl:hidden",
-            isScrolled && "hidden",
-          )}
+          className="relative z-10 justify-self-center xl:hidden"
         >
-          {!isScrolled ? <LanguageToggle /> : null}
+          <LanguageToggle />
         </div>
 
         <div
