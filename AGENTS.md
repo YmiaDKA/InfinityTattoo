@@ -17,10 +17,13 @@ At the start of every Codex editing session:
 2. Sync/pull the latest repo before making edits.
 
 For normal website edits:
-1. Make the requested change.
-2. Inspect the diff.
-3. Commit with a short clear message.
-4. Push to GitHub.
+1. Make changes on a `codex/` preview branch in the existing GitHub repo.
+2. Inspect the diff, run checks, and commit with a short clear message.
+3. Push the preview branch for a Vercel preview deployment; review changes on its `vercel.app` URL.
+4. At the end of the session, go over all changes with the user.
+5. Only after the user approves publishing, merge into `main` and push to the existing GitHub repo so Vercel updates https://infinitytattoo.no/.
+
+Keep the existing GitHub repository and Vercel integration. Do not create a replacement repo or change production domains. Preview work must not update production or use `vercel --prod` before approval.
 
 Do not ask the tattoo artist to use Terminal.
 Do not require localhost for simple text, image, gallery, SEO, or contact updates.

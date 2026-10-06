@@ -1,50 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowDownIcon,
-  ContrastIcon,
-  Maximize2Icon,
-  MoveUpRightIcon,
-  PenLineIcon,
-  SquareIcon,
-} from "lucide-react";
+import { ArrowDownIcon, MoveUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { galleryImages } from "@/lib/site-data";
-
-const portfolioHighlights = [
-  {
-    icon: Maximize2Icon,
-    titleEn: "Large-scale realism",
-    titleNo: "Realisme i stor skala",
-    textEn: "Portraits, sleeves and statement work with depth, contrast and long-term structure.",
-    textNo: "Portretter, sleeves og større prosjekter med dybde, kontrast og struktur som holder.",
-  },
-  {
-    icon: ContrastIcon,
-    titleEn: "Black & grey",
-    titleNo: "Black & grey",
-    textEn: "Smooth shading, strong darks and controlled detail for pieces that stay readable.",
-    textNo: "Myk shading, sterke mørke partier og kontrollerte detaljer som holder seg lesbare.",
-  },
-  {
-    icon: PenLineIcon,
-    titleEn: "Freehand Maori",
-    titleNo: "Freehand Maori",
-    textEn: "Custom flow drawn around the body, not copied from a template.",
-    textNo: "Custom flyt tegnet rundt kroppen, ikke kopiert fra en mal.",
-  },
-  {
-    icon: SquareIcon,
-    titleEn: "Blackout work",
-    titleNo: "Blackout arbeid",
-    textEn: "Heavy coverage, sharp edges and body-aware planning for bold blackwork.",
-    textNo: "Tung dekning, rene kanter og planlegging rundt kroppen for kraftig blackwork.",
-  },
-];
 
 export const metadata: Metadata = {
   title: "Portfolio | Realistisk tatovering Lørenskog",
@@ -60,7 +22,7 @@ export default function WorkPage() {
     <main className="min-h-screen bg-background">
       <SiteHeader />
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-32 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:pb-24">
+      <section className="mx-auto max-w-6xl px-5 pb-16 pt-32 sm:px-8 lg:pb-24">
         <div className="motion-rise flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
@@ -96,27 +58,6 @@ export default function WorkPage() {
             </Button>
           </div>
         </div>
-
-        <div className="motion-stagger grid gap-3 sm:grid-cols-2">
-          {portfolioHighlights.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <div
-                className="motion-lift-subtle rounded-lg border border-border/70 bg-card/45 p-5"
-                key={item.titleEn}
-              >
-                <Icon className="size-5 text-[color:var(--studio-red)]" />
-                <p className="mt-4 font-display text-xl font-bold text-foreground">
-                  <LocalizedText en={item.titleEn} no={item.titleNo} />
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText en={item.textEn} no={item.textNo} />
-                </p>
-              </div>
-            );
-          })}
-        </div>
       </section>
 
       <section
@@ -140,7 +81,7 @@ export default function WorkPage() {
           </p>
         </div>
 
-        <div className="motion-stagger grid gap-5 md:grid-cols-2">
+        <div className="motion-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {galleryImages.map((image) => (
             <div
               className="group relative aspect-[4/5] overflow-hidden rounded-lg border bg-card shadow-2xl shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-foreground/30"
@@ -151,8 +92,7 @@ export default function WorkPage() {
                 alt={image.alt}
                 fill
                 className="object-cover"
-                loading="eager"
-                sizes="(min-width: 1280px) 600px, (min-width: 768px) 48vw, 92vw"
+                sizes="(min-width: 1280px) 400px, (min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw"
               />
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-background/85 to-transparent p-4 opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100">
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-foreground/85">

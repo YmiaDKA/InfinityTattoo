@@ -72,6 +72,8 @@ export function PanoramaViewer() {
           alt="Panoramic interior view of Infinity Tattoo Studio"
           className="motion-panorama-media pointer-events-none size-full object-cover"
           draggable={false}
+          loading="lazy"
+          decoding="async"
           src="/media/studio-panorama.jpg"
         />
       </motion.div>

@@ -11,8 +11,8 @@ import type { Metadata } from "next";
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { testimonials } from "@/lib/site-data";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { testimonials, type Testimonial } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Anmeldelser | Infinity Tattoo Lørenskog",
@@ -23,6 +23,35 @@ export const metadata: Metadata = {
   },
 };
 
+function ReviewCard({ review }: { review: Testimonial }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{review.name}</CardTitle>
+        <div
+          aria-label={`${review.rating}/5`}
+          className="flex gap-1 text-foreground"
+        >
+          {Array.from({ length: review.rating }).map((_, index) => (
+            <StarIcon
+              aria-hidden="true"
+              className="size-4 fill-current"
+              key={index}
+            />
+          ))}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <blockquote className="text-base leading-7">
+          &quot;
+          <LocalizedText en={review.quoteEn} no={review.quoteNo} />
+          &quot;
+        </blockquote>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function ReviewsPage() {
   const featuredReviews = testimonials.slice(0, 3);
   const remainingReviews = testimonials.slice(3);
@@ -31,14 +60,16 @@ export default function ReviewsPage() {
     <main className="min-h-screen overflow-hidden bg-background">
       <SiteHeader />
 
-      <section className="relative isolate border-b border-border/70">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_15%,color-mix(in_oklch,var(--studio-red)_26%,transparent),transparent_35%),linear-gradient(180deg,color-mix(in_oklch,var(--card)_55%,transparent),var(--background))]" />
+      <section className="border-b border-border/70">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-12 pt-32 sm:px-8 sm:pb-16 lg:pt-36">
-          <div className="motion-rise grid min-w-0 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div className="motion-rise flex min-w-0 flex-col gap-8">
             <div className="flex min-w-0 flex-col gap-5">
               <div className="flex w-fit items-center gap-2 rounded-full border border-foreground/10 bg-background/55 px-3 py-2 text-sm font-semibold text-foreground/85 backdrop-blur">
                 <StarIcon className="size-4 fill-current text-[color:var(--studio-red)]" />
-                <LocalizedText en="135+ Google reviews" no="135+ Google-anmeldelser" />
+                <LocalizedText
+                  en="135+ Google reviews"
+                  no="135+ Google-anmeldelser"
+                />
               </div>
               <h1 className="font-display text-[3.45rem] font-bold leading-[0.92] sm:text-7xl">
                 <LocalizedText en="Reviews" no="Anmeldelser" />
@@ -66,7 +97,10 @@ export default function ReviewsPage() {
                   render={<Link href="/#booking" />}
                   size="lg"
                 >
-                  <LocalizedText en="Book free consultation" no="Book gratis konsultasjon" />
+                  <LocalizedText
+                    en="Book free consultation"
+                    no="Book gratis konsultasjon"
+                  />
                   <CalendarDaysIcon data-icon="inline-end" />
                 </Button>
                 <Button
@@ -88,31 +122,12 @@ export default function ReviewsPage() {
               </div>
             </div>
 
-            <div className="motion-stagger grid gap-3">
+            <div className="motion-stagger grid gap-3 md:grid-cols-3">
               {featuredReviews.map((review) => (
-                <Card
-                  className="motion-lift-subtle bg-background/65 backdrop-blur"
+                <ReviewCard
+                  review={review}
                   key={`${review.name}-${review.date}`}
-                >
-                  <CardContent className="flex flex-col gap-3 p-5">
-                    <div className="flex gap-1 text-[color:var(--studio-red)]">
-                      {Array.from({ length: review.rating }).map((_, index) => (
-                        <StarIcon
-                          className="size-4 fill-current"
-                          key={`${review.name}-${review.date}-${index}`}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-base leading-6 text-foreground">
-                      &quot;
-                      <LocalizedText en={review.quoteEn} no={review.quoteNo} />
-                      &quot;
-                    </p>
-                    <p className="text-sm font-semibold text-muted-foreground">
-                      {review.name}
-                    </p>
-                  </CardContent>
-                </Card>
+                />
               ))}
             </div>
           </div>
@@ -122,29 +137,7 @@ export default function ReviewsPage() {
       <section className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 lg:py-16">
         <div className="motion-stagger grid gap-3 md:grid-cols-2">
           {remainingReviews.map((review) => (
-            <Card
-              className="motion-lift motion-reveal bg-card/70"
-              key={`${review.name}-${review.date}`}
-            >
-              <CardContent className="flex min-h-44 flex-col gap-4 px-5 py-4">
-                <div className="flex gap-1 text-[color:var(--studio-red)]">
-                  {Array.from({ length: review.rating }).map((_, index) => (
-                    <StarIcon
-                      className="size-4 fill-current"
-                      key={`${review.name}-${review.date}-${index}`}
-                    />
-                  ))}
-                </div>
-                <p className="text-base leading-6">
-                  &quot;
-                  <LocalizedText en={review.quoteEn} no={review.quoteNo} />
-                  &quot;
-                </p>
-                <p className="mt-auto text-sm font-semibold text-muted-foreground">
-                  {review.name}
-                </p>
-              </CardContent>
-            </Card>
+            <ReviewCard review={review} key={`${review.name}-${review.date}`} />
           ))}
         </div>
 
@@ -156,7 +149,7 @@ export default function ReviewsPage() {
             size="lg"
             variant="outline"
           >
-            Back home
+            <LocalizedText en="Back home" no="Til forsiden" />
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
         </div>

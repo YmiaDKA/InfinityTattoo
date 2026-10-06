@@ -15,19 +15,31 @@ export function HeroBackgroundVideo() {
     video.muted = true;
     video.playsInline = true;
 
+    let isVisible = true;
+
     const playVideo = () => {
+      if (document.hidden || !isVisible) {
+        video.pause();
+        return;
+      }
+
       void video.play().catch(() => {
         // Mobile browsers can block autoplay in battery-saving modes.
       });
     };
 
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      playVideo();
+    });
+    observer.observe(video);
+
     playVideo();
     document.addEventListener("visibilitychange", playVideo);
-    window.addEventListener("focus", playVideo);
 
     return () => {
       document.removeEventListener("visibilitychange", playVideo);
-      window.removeEventListener("focus", playVideo);
+      observer.disconnect();
     };
   }, []);
 
@@ -41,7 +53,7 @@ export function HeroBackgroundVideo() {
       muted
       playsInline
       poster="/media/hero-poster.jpeg"
-      preload="auto"
+      preload="metadata"
     >
       <source src="/media/video/studio-reel.mp4" type="video/mp4" />
     </video>
