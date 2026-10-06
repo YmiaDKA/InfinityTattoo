@@ -31,17 +31,14 @@ export function ArtistSpotlight({
   children: ReactNode;
 }) {
   return (
-    <article className="relative isolate mx-auto grid w-full max-w-lg overflow-hidden rounded-3xl border bg-card/60 sm:max-w-none sm:grid-cols-2">
-      <div className="relative h-[32rem] sm:h-[36rem] lg:h-[34rem]">
-        <p className="relative z-20 px-6 pt-6 text-center text-sm font-semibold text-foreground sm:text-base">
-          <LocalizedText en={professionEn} no={professionNo} />
-        </p>
+    <article className="relative isolate mx-auto grid w-full max-w-lg overflow-hidden rounded-3xl border bg-card/60 sm:max-w-5xl sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+      <div className="relative h-[28rem] sm:h-auto sm:min-h-[30rem] lg:min-h-[32rem]">
         <h3
           className={cn(
             "artist-name pointer-events-none relative z-0 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight",
             mirrored
-              ? "artist-name-red mt-3 text-[clamp(4rem,12vw,6rem)] lg:text-[4.5rem]"
-              : "artist-name-gold mt-1 text-[clamp(5rem,15vw,8rem)]",
+              ? "artist-name-red mt-6 text-[clamp(4rem,12vw,6rem)] sm:text-5xl lg:text-6xl"
+              : "artist-name-gold mt-6 text-[clamp(5rem,15vw,8rem)] sm:text-5xl lg:text-7xl",
           )}
         >
           {name}
@@ -49,10 +46,7 @@ export function ArtistSpotlight({
         <Link
           href={href}
           aria-label={name}
-          className={cn(
-            "artist-cutout absolute bottom-0 top-20 mx-auto focus-visible:outline-2 focus-visible:outline-ring",
-            mirrored ? "inset-x-0" : "inset-x-4 max-w-lg",
-          )}
+          className="artist-cutout absolute inset-0 focus-visible:outline-2 focus-visible:outline-ring"
         >
           <Image
             src={image}
@@ -60,22 +54,18 @@ export function ArtistSpotlight({
             width={width}
             height={height}
             draggable={false}
-            className={cn(
-              "w-full",
-              mirrored
-                ? "absolute bottom-0 h-auto"
-                : "h-full object-contain object-bottom",
-            )}
-            sizes={
-              mirrored
-                ? "(min-width: 1152px) 544px, (min-width: 640px) 48vw, 90vw"
-                : "(min-width: 1152px) 512px, (min-width: 640px) 44vw, 84vw"
-            }
+            className="h-full w-full object-contain object-left-bottom"
+            sizes="(min-width: 1088px) 410px, (min-width: 640px) 38vw, 90vw"
           />
         </Link>
       </div>
       <div className="relative z-20 flex flex-col justify-center px-6 pb-6 sm:p-8 lg:p-10">
-        <div className="mx-auto w-full max-w-xl">{children}</div>
+        <div className="mx-auto w-full max-w-xl">
+          <p className="mb-4 text-base font-semibold text-foreground">
+            <LocalizedText en={professionEn} no={professionNo} />
+          </p>
+          {children}
+        </div>
         <div className="flex items-center justify-center gap-3 pt-7 sm:justify-start">
           {mirrored ? (
             <>
