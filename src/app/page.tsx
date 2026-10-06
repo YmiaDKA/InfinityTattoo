@@ -906,17 +906,19 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="grid self-start gap-4">
-            <iframe
-              title="Infinity Tattoo location on Google Maps"
-              aria-label="Infinity Tattoo location on Google Maps"
-              className="block aspect-[4/3] h-auto min-h-0 w-full rounded-3xl border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              scrolling="no"
-              src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
-            />
-            <PanoramaViewer className="aspect-[4/3] h-auto min-h-0 sm:h-auto lg:h-auto" />
+          <div className="relative">
+            <div className="grid grid-rows-2 gap-4 lg:absolute lg:inset-0">
+              <iframe
+                title="Infinity Tattoo location on Google Maps"
+                aria-label="Infinity Tattoo location on Google Maps"
+                className="block h-56 min-h-0 w-full rounded-3xl border-0 sm:h-64 lg:h-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                scrolling="no"
+                src="https://maps.google.com/maps?width=600&height=400&hl=en&q=sk%C3%A5rersletta%2048c&t=k&z=17&ie=UTF8&iwloc=B&output=embed"
+              />
+              <PanoramaViewer className="h-56 min-h-0 sm:h-64 lg:h-full" />
+            </div>
           </div>
         </div>
 
@@ -955,6 +957,10 @@ export default function Home() {
           >
             <InstagramIcon className="size-5 text-[color:var(--studio-gold)]" />
             Instagram
+            <MoveUpRightIcon
+              aria-hidden="true"
+              className="size-4 text-[color:var(--studio-gold)]"
+            />
           </a>
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
@@ -1171,18 +1177,18 @@ export default function Home() {
 
       <footer className="px-5 pb-10 sm:px-8">
         <div className="mx-auto w-full max-w-[68rem]">
-          <div className="flex flex-col items-center gap-6 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 md:grid md:grid-cols-[auto_1fr] md:items-start lg:grid-cols-[auto_1fr_auto]">
-            <span className="relative flex size-12 shrink-0 overflow-hidden rounded-full bg-foreground">
-              <Image
-                src="/media/brand/infinity.svg"
-                alt="Infinity Tattoo logo"
-                fill
-                className="object-cover"
-                sizes="48px"
-              />
-            </span>
-            <div className="grid max-w-full gap-6 text-left md:grid-cols-[auto_auto] md:justify-start md:gap-12">
-              <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center gap-6 rounded-3xl border bg-card/60 p-6 text-sm text-muted-foreground sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center">
+            <div className="flex min-w-0 flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-3 lg:justify-self-start">
+              <span className="relative flex size-12 shrink-0 overflow-hidden rounded-full bg-foreground">
+                <Image
+                  src="/media/brand/infinity.svg"
+                  alt="Infinity Tattoo logo"
+                  fill
+                  className="object-cover"
+                  sizes="48px"
+                />
+              </span>
+              <div className="flex min-w-0 flex-col gap-2 text-left">
                 <span className="text-foreground">
                   © Infinity Tattoo Studio
                 </span>
@@ -1195,42 +1201,42 @@ export default function Home() {
                   Skårersletta 48c, 1473 Lørenskog
                 </a>
               </div>
-              <section
-                id="opening-hours"
-                className="flex flex-col gap-2 text-sm text-muted-foreground"
-              >
-                <h2 className="font-semibold text-foreground md:text-center">
-                  <LocalizedText en="Opening hours" no="Åpningstider" />
-                </h2>
-                <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
-                  <dt>
-                    <LocalizedText en="Monday" no="Mandag" />
-                  </dt>
-                  <dd>
-                    <LocalizedText en="Closed" no="Stengt" />
-                  </dd>
-                  <dt>
-                    <LocalizedText
-                      en="Tuesday to Friday"
-                      no="Tirsdag til fredag"
-                    />
-                  </dt>
-                  <dd>
-                    <LocalizedText en="11:00 to 18:00" no="11:00 til 18:00" />
-                  </dd>
-                  <dt>
-                    <LocalizedText
-                      en="Saturday to Sunday"
-                      no="Lørdag til søndag"
-                    />
-                  </dt>
-                  <dd>
-                    <LocalizedText en="11:00 to 16:00" no="11:00 til 16:00" />
-                  </dd>
-                </dl>
-              </section>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:col-span-2 md:justify-self-end lg:col-span-1 lg:flex-col">
+            <section
+              id="opening-hours"
+              className="flex flex-col gap-2 justify-self-center text-sm text-muted-foreground"
+            >
+              <h2 className="font-semibold text-foreground md:text-center">
+                <LocalizedText en="Opening hours" no="Åpningstider" />
+              </h2>
+              <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
+                <dt>
+                  <LocalizedText en="Monday" no="Mandag" />
+                </dt>
+                <dd>
+                  <LocalizedText en="Closed" no="Stengt" />
+                </dd>
+                <dt>
+                  <LocalizedText
+                    en="Tuesday to Friday"
+                    no="Tirsdag til fredag"
+                  />
+                </dt>
+                <dd>
+                  <LocalizedText en="11:00 to 18:00" no="11:00 til 18:00" />
+                </dd>
+                <dt>
+                  <LocalizedText
+                    en="Saturday to Sunday"
+                    no="Lørdag til søndag"
+                  />
+                </dt>
+                <dd>
+                  <LocalizedText en="11:00 to 16:00" no="11:00 til 16:00" />
+                </dd>
+              </dl>
+            </section>
+            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-self-end lg:flex-col">
               <a
                 aria-label="Instagram"
                 className="lg:order-2 motion-lift-subtle inline-flex h-10 items-center gap-2 rounded-full border bg-background/50 px-4 transition hover:bg-background hover:text-foreground"
