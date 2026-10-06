@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -753,43 +754,74 @@ export default function Home() {
             />
           </p>
         </div>
-        <Marquee
-          pauseOnHover
-          repeat={2}
-          className="[--duration:600s] sm:[--duration:800s]"
-        >
-          {testimonials.map((testimonial) => (
-            <Card
-              className="motion-lift-subtle mx-1.5 w-[20rem] bg-background/70 sm:w-[27rem]"
-              key={`${testimonial.name}-${testimonial.date}`}
+        <div id="work" className="scroll-mt-28 flex flex-col gap-2">
+          {[0, 1].map((rowIndex) => (
+            <Marquee
+              key={rowIndex}
+              reverse={rowIndex === 1}
+              pauseOnHover
+              repeat={2}
+              aria-label={
+                rowIndex === 0
+                  ? "Reviews and tattoo projects moving left"
+                  : "Reviews and tattoo projects moving right"
+              }
+              className="motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
             >
-              <CardContent className="flex min-h-40 flex-col gap-4 px-5 py-4">
-                <div className="flex gap-1 text-[color:var(--studio-red)]">
-                  {Array.from({ length: testimonial.rating }).map(
-                    (_, index) => (
-                      <StarIcon
-                        className="size-4 fill-current"
-                        key={`${testimonial.name}-${testimonial.date}-${index}`}
-                      />
-                    ),
-                  )}
-                </div>
-                <p className="line-clamp-5 text-base leading-6 text-foreground">
-                  &quot;
-                  <LocalizedText
-                    en={testimonial.quoteEn}
-                    no={testimonial.quoteNo}
-                  />
-                  &quot;
-                </p>
-                <p className="mt-auto text-sm font-semibold text-muted-foreground">
-                  {testimonial.name}
-                </p>
-              </CardContent>
-            </Card>
+              {featuredGalleryImages
+                .slice(rowIndex * 3, rowIndex * 3 + 3)
+                .map((image, index) => {
+                  const testimonial = testimonials[rowIndex * 3 + index];
+                  return (
+                    <Fragment key={image.src}>
+                      <Card className="h-60 w-80 shrink-0 bg-background/70 sm:h-75 sm:w-96">
+                        <CardContent className="flex h-full flex-col gap-4 px-5">
+                          <div
+                            aria-label={`${testimonial.rating}/5`}
+                            className="flex gap-1 text-[color:var(--studio-red)]"
+                          >
+                            {Array.from({ length: testimonial.rating }).map(
+                              (_, starIndex) => (
+                                <StarIcon
+                                  aria-hidden="true"
+                                  className="size-4 fill-current"
+                                  key={starIndex}
+                                />
+                              ),
+                            )}
+                          </div>
+                          <p className="line-clamp-5 text-base leading-6 text-foreground">
+                            &quot;
+                            <LocalizedText
+                              en={testimonial.quoteEn}
+                              no={testimonial.quoteNo}
+                            />
+                            &quot;
+                          </p>
+                          <p className="mt-auto text-sm font-semibold text-muted-foreground">
+                            {testimonial.name}
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <Link
+                        href="/work"
+                        className="relative h-60 w-48 shrink-0 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-ring sm:h-75 sm:w-60"
+                      >
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 640px) 240px, 192px"
+                        />
+                      </Link>
+                    </Fragment>
+                  );
+                })}
+            </Marquee>
           ))}
-        </Marquee>
-        <div className="my-6 flex flex-wrap justify-center gap-3 px-5">
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-3 px-5">
           <Button
             className="motion-lift-subtle rounded-full"
             nativeButton={false}
@@ -810,30 +842,6 @@ export default function Home() {
             <MoveUpRightIcon data-icon="inline-end" />
           </Button>
         </div>
-        <Marquee
-          id="work"
-          aria-label="Recent tattoo projects"
-          reverse
-          pauseOnHover
-          repeat={2}
-          className="scroll-mt-28 motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
-        >
-          {featuredGalleryImages.map((image) => (
-            <Link
-              href="/work"
-              className="relative aspect-[4/5] w-40 shrink-0 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-ring sm:w-60"
-              key={image.src}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                className="object-cover"
-                sizes="(min-width: 640px) 240px, 160px"
-              />
-            </Link>
-          ))}
-        </Marquee>
       </section>
 
       <section id="styles" className="motion-reveal border-y bg-card/30">
