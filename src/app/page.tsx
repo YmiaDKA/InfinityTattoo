@@ -705,7 +705,7 @@ export default function Home() {
           </h2>
           <div
             id="services"
-            className="flex scroll-mt-28 flex-col gap-14 sm:gap-16 lg:grid lg:grid-cols-12 lg:items-start lg:gap-0"
+            className="grid scroll-mt-28 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-stretch"
           >
             <ArtistSpotlight
               name="Filip"
@@ -792,10 +792,7 @@ export default function Home() {
                     no: "Rolig veiledning fra første besøk til etterbehandling.",
                   },
                 ].map(({ icon: Icon, en, no }) => (
-                  <li
-                    key={en}
-                    className="flex flex-row-reverse items-start gap-2"
-                  >
+                  <li key={en} className="flex items-start gap-2">
                     <Icon
                       aria-hidden="true"
                       className="mt-1 size-4 shrink-0 text-[#d85a42]"
