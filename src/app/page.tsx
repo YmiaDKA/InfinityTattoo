@@ -11,6 +11,7 @@ import {
   StarIcon,
 } from "lucide-react";
 
+import { InstagramPill } from "@/components/instagram-pill";
 import { ArtistProfileCard } from "@/components/artist-profile-card";
 import { LineworkBooking } from "@/components/linework-booking";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
@@ -52,97 +53,14 @@ const showcaseRows = [
     .map((image) => ({ type: "image" as const, image })),
 ];
 
-const signatureStyles = [
-  {
-    titleEn: "Realistic tattoos",
-    titleNo: "Realistisk tatovering",
-    textEn:
-      "Detailed custom realism planned around contrast, reference quality and long term readability.",
-    textNo:
-      "Detaljert custom realisme planlagt rundt kontrast, referansekvalitet og langvarig lesbarhet.",
-    href: "/realistisk-tatovering",
-  },
-  {
-    titleEn: "Black and grey",
-    titleNo: "Black and grey",
-    textEn:
-      "Smooth shading, strong darks and controlled structure for portraits, sleeves and larger work.",
-    textNo:
-      "Myk shading, sterke mørke partier og kontrollert struktur for portretter, sleeves og større arbeid.",
-    href: "/black-and-grey-tatovering",
-  },
-  {
-    titleEn: "Blackout",
-    titleNo: "Blackout",
-    textEn:
-      "Heavy blackwork and blackout projects planned around coverage, edges and body flow.",
-    textNo:
-      "Heavy blackwork og blackout prosjekter planlagt rundt dekning, kanter og kroppsflyt.",
-    href: "/blackout-tatovering",
-  },
-  {
-    titleEn: "Portrait tattoos",
-    titleNo: "Portrett tatovering",
-    textEn:
-      "Portrait work with focus on likeness, structure, contrast and strong reference photos.",
-    textNo:
-      "Portrettarbeid med fokus på likhet, struktur, kontrast og sterke referansebilder.",
-    href: "/portrett-tatovering",
-  },
-  {
-    titleEn: "Sleeves",
-    titleNo: "Sleeves",
-    textEn:
-      "Large custom projects built around theme, session planning, transitions and body movement.",
-    textNo:
-      "Store custom prosjekter bygget rundt tema, sessions, overganger og kroppens bevegelse.",
-    href: "/sleeve-tatovering",
-  },
-  {
-    titleEn: "Cover ups",
-    titleNo: "Cover up",
-    textEn: "Realistic cover up planning for old, faded or unwanted tattoos.",
-    textNo:
-      "Realistisk cover up planlegging for gamle, falmede eller uønskede tatoveringer.",
-    href: "/cover-up-tatovering",
-  },
-  {
-    titleEn: "Fine line",
-    titleNo: "Fine line",
-    textEn:
-      "Small custom pieces with clean placement, simple detail and clear consultation.",
-    textNo:
-      "Mindre custom motiver med ren plassering, enkle detaljer og tydelig konsultasjon.",
-    href: "/fine-line-tatovering",
-  },
-  {
-    titleEn: "Lettering",
-    titleNo: "Lettering",
-    textEn:
-      "Names, quotes and script tattoos planned around font choice, spacing, placement and healed readability.",
-    textNo:
-      "Navn, sitater og script tatoveringer planlagt rundt fontvalg, avstand, plassering og lesbarhet etter healing.",
-    href: "/lettering-tatovering",
-  },
-  {
-    titleEn: "Freehand Maori",
-    titleNo: "Freehand Maori",
-    textEn:
-      "Large scale Maori and Polynesian inspired flow work drawn around the body.",
-    textNo:
-      "Maori og Polynesian inspirert arbeid i stor skala, tegnet rundt kroppen.",
-    href: "/freehand-maori-tattoo",
-  },
-];
-
 const serviceAreas = [
   {
     area: "Lørenskog",
     href: "/#contact",
     textEn:
-      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, portrait tattoos, consultations, and tooth gems.",
+      "The studio is based at Skårersletta 48c for custom realism, black & grey tattoos, portrait tattoos, consultations, and Tooth Gems.",
     textNo:
-      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, portrett tatoveringer, konsultasjoner og tooth gems.",
+      "Studioet ligger på Skårersletta 48c for custom realisme, black & grey tatoveringer, portrett tatoveringer, konsultasjoner og Tooth Gems.",
   },
   {
     area: "Strømmen",
@@ -177,7 +95,7 @@ const localBusinessJsonLd = {
   name: "Infinity Tattoo Studio",
   alternateName: "Infinity Tattoo",
   description:
-    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, piercing, tooth gems, and free consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
+    "Custom tattoo studio in Lørenskog for realism, black and grey, blackout, portraits, sleeves, fine line, freehand Maori, piercing, Tooth Gems, and free consultations for clients from Lørenskog, Strømmen, Lillestrøm and Oslo.",
   image: [
     "https://infinitytattoo.no/media/hero-poster.jpeg",
     "https://infinitytattoo.no/media/artist/filippos.jpg",
@@ -261,7 +179,7 @@ const localBusinessJsonLd = {
     "cover-up tattoo planning",
     "piercing",
     "tattoo consultation",
-    "tooth gems",
+    "Tooth Gems",
   ],
   sameAs: [
     "https://www.instagram.com/infinitytattoo.lorenskog/",
@@ -369,8 +287,8 @@ const localBusinessJsonLd = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Tooth gems",
-          serviceType: "Tooth gems",
+          name: "Tooth Gems",
+          serviceType: "Tooth Gems",
         },
       },
     ],
@@ -604,7 +522,7 @@ export default function Home() {
                   aria-hidden="true"
                   className="size-4 shrink-0 text-[color:var(--studio-gold)]"
                 />
-                Tooth gems
+                Tooth Gems
               </span>
             </div>
           </div>
@@ -797,75 +715,67 @@ export default function Home() {
           <h2 className="font-display text-4xl font-bold sm:text-5xl">
             <LocalizedText en="Our artists" no="Artistene våre" />
           </h2>
-          <div className="grid items-start justify-items-center gap-9 lg:justify-items-stretch lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-16">
+          <div
+            id="services"
+            className="grid scroll-mt-28 grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)_minmax(0,1fr)] items-start gap-2 sm:gap-6 lg:gap-12"
+          >
+            <div className="pt-10 sm:pt-16">
+              <ArtistProfileCard
+                name="Nora"
+                href="/piercing"
+                icon={CircleDotIcon}
+                bioEn="Piercing. Thoughtful placement and calm, personal guidance, from jewellery to aftercare."
+                bioNo="Piercing. Gjennomtenkt plassering og rolig, personlig veiledning, fra smykke til etterbehandling."
+              />
+            </div>
             <ArtistProfileCard
-              label="TATTOO"
               name="Filip"
               href="/work"
               image="/media/artist/filippos.jpg"
               icon={PenLineIcon}
               large
-              bioEn="Artist and owner with 4+ years of experience from Greece and Norway. Custom realism, black & grey, blackout and freehand Maori."
-              bioNo="Artist og eier med over 4 års erfaring fra Hellas og Norge. Custom realisme, black & grey, blackout og freehand Maori."
-            />
-            <div
-              id="services"
-              className="grid w-full max-w-[34rem] scroll-mt-28 grid-cols-2 items-start gap-4 sm:gap-6"
+              bioEn="Tattoo artist and owner with 4+ years of experience from Greece and Norway. Custom designs built around your idea and your body."
+              bioNo="Tatovør og eier med over 4 års erfaring fra Hellas og Norge. Custom design bygget rundt ideen din og kroppen din."
             >
+              <ul
+                id="styles"
+                className="list-disc space-y-1 pl-4 text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6"
+              >
+                <li>
+                  <LocalizedText
+                    en="Realism and portraits"
+                    no="Realisme og portretter"
+                  />
+                </li>
+                <li>
+                  <LocalizedText
+                    en="Black & grey, blackout and cover ups"
+                    no="Black & grey, blackout og cover up"
+                  />
+                </li>
+                <li>
+                  <LocalizedText
+                    en="Sleeves and freehand Maori"
+                    no="Sleeves og freehand Maori"
+                  />
+                </li>
+                <li>
+                  <LocalizedText
+                    en="Fine line, lettering and custom work"
+                    no="Fine line, lettering og custom arbeid"
+                  />
+                </li>
+              </ul>
+            </ArtistProfileCard>
+            <div className="pt-10 sm:pt-16">
               <ArtistProfileCard
-                label="PIERCING"
-                name="Piercing"
-                href="/piercing"
-                icon={CircleDotIcon}
-                bioEn="Thoughtful placement and calm, personal guidance, from choosing your jewellery to aftercare."
-                bioNo="Gjennomtenkt plassering og rolig, personlig veiledning, fra valg av smykke til etterbehandling."
-              />
-              <ArtistProfileCard
-                label="TOOTH GEM"
-                name="Tooth gems"
+                name="Nora"
                 href="/tooth-gems"
                 icon={GemIcon}
-                bioEn="A little sparkle, your way. Personal guidance on crystals, placement and a design that suits your smile."
-                bioNo="Litt ekstra glans, på din måte. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
+                bioEn="Tooth Gems. Personal guidance on crystals, placement and a design that suits your smile."
+                bioNo="Tooth Gems. Personlig veiledning om krystaller, plassering og et design som passer smilet ditt."
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="styles" className="motion-reveal border-y bg-card/30">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-20 sm:px-8 lg:py-24">
-          <div className="flex flex-col gap-4 lg:max-w-3xl">
-            <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText
-                en="Signature styles"
-                no="Stiler og spesialiteter"
-              />
-            </h2>
-            <p className="text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="Explore the main tattoo styles at Infinity Tattoo. Each project starts with a consultation around idea, placement, size, references and how the tattoo should age on your skin."
-                no="Utforsk de viktigste stilene hos Infinity Tattoo. Hvert prosjekt starter med konsultasjon rundt idé, plassering, størrelse, referanser og hvordan tatoveringen skal eldes på huden."
-              />
-            </p>
-          </div>
-
-          <div className="motion-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {signatureStyles.map((style) => (
-              <Link
-                className="motion-lift motion-reveal group relative flex min-h-56 flex-col rounded-lg border border-border/70 bg-background/55 p-5 transition hover:border-[color:var(--studio-gold)] hover:bg-background/80"
-                href={style.href}
-                key={style.href}
-              >
-                <p className="font-display text-xl font-bold text-foreground">
-                  <LocalizedText en={style.titleEn} no={style.titleNo} />
-                </p>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  <LocalizedText en={style.textEn} no={style.textNo} />
-                </p>
-                <MoveUpRightIcon className="mt-auto size-4 text-muted-foreground transition group-hover:text-[color:var(--studio-gold)]" />
-              </Link>
-            ))}
           </div>
         </div>
       </section>
@@ -949,19 +859,7 @@ export default function Home() {
             <PhoneIcon className="size-5 text-[color:var(--studio-gold)]" />
             +47 40 34 47 75
           </a>
-          <a
-            className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
-            href="https://www.instagram.com/infinitytattoo.lorenskog/"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <InstagramIcon className="size-5 text-[color:var(--studio-gold)]" />
-            Instagram
-            <MoveUpRightIcon
-              aria-hidden="true"
-              className="size-4 text-[color:var(--studio-gold)]"
-            />
-          </a>
+          <InstagramPill />
           <a
             className="motion-lift-subtle flex items-center justify-center gap-3 rounded-full border bg-card/60 p-4 text-sm text-muted-foreground transition hover:bg-card hover:text-foreground"
             href="https://booking.linework.com/infinity"

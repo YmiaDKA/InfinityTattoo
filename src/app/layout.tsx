@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     "piercing",
     "cover up tattoo",
     "tattoo consultation",
-    "tooth gems",
+    "Tooth Gems",
   ],
   alternates: {
     canonical: "https://infinitytattoo.no/",

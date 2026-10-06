@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { labelEn: "Work", labelNo: "Arbeid", href: "/work" },
   {
-    labelEn: "Piercing & tooth gems",
-    labelNo: "Piercing & tooth gems",
+    labelEn: "Piercing & Tooth Gems",
+    labelNo: "Piercing & Tooth Gems",
     href: "/#services",
   },
   { labelEn: "Studio", labelNo: "Studio", href: "/#oslo" },

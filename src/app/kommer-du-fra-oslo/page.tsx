@@ -20,8 +20,8 @@ export default function KommerDuFraOsloPage() {
       introNo="Custom tatovering nær Oslo, uten stresset med parkering i sentrum. Infinity Tattoo i Lørenskog er et roligere alternativ for kunder som ønsker seriøst custom arbeid utenfor den travleste delen av byen."
       travelEn="Many clients come from Oslo because longer tattoo sessions are easier to plan in a calmer studio setting, with less city stress before and after the appointment. Triaden offers 2 hours of free parking about 2 to 3 minutes from the studio, and Infinity Tattoo is backed by 135+ Google reviews."
       travelNo="Mange kunder kommer fra Oslo fordi lengre tatoveringstimer er enklere å planlegge i et roligere studio, med mindre bystress før og etter timen. På Triaden får du 2 timer gratis parkering ca. 2 til 3 minutter fra studioet, og Infinity Tattoo har 135+ Google anmeldelser."
-      focusEn="The studio focuses on custom realism, black & grey, portrait tattoos, sleeves, blackout work, fine line, freehand Maori, cover up planning, tooth gems, and clear consultations before booking."
-      focusNo="Studioet fokuserer på custom realisme, black and grey, portrett tatoveringer, sleeves, blackout arbeid, fine line, freehand Maori, cover up planlegging, tooth gems og tydelige konsultasjoner før booking."
+      focusEn="The studio focuses on custom realism, black & grey, portrait tattoos, sleeves, blackout work, fine line, freehand Maori, cover up planning, Tooth Gems, and clear consultations before booking."
+      focusNo="Studioet fokuserer på custom realisme, black and grey, portrett tatoveringer, sleeves, blackout arbeid, fine line, freehand Maori, cover up planlegging, Tooth Gems og tydelige konsultasjoner før booking."
     />
   );
 }

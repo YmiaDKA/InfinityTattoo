@@ -116,7 +116,7 @@ export const toothGemSizes = [
 export const supremeGemzGallery = [
   {
     src: "/media/tooth-gems/gallery/supreme-gemz-portrait-smile.webp",
-    alt: "Tooth gems by Supreme.Gemz with crystal smile design",
+    alt: "Tooth Gems by Supreme.Gemz with crystal smile design",
   },
   {
     src: "/media/tooth-gems/gallery/supreme-gemz-cherry.webp",
@@ -128,7 +128,7 @@ export const supremeGemzGallery = [
   },
   {
     src: "/media/tooth-gems/gallery/supreme-gemz-rainbow-gems.webp",
-    alt: "Rainbow tooth gems by Supreme.Gemz",
+    alt: "Rainbow Tooth Gems by Supreme.Gemz",
   },
   {
     src: "/media/tooth-gems/gallery/supreme-gemz-paw-design.webp",

@@ -71,7 +71,7 @@ export default function PiercingPage() {
               size="lg"
               variant="outline"
             >
-              <LocalizedText en="Tooth gems" no="Tooth gems" />
+              <LocalizedText en="Tooth Gems" no="Tooth Gems" />
               <SparklesIcon data-icon="inline-end" />
             </Button>
           </div>
@@ -124,13 +124,13 @@ export default function PiercingPage() {
               Nora, 25
             </h2>
             <p className="mt-2 text-lg font-semibold text-[color:var(--studio-gold)]">
-              Piercing / Tooth gems
+              Piercing / Tooth Gems
             </p>
           </div>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="Nora works with piercing placement, jewelry styling and tooth gems at Infinity Tattoo Studio. She helps you choose jewelry that fits your anatomy, personal style, budget and any allergies."
-              no="Nora jobber med piercing, smykkestyling og tooth gems hos Infinity Tattoo Studio. Hun hjelper deg å velge smykker som passer anatomien din, stilen din, budsjettet ditt og eventuelle allergier."
+              en="Nora works with piercing placement, jewelry styling and Tooth Gems at Infinity Tattoo Studio. She helps you choose jewelry that fits your anatomy, personal style, budget and any allergies."
+              no="Nora jobber med piercing, smykkestyling og Tooth Gems hos Infinity Tattoo Studio. Hun hjelper deg å velge smykker som passer anatomien din, stilen din, budsjettet ditt og eventuelle allergier."
             />
           </p>
           <p className="text-base leading-7 text-muted-foreground">

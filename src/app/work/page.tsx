@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MoveUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 
+import { InstagramPill } from "@/components/instagram-pill";
 import { LocalizedText } from "@/components/localized-text";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -35,15 +36,7 @@ export default function WorkPage() {
               {galleryImages.length} <LocalizedText en="pieces" no="arbeider" />
             </p>
           </div>
-          <Button
-            className="motion-lift-subtle w-fit rounded-full"
-            nativeButton={false}
-            render={<Link href="/#booking" />}
-            size="lg"
-          >
-            <LocalizedText en="Start your idea" no="Start ideen din" />
-            <MoveUpRightIcon data-icon="inline-end" />
-          </Button>
+          <InstagramPill className="w-fit" />
         </div>
 
         <div className="motion-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

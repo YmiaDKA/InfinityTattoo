@@ -24,9 +24,9 @@ import {
 const supremeGemzBookingUrl = "https://booking.linework.com/supreme-gemz";
 
 export const metadata = {
-  title: "Tooth gems og tannsmykker | Infinity Tattoo Lørenskog",
+  title: "Tooth Gems og tannsmykker | Infinity Tattoo Lørenskog",
   description:
-    "Tooth gems og tannsmykker hos Infinity Tattoo i Lørenskog. Krystallplassering, standard designs, disco, 18k gold og custom design.",
+    "Tooth Gems og tannsmykker hos Infinity Tattoo i Lørenskog. Krystallplassering, standard designs, disco, 18k gold og custom design.",
   alternates: {
     canonical: "https://infinitytattoo.no/tooth-gems",
   },
@@ -44,7 +44,7 @@ export default function ToothGemsPage() {
           </div>
           <div className="flex flex-col gap-4">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
-              Tooth gems
+              Tooth Gems
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
               <LocalizedText
@@ -60,7 +60,7 @@ export default function ToothGemsPage() {
               render={<a href={supremeGemzBookingUrl} rel="noreferrer" target="_blank" />}
               size="lg"
             >
-              <LocalizedText en="Book tooth gems" no="Book tooth gems" />
+              <LocalizedText en="Book Tooth Gems" no="Book Tooth Gems" />
               <CalendarDaysIcon data-icon="inline-end" />
             </Button>
             <Button
@@ -147,13 +147,13 @@ export default function ToothGemsPage() {
               Nora, 25
             </h2>
             <p className="mt-2 text-lg font-semibold text-[color:var(--studio-gold)]">
-              Piercing / Tooth gems
+              Piercing / Tooth Gems
             </p>
           </div>
           <p className="text-base leading-7 text-muted-foreground">
             <LocalizedText
-              en="Nora specializes in piercing jewelry styling and Swarovski crystal tooth gems, using quality materials chosen for skin and teeth safety. Tooth gems are placed with dental approved equipment and real Swarovski crystals or 18k gold/white gold options."
-              no="Nora jobber med styling av piercing smykker og Swarovski tooth gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth gems settes med dental godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull."
+              en="Nora specializes in piercing jewelry styling and Swarovski crystal Tooth Gems, using quality materials chosen for skin and teeth safety. Tooth Gems are placed with dental approved equipment and real Swarovski crystals or 18k gold/white gold options."
+              no="Nora jobber med styling av piercing smykker og Swarovski Tooth Gems, med kvalitetsmaterialer valgt for trygghet for hud og tenner. Tooth Gems settes med dental godkjent utstyr og ekte Swarovski krystaller eller 18k gull/hvitt gull."
             />
           </p>
           <p className="text-base leading-7 text-muted-foreground">
