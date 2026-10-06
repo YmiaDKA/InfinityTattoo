@@ -1,8 +1,7 @@
 import {
+  ArrowLeftIcon,
   CalendarDaysIcon,
-  MapPinIcon,
   MoveUpRightIcon,
-  ShieldCheckIcon,
   StarIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +29,7 @@ function ReviewCard({ review }: { review: Testimonial }) {
         <CardTitle>{review.name}</CardTitle>
         <div
           aria-label={`${review.rating}/5`}
-          className="flex gap-1 text-foreground"
+          className="flex gap-1 text-[color:var(--studio-gold)]"
         >
           {Array.from({ length: review.rating }).map((_, index) => (
             <StarIcon
@@ -60,8 +59,17 @@ export default function ReviewsPage() {
     <main className="min-h-screen overflow-hidden bg-background">
       <SiteHeader />
 
-      <section className="border-b border-border/70">
+      <section>
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pb-12 pt-32 sm:px-8 sm:pb-16 lg:pt-36">
+          <Button
+            className="w-fit rounded-full"
+            nativeButton={false}
+            render={<Link href="/#reviews" />}
+            variant="outline"
+          >
+            <ArrowLeftIcon data-icon="inline-start" />
+            <LocalizedText en="Back" no="Tilbake" />
+          </Button>
           <div className="motion-rise flex min-w-0 flex-col gap-8">
             <div className="flex min-w-0 flex-col gap-5">
               <div className="flex w-fit items-center gap-2 rounded-full border border-foreground/10 bg-background/55 px-3 py-2 text-sm font-semibold text-foreground/85 backdrop-blur">
@@ -80,16 +88,6 @@ export default function ReviewsPage() {
                   no="Kunder velger Infinity Tattoo for custom arbeid, tydelig konsultasjon og en rolig studio-opplevelse i Lørenskog."
                 />
               </p>
-              <div className="grid grid-cols-2 gap-2.5 text-sm font-semibold text-foreground/85 sm:max-w-md">
-                <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-                  <MapPinIcon className="size-4 shrink-0 text-[color:var(--studio-gold)]" />
-                  Lørenskog
-                </div>
-                <div className="flex min-h-12 items-center gap-2 rounded-lg border border-foreground/10 bg-background/55 px-3 backdrop-blur">
-                  <ShieldCheckIcon className="size-4 shrink-0 text-[color:var(--studio-gold)]" />
-                  <LocalizedText en="Calm studio" no="Rolig studio" />
-                </div>
-              </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   className="motion-lift-subtle rounded-full max-sm:min-h-14 max-sm:w-full max-sm:text-base"
@@ -108,7 +106,7 @@ export default function ReviewsPage() {
                   nativeButton={false}
                   render={
                     <a
-                      href="https://www.google.com/search?q=Infinity+Tattoo+L%C3%B8renskog+reviews"
+                      href="https://www.google.com/maps/place/INFINITY+TATTOO+STUDIO/@59.9228344,10.9548371,17z/data=!4m8!3m7!1s0x464165b7b16d6617:0x87039f7c4890f8d1!8m2!3d59.9228344!4d10.9548371!9m1!1b1!16s%2Fg%2F11ms7vwdjp?entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D"
                       rel="noreferrer"
                       target="_blank"
                     />
@@ -122,36 +120,38 @@ export default function ReviewsPage() {
               </div>
             </div>
 
-            <div className="motion-stagger grid gap-3 md:grid-cols-3">
-              {featuredReviews.map((review) => (
-                <ReviewCard
-                  review={review}
-                  key={`${review.name}-${review.date}`}
-                />
-              ))}
+            <div className="flex flex-col gap-3">
+              <div className="motion-stagger grid gap-3 md:grid-cols-3">
+                {featuredReviews.map((review) => (
+                  <ReviewCard
+                    review={review}
+                    key={`${review.name}-${review.date}`}
+                  />
+                ))}
+              </div>
+              <div className="motion-stagger grid gap-3 md:grid-cols-2">
+                {remainingReviews.map((review) => (
+                  <ReviewCard
+                    review={review}
+                    key={`${review.name}-${review.date}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 sm:px-8 lg:py-16">
-        <div className="motion-stagger grid gap-3 md:grid-cols-2">
-          {remainingReviews.map((review) => (
-            <ReviewCard review={review} key={`${review.name}-${review.date}`} />
-          ))}
-        </div>
-
-        <div className="motion-reveal">
-          <Button
-            className="motion-lift-subtle rounded-full"
-            nativeButton={false}
-            render={<Link href="/#reviews" />}
-            size="lg"
-            variant="outline"
-          >
-            <LocalizedText en="Back home" no="Til forsiden" />
-            <MoveUpRightIcon data-icon="inline-end" />
-          </Button>
+          <div className="motion-reveal">
+            <Button
+              className="motion-lift-subtle rounded-full"
+              nativeButton={false}
+              render={<Link href="/#reviews" />}
+              size="lg"
+              variant="outline"
+            >
+              <LocalizedText en="Back home" no="Til forsiden" />
+              <MoveUpRightIcon data-icon="inline-end" />
+            </Button>
+          </div>
         </div>
       </section>
     </main>

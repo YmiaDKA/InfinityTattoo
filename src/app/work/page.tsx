@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDownIcon, MoveUpRightIcon } from "lucide-react";
+import { MoveUpRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { LocalizedText } from "@/components/localized-text";
@@ -22,63 +22,28 @@ export default function WorkPage() {
     <main className="min-h-screen bg-background">
       <SiteHeader />
 
-      <section className="mx-auto max-w-6xl px-5 pb-16 pt-32 sm:px-8 lg:pb-24">
-        <div className="motion-rise flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
+      <section
+        id="portfolio-grid"
+        className="mx-auto flex max-w-7xl flex-col gap-8 px-5 pb-20 pt-32 sm:px-8 lg:pb-28"
+      >
+        <div className="motion-rise flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div className="flex flex-col gap-3">
             <h1 className="font-display text-5xl font-bold leading-none sm:text-7xl">
               Portfolio
             </h1>
-            <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-              <LocalizedText
-                en="A closer look at custom tattoo work from Infinity Tattoo in Lørenskog: realism, black & grey, portraits, blackout, sleeves and freehand Maori pieces made around the body."
-                no="Et nærmere blikk på custom tatoveringer fra Infinity Tattoo i Lørenskog: realisme, black & grey, portretter, blackout, sleeves og freehand Maori laget rundt kroppen."
-              />
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+              {galleryImages.length} <LocalizedText en="pieces" no="arbeider" />
             </p>
           </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              className="motion-lift-subtle rounded-full"
-              nativeButton={false}
-              render={<Link href="/#booking" />}
-              size="lg"
-            >
-              <LocalizedText en="Start your idea" no="Start ideen din" />
-              <MoveUpRightIcon data-icon="inline-end" />
-            </Button>
-            <Button
-              className="motion-lift-subtle rounded-full"
-              nativeButton={false}
-              render={<a href="#portfolio-grid" />}
-              size="lg"
-              variant="outline"
-            >
-              <LocalizedText en="View gallery" no="Se galleri" />
-              <ArrowDownIcon data-icon="inline-end" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="portfolio-grid"
-        className="mx-auto flex max-w-7xl flex-col gap-8 px-5 pb-20 sm:px-8 lg:pb-28"
-      >
-        <div className="motion-reveal flex flex-col justify-between gap-4 border-y border-border/70 py-6 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="font-display text-4xl font-bold sm:text-5xl">
-              <LocalizedText en="Selected work" no="Utvalgt arbeid" />
-            </h2>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-              <LocalizedText
-                en="Tap into each piece visually: strong first impressions, close detail, body flow and healed readability."
-                no="Se arbeidene visuelt: sterk førsteimpresjon, detaljer, flyt på kroppen og lesbarhet over tid."
-              />
-            </p>
-          </div>
-          <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-            {galleryImages.length} <LocalizedText en="pieces" no="arbeider" />
-          </p>
+          <Button
+            className="motion-lift-subtle w-fit rounded-full"
+            nativeButton={false}
+            render={<Link href="/#booking" />}
+            size="lg"
+          >
+            <LocalizedText en="Start your idea" no="Start ideen din" />
+            <MoveUpRightIcon data-icon="inline-end" />
+          </Button>
         </div>
 
         <div className="motion-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -28,13 +28,15 @@ import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Marquee } from "@/components/ui/marquee";
-import { featuredGalleryImages, testimonials } from "@/lib/site-data";
+import { galleryImages, testimonials } from "@/lib/site-data";
 
 const showcaseRows = [
   testimonials
     .slice(0, 6)
     .map((review) => ({ type: "review" as const, review })),
-  featuredGalleryImages.map((image) => ({ type: "image" as const, image })),
+  galleryImages
+    .filter((image) => image.tag !== "#15")
+    .map((image) => ({ type: "image" as const, image })),
 ];
 
 const signatureStyles = [
@@ -1139,7 +1141,7 @@ export default function Home() {
                 id="opening-hours"
                 className="flex flex-col gap-2 text-sm text-muted-foreground"
               >
-                <h2 className="font-semibold text-foreground">
+                <h2 className="font-semibold text-foreground md:text-center">
                   <LocalizedText en="Opening hours" no="Åpningstider" />
                 </h2>
                 <dl className="grid grid-cols-[auto_auto] gap-x-5 gap-y-1">
