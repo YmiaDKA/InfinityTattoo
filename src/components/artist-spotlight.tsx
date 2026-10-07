@@ -31,8 +31,8 @@ export function ArtistSpotlight({
   children: ReactNode;
 }) {
   return (
-    <article className="relative isolate mx-auto grid w-full max-w-lg overflow-hidden rounded-3xl border bg-card/60 sm:max-w-5xl sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-      <div className="relative h-[28rem] sm:h-auto sm:min-h-[30rem] lg:min-h-[32rem]">
+    <article className="relative isolate mx-auto grid w-full max-w-md overflow-hidden rounded-3xl border bg-card/60 sm:max-w-4xl sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+      <div className="relative order-last h-[28rem] overflow-hidden sm:order-none sm:h-auto sm:min-h-[30rem] lg:min-h-[32rem]">
         <h3
           className={cn(
             "artist-name pointer-events-none relative z-0 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight",
@@ -46,7 +46,10 @@ export function ArtistSpotlight({
         <Link
           href={href}
           aria-label={name}
-          className="artist-cutout absolute inset-0 focus-visible:outline-2 focus-visible:outline-ring"
+          className={cn(
+            "artist-cutout absolute inset-0 focus-visible:outline-2 focus-visible:outline-ring",
+            mirrored ? "artist-cutout-nora" : "artist-cutout-filip",
+          )}
         >
           <Image
             src={image}
@@ -54,12 +57,12 @@ export function ArtistSpotlight({
             width={width}
             height={height}
             draggable={false}
-            className="h-full w-full object-contain object-left-bottom"
-            sizes="(min-width: 1088px) 410px, (min-width: 640px) 38vw, 90vw"
+            className="absolute w-auto max-w-none"
+            sizes="(min-width: 960px) 550px, (min-width: 640px) 60vw, 550px"
           />
         </Link>
       </div>
-      <div className="relative z-20 flex flex-col justify-center px-6 pb-6 sm:p-8 lg:p-10">
+      <div className="relative z-20 flex flex-col justify-center px-6 py-6 sm:p-8 lg:p-10">
         <div className="mx-auto w-full max-w-xl">
           <p className="mb-4 text-base font-semibold text-foreground">
             <LocalizedText en={professionEn} no={professionNo} />

@@ -423,6 +423,16 @@
   background-image: linear-gradient(180deg, #ef6447 8%, #94241a 95%);
   filter: drop-shadow(0 0 14px rgb(212 58 35 / 18%));
 }
-.artist-cutout {
-  mask-image: linear-gradient(to bottom, #000 35%, rgb(0 0 0 / 65%) 55%, rgb(0 0 0 / 20%) 75%, transparent 90%);
+/* Compensate for the transparent margins in each original cutout. */
+.artist-cutout-filip img {
+  height: 112.8%;
+  left: 0;
+  transform: translateX(-8%);
+  bottom: -5.4%;
+}
+.artist-cutout-nora img {
+  height: 109%;
+  left: 0;
+  transform: translateX(-5.7%);
+  bottom: -3.5%;
 }

@@ -1014,7 +1014,7 @@ export default function Home() {
                 <AccordionTrigger className="py-4 text-base">
                   <LocalizedText en={item.questionEn} no={item.questionNo} />
                 </AccordionTrigger>
-                <AccordionContent className="text-foreground">
+                <AccordionContent className="whitespace-pre-line text-muted-foreground">
                   <LocalizedText en={item.answerEn} no={item.answerNo} />
                 </AccordionContent>
               </AccordionItem>
