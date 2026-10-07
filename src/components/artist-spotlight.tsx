@@ -95,7 +95,7 @@ export function ArtistSpotlight({
               >
                 <InstagramIcon
                   aria-hidden="true"
-                  className="size-5 text-[color:var(--studio-gold)]"
+                  className="size-5 text-[#d85a42]"
                 />
               </a>
             </>
