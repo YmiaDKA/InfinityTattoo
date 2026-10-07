@@ -10,6 +10,11 @@ export type Testimonial = {
 
 export const galleryImages = [
   {
+    src: "/media/gallery/infinity/script-rib-lettering.webp",
+    tag: "#16",
+    alt: "Large flowing script lettering tattoo along the ribs and side of the torso",
+  },
+  {
     src: "/media/gallery/infinity/infinity-29.webp",
     tag: "#01",
     alt: "Black and grey geisha portrait tattoo close up",
