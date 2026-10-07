@@ -31,14 +31,14 @@ export function ArtistSpotlight({
   children: ReactNode;
 }) {
   return (
-    <article className="relative isolate mx-auto grid w-full max-w-md overflow-hidden rounded-3xl border bg-card/60 sm:max-w-4xl sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+    <article className="relative isolate mx-auto grid w-full max-w-[30rem] overflow-hidden rounded-3xl border bg-card/60 sm:max-w-[60rem] sm:grid-cols-[minmax(0,9fr)_minmax(0,11fr)]">
       <div className="relative order-last h-[28rem] overflow-hidden sm:order-none sm:h-auto sm:min-h-[30rem] lg:min-h-[32rem]">
         <h3
           className={cn(
-            "artist-name pointer-events-none relative z-0 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight",
+            "artist-name pointer-events-none relative z-0 px-4 text-center font-display font-extrabold uppercase leading-[0.9] tracking-tight mt-6 text-[clamp(5rem,15vw,8rem)] sm:text-5xl lg:text-7xl",
             mirrored
-              ? "artist-name-red mt-6 text-[clamp(4rem,12vw,6rem)] sm:text-5xl lg:text-6xl"
-              : "artist-name-gold mt-6 text-[clamp(5rem,15vw,8rem)] sm:text-5xl lg:text-7xl",
+              ? "artist-name-red"
+              : "artist-name-gold",
           )}
         >
           {name}
@@ -57,18 +57,18 @@ export function ArtistSpotlight({
             height={height}
             draggable={false}
             className={cn(
-              "absolute left-0 w-auto max-w-none",
+              "absolute bottom-0 left-0 max-w-none",
               mirrored
-                ? "h-[109%] -bottom-[3.5%] -translate-x-[5.7%]"
-                : "h-[112.8%] -bottom-[5.4%] -translate-x-[13%]",
+                ? "h-auto w-[112%] -translate-x-[5.7%] translate-y-[3.2%]"
+                : "h-[104%] w-auto -translate-x-[13%] translate-y-[4.75%]",
             )}
             sizes="(min-width: 960px) 550px, (min-width: 640px) 60vw, 550px"
           />
         </Link>
       </div>
       <div className="relative z-20 flex flex-col justify-center px-6 py-6 sm:p-8 lg:p-10">
-        <div className="mx-auto w-full max-w-xl">
-          <p className="mb-4 text-base font-semibold text-foreground">
+        <div className="mx-auto w-full max-w-xl [&_ul]:text-lg">
+          <p className="mb-4 text-lg font-semibold text-foreground">
             <LocalizedText en={professionEn} no={professionNo} />
           </p>
           {children}
