@@ -60,7 +60,7 @@ export function ArtistSpotlight({
               "absolute left-0 w-auto max-w-none",
               mirrored
                 ? "h-[109%] -bottom-[3.5%] -translate-x-[5.7%]"
-                : "h-[112.8%] -bottom-[5.4%] -translate-x-[8%]",
+                : "h-[112.8%] -bottom-[5.4%] -translate-x-[13%]",
             )}
             sizes="(min-width: 960px) 550px, (min-width: 640px) 60vw, 550px"
           />
