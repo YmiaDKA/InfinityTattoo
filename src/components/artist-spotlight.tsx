@@ -47,8 +47,7 @@ export function ArtistSpotlight({
           href={href}
           aria-label={name}
           className={cn(
-            "artist-cutout absolute inset-0 focus-visible:outline-2 focus-visible:outline-ring",
-            mirrored ? "artist-cutout-nora" : "artist-cutout-filip",
+            "absolute inset-0 focus-visible:outline-2 focus-visible:outline-ring",
           )}
         >
           <Image
@@ -57,7 +56,12 @@ export function ArtistSpotlight({
             width={width}
             height={height}
             draggable={false}
-            className="absolute w-auto max-w-none"
+            className={cn(
+              "absolute left-0 w-auto max-w-none",
+              mirrored
+                ? "h-[109%] -bottom-[3.5%] -translate-x-[5.7%]"
+                : "h-[112.8%] -bottom-[5.4%] -translate-x-[8%]",
+            )}
             sizes="(min-width: 960px) 550px, (min-width: 640px) 60vw, 550px"
           />
         </Link>
