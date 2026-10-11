@@ -16,14 +16,18 @@ At the start of every Codex editing session:
 1. Use the Browser and Build Web Apps plugins.
 2. Sync/pull the latest repo before making edits.
 
-For normal website edits:
-1. Make changes on a `codex/` preview branch in the existing GitHub repo.
-2. Inspect the diff, run checks, and commit with a short clear message.
-3. Push the preview branch for a Vercel preview deployment; review changes on its `vercel.app` URL.
-4. At the end of the session, go over all changes with the user.
-5. Only after the user approves publishing, merge into `main` and push to the existing GitHub repo so Vercel updates https://infinitytattoo.no/.
+Every requested website update must be committed and pushed automatically, including updates requested by Filip (the tattoo artist and studio owner). This is standing authorization to publish completed changes; do not ask for a separate push, merge, or publishing approval.
 
-Keep the existing GitHub repository and Vercel integration. Do not create a replacement repo or change production domains. Preview work must not update production or use `vercel --prod` before approval.
+For every website update:
+1. Sync with the latest `main` in the existing GitHub repository and preserve unrelated local work.
+2. Make the requested changes, inspect the diff, and run checks appropriate to the change.
+3. Commit the completed changes with a short clear message.
+4. Merge or fast-forward the completed changes into `main` and push to the existing GitHub repository so Vercel updates https://infinitytattoo.no/.
+5. Verify the production deployment and relevant live behavior, then give a short plain-language update.
+
+Do not stop after a local edit or preview deployment. A preview is optional verification, not the default final delivery. Only leave work unpublished when the user explicitly requests preview-only work, no commit, or no push, or when a failed check or access problem prevents safe completion; explain any blocker clearly.
+
+Keep the existing GitHub repository and Vercel integration. Do not create a replacement repo or change production domains.
 
 Do not ask the tattoo artist to use Terminal.
 Do not require localhost for simple text, image, gallery, SEO, or contact updates.
