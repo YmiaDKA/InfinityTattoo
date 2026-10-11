@@ -593,7 +593,7 @@ export default function Home() {
                   ? "Client reviews moving left"
                   : "Tattoo projects moving right"
               }
-              className="motion-reduce:overflow-x-auto [&_.animate-marquee]:focus-within:[animation-play-state:paused] [&_.animate-marquee]:motion-reduce:animate-none"
+              className="motion-reduce:overflow-x-auto [&_.animate-marquee]:motion-reduce:animate-none"
             >
               {items.map((item) =>
                 item.type === "review" ? (

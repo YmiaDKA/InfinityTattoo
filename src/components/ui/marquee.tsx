@@ -49,7 +49,7 @@ export function Marquee({
     <div
       {...props}
       className={cn(
-        "group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
+        "group/marquee flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,
@@ -63,10 +63,10 @@ export function Marquee({
           <div
             key={i}
             aria-hidden={decorativeRepeats && i > 0 ? true : undefined}
-            className={cn("flex shrink-0 justify-around gap-(--gap)", {
+            className={cn("flex shrink-0 justify-around gap-(--gap) group-focus-within/marquee:[animation-play-state:paused]", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
-              "group-hover:[animation-play-state:paused]": pauseOnHover,
+              "group-hover/marquee:[animation-play-state:paused]": pauseOnHover,
               "[animation-direction:reverse]": reverse,
             })}
           >
