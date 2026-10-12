@@ -97,40 +97,9 @@ extra.get("/settings", async (c) => {
       </p>
 
       <h2>Ansatte</h2>
-      <div class="card" style="overflow-x:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Navn</th>
-              <th>Rolle</th>
-              <th>E-post (innlogging)</th>
-              <th class="num">Studioandel</th>
-              <th>Kalender-abonnement</th>
-            </tr>
-          </thead>
-          <tbody>
-            {staff.results.map((s) => (
-              <tr class={s.active ? "" : "muted"}>
-                <td>
-                  <span class="dot" style={`background:${s.color}`} />
-                  <a href={`/admin/settings/staff/${s.id}`}>{s.name}</a>
-                  {!s.active && " (inaktiv)"}
-                </td>
-                <td>{ROLES[s.role] ?? s.role}</td>
-                <td>{s.email ?? <span class="muted">–</span>}</td>
-                <td class="num">{s.studio_share_pct} %</td>
-                <td style="font-size:.8rem;word-break:break-all">{s.ical_token ? `${base}/cal/${s.ical_token}.ics` : "–"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p>
-          <a class="button secondary" href="/admin/settings/staff/new">
-            Legg til ansatt
-          </a>
-        </p>
-        <p class="muted">Kalender-abonnement: lim inn lenken i iPhone (Innstillinger → Kalender → Kontoer → Legg til abonnement) eller Google Kalender.</p>
-      </div>
+      <p>
+        Artister og ledere har egne sider i menyen: <a href="/admin/artists">Artister</a> og <a href="/admin/managers">Ledere</a>.
+      </p>
 
       <h2 id="behandlinger">Behandlinger og priser</h2>
       <div class="card" style="overflow-x:auto">
@@ -280,12 +249,90 @@ extra.post("/settings/features", async (c) => {
 
 // ---------- Staff ----------
 
+// =====================================================================
+// Artists and managers (separate menu items, as in Linework)
+// =====================================================================
+
+const MANAGER_ROLES = ["owner", "reception"];
+const staffSection = (role: string) => (role === "reception" ? "/admin/managers" : "/admin/artists");
+
+async function staffPage(c: Context<AdminEnv>, kind: "artists" | "managers") {
+  const rows = (await c.env.DB.prepare("SELECT * FROM staff ORDER BY active DESC, id").all<StaffRow>()).results.filter((s) =>
+    kind === "managers" ? MANAGER_ROLES.includes(s.role) : !MANAGER_ROLES.includes(s.role) || (s.role === "owner" && s.bookable),
+  );
+  const linked = await c.env.DB.prepare(
+    "SELECT ss.staff_id, COUNT(*) AS n FROM staff_services ss JOIN services sv ON sv.id = ss.service_id WHERE sv.active = 1 GROUP BY ss.staff_id",
+  ).all<{ staff_id: number; n: number }>();
+  const servicesOf = (id: number) => linked.results.find((l) => l.staff_id === id)?.n ?? 0;
+  const base = c.env.PUBLIC_BASE_URL.replace(/\/$/, "");
+  const owner = isOwner(c);
+  const rentOn = c.get("user").features?.rent !== false;
+  const title = kind === "artists" ? "Artister" : "Ledere";
+  return c.html(
+    <Layout title={title} path={`/admin/${kind}`} user={c.get("user")} {...flash(c)}>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <h1>{title}</h1>
+        {owner && (
+          <a class="button" style="flex:0 0 auto" href={`/admin/settings/staff/new?role=${kind === "artists" ? "artist" : "reception"}`}>
+            {kind === "artists" ? "Inviter artist" : "Legg til leder"}
+          </a>
+        )}
+      </div>
+      <p class="muted">
+        {kind === "artists"
+          ? "Alle som tar imot kunder: tatovører, piercere og gjesteartister. Hver har egne timer, behandlinger, farge i kalenderen og oppgjør."
+          : "De som driver studioet. Eieren ser alt og kan endre innstillinger; resepsjon kan booke og registrere betalinger."}
+      </p>
+      <div class="card scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Navn</th>
+              <th>Rolle</th>
+              <th>Innlogging</th>
+              {kind === "artists" && <th class="num">Studioandel</th>}
+              {kind === "artists" && rentOn && <th class="num">Stolleie</th>}
+              {kind === "artists" && <th class="num">Behandlinger</th>}
+              <th>Kalender på telefonen</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((s) => (
+              <tr class={s.active ? "" : "muted"}>
+                <td>
+                  <span class="dot" style={`background:${s.color}`} />
+                  {owner ? <a href={`/admin/settings/staff/${s.id}`}>{s.name}</a> : s.name}
+                  {!s.active && " (inaktiv)"}
+                </td>
+                <td>{ROLES[s.role] ?? s.role}</td>
+                <td>{s.email ?? <span class="muted">Ikke invitert</span>}</td>
+                {kind === "artists" && <td class="num">{s.studio_share_pct} %</td>}
+                {kind === "artists" && rentOn && <td class="num">{formatOre(s.monthly_rent_ore ?? 0)}</td>}
+                {kind === "artists" && <td class="num">{servicesOf(s.id)}</td>}
+                <td style="font-size:.8rem;word-break:break-all">{s.ical_token ? `${base}/cal/${s.ical_token}.ics` : "–"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!rows.length && <p class="muted">Ingen ennå.</p>}
+      </div>
+      <p class="muted">
+        Innlogging: e-posten personen logger inn med. Kalender på telefonen: lim inn lenken i iPhone (Innstillinger → Kalender → Kontoer → Legg til
+        abonnement) eller Google Kalender.
+      </p>
+    </Layout>,
+  );
+}
+
+extra.get("/artists", (c) => staffPage(c, "artists"));
+extra.get("/managers", (c) => staffPage(c, "managers"));
+
 extra.get("/settings/staff/:id", async (c) => {
   if (!isOwner(c)) return ownerOnly(c);
   const isNew = c.req.param("id") === "new";
   const id = Number(c.req.param("id"));
   const s = isNew
-    ? ({ id: 0, name: "", email: null, role: "artist", studio_share_pct: 0, color: "#2563eb", bookable: 1, active: 1, birth_date: null, national_id: null, ical_token: null } as StaffRow)
+    ? ({ id: 0, name: "", email: null, role: ROLES[c.req.query("role") ?? ""] ? c.req.query("role")! : "artist", studio_share_pct: 0, color: "#2563eb", bookable: 1, active: 1, birth_date: null, national_id: null, ical_token: null } as StaffRow)
     : await c.env.DB.prepare("SELECT * FROM staff WHERE id = ?").bind(id).first<StaffRow>();
   if (!s) return c.notFound();
   const [services, hours, linked] = await Promise.all([
@@ -297,7 +344,7 @@ extra.get("/settings/staff/:id", async (c) => {
   const hoursFor = (d: number) => hours.results.find((h) => h.weekday === d);
 
   return c.html(
-    <Layout title={isNew ? "Ny ansatt" : s.name} path="/admin/settings" user={c.get("user")} {...flash(c)}>
+    <Layout title={isNew ? "Ny ansatt" : s.name} path={staffSection(s.role)} user={c.get("user")} {...flash(c)}>
       <h1>{isNew ? "Ny ansatt" : s.name}</h1>
       <form method="post" class="card">
         <div class="row">
