@@ -13,7 +13,8 @@ Updated 2026-10-12. Sources are linked inline. Anything marked *inferred* was no
   - Vippskassa has no monthly fee and 1.75 %, and is declared when its bookkeeping features, cash drawer and printer are switched on ([Vipps](https://help.vippsmobilepay.com/nb-NO/articles/bookkeeping-obligations)), but there's no import into our system.
   - Stripe, Viva, Nexi and Adyen also do Tap to Pay in Norway, but none of them is a ready kassasystem for a small studio.
 - **Today:** the owner takes payments in Linework and uses its "Z-report". Linework never calls itself a kassasystem or mentions produkterklæring/Z-rapport on its site; its "Utsalgssted" takes payment by QR code or link through Dintero (*inferred:* its report is a sales report, not a statutory Z-report). Skatteetaten's [list](https://www.skatteetaten.no/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/liste/) only loads in a browser; worth a look for "Zettle" and "Linework".
-- **Folio** is his business bank (89–359 kr/month): account, card, receipts and accounting automation. It has no way to take payments (no terminal, links, Vipps or Tap to Pay) and no till or Z-report ([folio.no](https://folio.no), [FAQ](https://folio.no/sporsmal-og-svar)). Our CSV export works for his accountant alongside it.
+- **Zettle pays out to any Norwegian business account in the company's name**, so Folio stays as the bank. Payouts are daily by default, 1–2 business days after the sale ([Zettle](https://www.zettle.com/no/help/articles/1084784-utbetalinger), [bank account](https://www.zettle.com/no/help/articles/1084795-koble-til-bankkontoen-din)). Zettle connects to Fiken if the accountant uses it ([integrations](https://www.zettle.com/no/integrasjoner)).
+- **Folio** is his business bank (89–359 kr/month): account, card, receipts and accounting automation. Its Standard/Avansert plans can take BankAxept card payments through a terminal (18 øre per sale), but that is a terminal, not a kassasystem: no Z-report, no Vipps, no Tap to Pay ([folio.no/priser](https://folio.no/priser)). Our CSV export works for his accountant alongside it.
 
 ## 2. Feature coverage vs Linework
 
@@ -27,7 +28,7 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Calendar sync to phone | ✅ Private subscription link per artist (iPhone/Google) | Innstillinger |
 | Client records | ✅ Search, notes, birth date, history | Kunder |
 | Consent / health form | ✅ Sent with confirmation and reminder, signed on phone, 18+ check with guardian, health flags shown on the booking | `/skjema/…` |
-| SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ❌ SMS (costs per message anywhere) | Automatic |
+| SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ✅ SMS reminder the day before through Twilio (~0.75 kr each) | Automatic |
 | Aftercare after the session | ✅ Per-service text (NO/EN), sent when the booking is set to completed | Innstillinger → Behandlinger |
 | Payment in the studio (Utsalgssted) | ↪ Zettle till with Tap to Pay on iPhone (no hardware). Payments imported automatically; manual entry for anything else | Betalinger |
 | Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement; CSV for the accountant | Dagsoppgjør, Artistoppgjør |
@@ -38,7 +39,7 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Personalliste (needed for piercing as skjønnhetspleie) | ✅ Start/stop per person, append-only corrections with reason, printable. Linework doesn't have this | Personalliste |
 | Products / ink inventory | ❌ Backlog. Product sales are already tracked as a payment type | |
 | Flash booking | ❌ Backlog (can be a service with a fixed price today) | |
-| Mobile app | Admin works in the phone browser and can be added to the home screen. No native app needed | |
+| Mobile app | Admin is built for phones and installs on the home screen with the studio icon (opens full screen like an app). No App Store app needed | |
 
 ## 3. What it costs
 
@@ -49,7 +50,7 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Vipps in studio | 1.75 % | Through Zettle: no Zettle fee; Vipps' own pricing applies (*inferred*). Vippskassa: 1.75 % |
 | Online deposits | Card 1.65 %, Vipps 1.75 %, Klarna 3.99 % | Stripe card fee (about 1.5 % + 1.80 kr for European cards; *check current Stripe pricing*) |
 | Gift cards | 2.99 % | Stripe card fee online; till fee in studio |
-| SMS | 0.99 kr each | Not used |
+| SMS | 0.99 kr each | ~0.75 kr each (Twilio, no monthly fee) |
 
 **Is Vipps free for businesses?** No, but there's no monthly or setup fee: in person 1.75 %, payment links 2.49 % + 1 kr, integrated online payments 2.99 % + 1 kr ([Vipps pricing](https://vippsmobilepay.com/nb-NO/pricing)).
 
@@ -83,9 +84,8 @@ D1: staff, services, hours, time_off, clients, bookings, consents, payments, day
 
 1. Products and ink inventory with stock counts.
 2. Flash sheet booking (fixed design + price on the website).
-3. SMS reminders (needs a paid SMS provider).
-4. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
-5. Move the website from Vercel to Cloudflare and serve the API on the same domain.
+3. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
+4. Move the website from Vercel to Cloudflare and serve the API on the same domain.
 
 ## 7. Decisions and defaults
 
@@ -99,13 +99,21 @@ Defaults that can be changed any time in *Innstillinger*, so they don't block la
 - Nora's tooth gems/piercings go through the same till and reports as the studio.
 - Signed consent forms are kept until deleted.
 
-Needed to go live: the staff emails that should get a login, and access to his Cloudflare account (or he creates one).
+Not live yet (Ibrahim's call). It will run on Ibrahim's Cloudflare account; going live needs a Cloudflare API token and the staff emails that should get a login.
 
-## 8. What Linework has that we don't
+**Look and feel:** the admin can be reshaped to follow Linework's dashboard layout (same pages, order and wording) so the switch feels familiar. Plan: Ibrahim makes a Linework trial account and a session looks through it with him logged in, then adjusts the admin to match. No passwords shared.
+
+## 8. Moving data from Linework
+
+Linework has no public API, webhooks or export button that we could find, and no outgoing calendar feed. Plan:
+1. Ask Linework by email (linework.no/kontakt-oss) for a full export of clients, bookings and consent forms under GDPR (right of access/portability). They must answer within a month.
+2. If they don't, or the export is incomplete: with a Linework login, a session uses the browser to read clients and upcoming bookings and imports them.
+3. Upcoming bookings are what matters on switch-over day; old payments stay in Linework's reports for the accounts.
+
+## 9. What Linework has that we don't
 
 - Payments by QR/link with automatic payout split between studio and artists (Dintero). We take online deposits through Stripe and leave in-studio payments to the till; the split is calculated in the settlements instead of paid out automatically.
-- Native iOS/Android apps. Our admin runs in the phone browser and can be added to the home screen.
-- SMS reminders (we send email).
+- Native iOS/Android apps. Our admin installs on the home screen from the browser instead.
 None of these is a legal requirement or something only Linework can do.
 
 ## Notes

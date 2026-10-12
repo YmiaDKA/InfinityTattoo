@@ -77,6 +77,7 @@ extra.get("/settings", async (c) => {
   const base = c.env.PUBLIC_BASE_URL.replace(/\/$/, "");
   const integrations = [
     ["E-post til kunder", Boolean(c.env.RESEND_API_KEY && c.env.EMAIL_FROM)],
+    ["SMS-påminnelser", Boolean(c.env.TWILIO_ACCOUNT_SID && c.env.TWILIO_AUTH_TOKEN)],
     ["Nettbetaling (depositum, gavekort)", stripeEnabled(c.env)],
     ["Referansebilder", Boolean(c.env.PHOTOS)],
     ["Zettle-synk", Boolean(c.env.ZETTLE_CLIENT_ID && c.env.ZETTLE_API_KEY)],

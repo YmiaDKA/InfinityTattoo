@@ -7,9 +7,11 @@ import {
   depositLinkEmail,
   giftCardEmail,
   reminderEmail,
+  reminderSms,
   requestReceivedEmail,
   type MessageBooking,
 } from "./messages";
+import { sendBookingSms } from "./sms";
 import { createCheckout } from "./stripe";
 import { businessDate } from "./time";
 import { syncZettle, zettleEnabled } from "./zettle";
@@ -22,12 +24,13 @@ type FullBooking = MessageBooking & {
   status: string;
   needs_consent: number;
   hold_until: string | null;
+  client_phone: string | null;
 };
 
 export async function loadBooking(env: Env, id: number): Promise<FullBooking | null> {
   return env.DB.prepare(
     `SELECT b.id, b.public_id, b.status, b.starts_at, b.deposit_ore, b.language, b.hold_until,
-            c.name AS client_name, c.email AS client_email,
+            c.name AS client_name, c.email AS client_email, c.phone AS client_phone,
             sv.name_no AS service_name_no, sv.name_en AS service_name_en, sv.needs_consent,
             sv.aftercare_no, sv.aftercare_en, s.name AS staff_name
      FROM bookings b JOIN clients c ON c.id = b.client_id JOIN services sv ON sv.id = b.service_id
@@ -219,9 +222,12 @@ export async function runScheduled(env: Env, now = new Date()) {
     .all<{ id: number }>();
   for (const { id } of upcoming.results) {
     const b = await loadBooking(env, id);
-    if (!b?.client_email) continue;
-    const consent = b.needs_consent && !(await hasConsent(env, id)) ? consentUrl(env, b.public_id) : undefined;
-    await sendBookingEmail(env, id, "reminder", reminderEmail(b, { consent }));
+    if (!b) continue;
+    if (b.client_email) {
+      const consent = b.needs_consent && !(await hasConsent(env, id)) ? consentUrl(env, b.public_id) : undefined;
+      await sendBookingEmail(env, id, "reminder", reminderEmail(b, { consent }));
+    }
+    if (b.client_phone) await sendBookingSms(env, id, "reminder_sms", b.client_phone, reminderSms(b));
   }
 
   // 3. Pull new till payments from Zettle.

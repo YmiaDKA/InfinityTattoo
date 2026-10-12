@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { ageOn, flaggedQuestions } from "../src/lib/consent";
 import { giftCardExpiry, newGiftCardCode, normalizeCode } from "../src/lib/giftcards";
+import { normalizePhone } from "../src/lib/sms";
 import { verifyStripeEvent } from "../src/lib/stripe";
 import { mapZettleMethod } from "../src/lib/zettle";
 
@@ -60,5 +61,15 @@ describe("Zettle payment types", () => {
     expect(mapZettleMethod("IZETTLE_CASH")).toBe("cash");
     expect(mapZettleMethod("VIPPS")).toBe("vipps");
     expect(mapZettleMethod("SOMETHING_NEW")).toBe("other");
+  });
+});
+
+describe("normalizePhone", () => {
+  it("adds +47 to Norwegian numbers and keeps international ones", () => {
+    expect(normalizePhone("403 44 775")).toBe("+4740344775");
+    expect(normalizePhone("0047 40344775")).toBe("+4740344775");
+    expect(normalizePhone("+46 70 123 45 67")).toBe("+46701234567");
+    expect(normalizePhone("123")).toBeNull();
+    expect(normalizePhone(null)).toBeNull();
   });
 });

@@ -112,6 +112,7 @@ export const EMAIL_LABELS: Record<string, string> = {
   request_received: "Forespørsel mottatt",
   confirmation: "Bekreftelse",
   reminder: "Påminnelse",
+  reminder_sms: "Påminnelse (SMS)",
   deposit_link: "Depositum-lenke",
   aftercare: "Etterbehandling",
   cancelled: "Avlysning",

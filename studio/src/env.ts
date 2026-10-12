@@ -23,6 +23,11 @@ export type Env = {
   RESEND_API_KEY?: string;
   EMAIL_FROM?: string;
   EMAIL_REPLY_TO?: string;
+  /** SMS reminders through Twilio (~0.75 kr per SMS to Norway); skipped when unset. */
+  TWILIO_ACCOUNT_SID?: string;
+  TWILIO_AUTH_TOKEN?: string;
+  /** Sender name shown on the phone, max 11 letters without æøå. Defaults to "Infinity". */
+  SMS_FROM?: string;
   /** Online deposits and gift cards through Stripe Checkout; disabled when unset. */
   STRIPE_SECRET_KEY?: string;
   STRIPE_WEBHOOK_SECRET?: string;

@@ -20,6 +20,8 @@ button.secondary,.button.secondary{background:var(--panel);border:1px solid var(
 .dot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.4rem}.flash{padding:.6rem 1rem;border-radius:10px;background:#14532d;margin-bottom:1rem}.flash.error{background:#7f1d1d}
 input[type=checkbox],input[type=radio]{display:inline-block;width:auto;margin:0 .4rem 0 0;vertical-align:middle}.check{display:flex;gap:.4rem;align-items:flex-start;color:var(--text);font-size:.95rem}.check input{margin-top:.3rem}
 fieldset{border:1px solid var(--line);border-radius:12px;padding:.75rem 1rem;margin:0 0 1rem}legend{color:var(--muted);font-size:.85rem;padding:0 .3rem}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:700px){header{padding:.5rem .75rem calc(.5rem) .75rem;padding-top:max(.5rem,env(safe-area-inset-top));gap:.5rem}nav{flex-wrap:nowrap;overflow-x:auto;width:100%;order:3;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap}main{padding:.75rem}table{display:block;overflow-x:auto;white-space:nowrap}input,select,textarea{font-size:16px}button,.button{padding:.7rem 1.1rem}}
 @media print{header,form,.noprint{display:none!important}body{background:#fff;color:#000}.card{border-color:#ccc;background:#fff}th{color:#333}}
 `;
 
@@ -43,6 +45,12 @@ export function Layout(props: { title: string; path: string; user: StaffUser; fl
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex" />
+        <meta name="theme-color" content="#0b0b0c" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Infinity" />
+        <link rel="manifest" href="/admin/manifest.webmanifest" crossorigin="use-credentials" />
+        <link rel="apple-touch-icon" href="/admin/icon-180.png" />
         <title>{`${props.title} · Infinity Studio`}</title>
         <style dangerouslySetInnerHTML={{ __html: css }} />
       </head>

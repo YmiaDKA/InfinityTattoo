@@ -184,3 +184,12 @@ export function giftCardEmail(card: {
   };
 }
 
+
+/** Short reminder SMS (fits in one or two messages). */
+export function reminderSms(b: MessageBooking): string {
+  const lang = langOf(b);
+  const time = b.starts_at ? localTime(b.starts_at) : "";
+  return lang === "no"
+    ? `Hei ${firstName(b.client_name)}! Påminnelse om timen din hos ${STUDIO.name} i morgen kl. ${time}${b.staff_name ? ` (${b.staff_name})` : ""}. ${STUDIO.address}. Må du flytte? Ring ${STUDIO.phone}.`
+    : `Hi ${firstName(b.client_name)}! Reminder of your appointment at ${STUDIO.name} tomorrow at ${time}${b.staff_name ? ` (${b.staff_name})` : ""}. ${STUDIO.address}. Need to move it? Call ${STUDIO.phone}.`;
+}
