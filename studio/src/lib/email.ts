@@ -1,0 +1,48 @@
+import type { Env } from "../env";
+
+export type Email = { to: string; subject: string; text: string };
+
+export type EmailResult = { status: "sent" | "failed" | "skipped"; error?: string };
+
+/** Sends a plain-text email to a client through Resend. Skipped (not failed) when not configured. */
+export async function sendEmail(env: Env, email: Email): Promise<EmailResult> {
+  if (!env.RESEND_API_KEY || !env.EMAIL_FROM) return { status: "skipped", error: "email not configured" };
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: env.EMAIL_FROM,
+        to: [email.to],
+        reply_to: env.EMAIL_REPLY_TO || undefined,
+        subject: email.subject,
+        text: email.text,
+      }),
+    });
+    if (!res.ok) return { status: "failed", error: `${res.status} ${(await res.text()).slice(0, 300)}` };
+    return { status: "sent" };
+  } catch (error) {
+    return { status: "failed", error: String(error).slice(0, 300) };
+  }
+}
+
+/** Sends once per (booking, kind) and records the attempt. Returns false if it was already sent. */
+export async function sendBookingEmail(
+  env: Env,
+  bookingId: number,
+  kind: string,
+  email: Email,
+  options: { force?: boolean } = {},
+): Promise<EmailResult | null> {
+  if (!options.force) {
+    const already = await env.DB.prepare("SELECT 1 FROM emails WHERE booking_id = ? AND kind = ? AND status = 'sent' LIMIT 1")
+      .bind(bookingId, kind)
+      .first();
+    if (already) return null;
+  }
+  const result = await sendEmail(env, email);
+  await env.DB.prepare("INSERT INTO emails (booking_id, kind, to_address, status, error) VALUES (?, ?, ?, ?, ?)")
+    .bind(bookingId, kind, email.to, result.status, result.error ?? null)
+    .run();
+  return result;
+}

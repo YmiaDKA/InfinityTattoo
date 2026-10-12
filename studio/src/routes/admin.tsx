@@ -1,7 +1,5 @@
-import { Hono } from "hono";
-
 import type { Env } from "../env";
-import { staffFromRequest, type StaffUser } from "../lib/auth";
+import { staffFromRequest } from "../lib/auth";
 import {
   buildDayReport,
   formatOre,
@@ -13,10 +11,30 @@ import {
   type ReportStaff,
 } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
+import { afterCancelled, afterCompleted, afterConfirmed, consentUrl, sendDepositLink, stripeEnabled } from "../lib/bookings";
+import { ageOn, flaggedQuestions, type ConsentAnswers } from "../lib/consent";
+import { giftCardBalance, normalizeCode } from "../lib/giftcards";
+import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Layout, StatusPill } from "../views/layout";
+import { extra } from "./admin-extra";
+import {
+  adminApp,
+  METHOD_LABELS,
+  KIND_LABELS,
+  BookingRow,
+  BOOKING_SELECT,
+  today,
+  dayRange,
+  when,
+  audit,
+  staffList,
+  serviceList,
+  str,
+  EMAIL_LABELS,
+} from "./admin-shared";
 
-type Vars = { user: StaffUser };
-export const admin = new Hono<{ Bindings: Env; Variables: Vars }>();
+
+export const admin = adminApp();
 
 admin.use("*", async (c, next) => {
   const user = await staffFromRequest(c.req.raw, c.env);
@@ -25,104 +43,7 @@ admin.use("*", async (c, next) => {
   await next();
 });
 
-const METHOD_LABELS: Record<string, string> = {
-  card: "Kort",
-  vipps: "Vipps",
-  cash: "Kontant",
-  gift_card: "Gavekort",
-  bank: "Bank/faktura",
-  other: "Annet",
-};
-const KIND_LABELS: Record<string, string> = {
-  deposit: "Depositum",
-  payment: "Betaling",
-  refund: "Refusjon",
-  gift_card_sale: "Gavekortsalg",
-  product: "Produkt/smykke",
-};
-
-type BookingRow = {
-  id: number;
-  status: string;
-  starts_at: string | null;
-  ends_at: string | null;
-  client_id: number;
-  client_name: string;
-  client_phone: string | null;
-  client_email: string | null;
-  staff_id: number | null;
-  staff_name: string | null;
-  staff_color: string | null;
-  service_id: number;
-  service_name: string;
-  idea: string | null;
-  placement: string | null;
-  size: string | null;
-  style: string | null;
-  first_tattoo: number | null;
-  budget: string | null;
-  price_ore: number | null;
-  deposit_ore: number;
-  internal_notes: string | null;
-  source: string;
-  created_at: string;
-};
-
-const BOOKING_SELECT = `
-  SELECT b.*, c.name AS client_name, c.phone AS client_phone, c.email AS client_email,
-         s.name AS staff_name, s.color AS staff_color, sv.name_no AS service_name
-  FROM bookings b
-  JOIN clients c ON c.id = b.client_id
-  JOIN services sv ON sv.id = b.service_id
-  LEFT JOIN staff s ON s.id = b.staff_id`;
-
-function today() {
-  return businessDate(new Date());
-}
-
-function dayRange(date: string) {
-  return [osloToUtc(date, "00:00").toISOString(), osloToUtc(addDays(date, 1), "00:00").toISOString()] as const;
-}
-
-function when(b: { starts_at: string | null; ends_at: string | null }) {
-  if (!b.starts_at) return "Ingen tid";
-  return `${businessDate(b.starts_at)} ${localTime(b.starts_at)}–${b.ends_at ? localTime(b.ends_at) : ""}`;
-}
-
-async function audit(env: Env, user: StaffUser, action: string, entity: string, entityId: number | null, detail?: unknown) {
-  await env.DB.prepare("INSERT INTO audit_log (actor, action, entity, entity_id, detail) VALUES (?, ?, ?, ?, ?)")
-    .bind(user.email, action, entity, entityId, detail === undefined ? null : JSON.stringify(detail))
-    .run();
-}
-
-async function staffList(env: Env) {
-  return (
-    await env.DB.prepare("SELECT id, name, role, color, studio_share_pct FROM staff WHERE active = 1 ORDER BY id").all<{
-      id: number;
-      name: string;
-      role: string;
-      color: string;
-      studio_share_pct: number;
-    }>()
-  ).results;
-}
-
-async function serviceList(env: Env) {
-  return (
-    await env.DB.prepare("SELECT id, name_no, duration_min, price_ore, deposit_ore FROM services WHERE active = 1 ORDER BY sort, id").all<{
-      id: number;
-      name_no: string;
-      duration_min: number;
-      price_ore: number | null;
-      deposit_ore: number;
-    }>()
-  ).results;
-}
-
-function str(body: Record<string, unknown>, key: string): string {
-  const v = body[key];
-  return typeof v === "string" ? v.trim() : "";
-}
+admin.route("/", extra);
 
 // ---------- Today ----------
 
@@ -415,12 +336,34 @@ admin.get("/bookings/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const b = await c.env.DB.prepare(`${BOOKING_SELECT} WHERE b.id = ?`).bind(id).first<BookingRow>();
   if (!b) return c.notFound();
-  const [staff, services, payments, consent] = await Promise.all([
+  const [staff, services, payments, consent, photos, emails, openPayment, hold] = await Promise.all([
     staffList(c.env),
     serviceList(c.env),
     c.env.DB.prepare("SELECT * FROM payments WHERE booking_id = ? ORDER BY paid_at").bind(id).all<PaymentRow>(),
-    c.env.DB.prepare("SELECT signed_name, signed_at FROM consents WHERE booking_id = ? ORDER BY id DESC LIMIT 1").bind(id).first<{ signed_name: string; signed_at: string }>(),
+    c.env.DB.prepare("SELECT * FROM consents WHERE booking_id = ? ORDER BY id DESC LIMIT 1").bind(id).first<{
+      signed_name: string;
+      signed_at: string;
+      answers_json: string;
+      birth_date: string | null;
+      guardian_name: string | null;
+      photo_consent: number;
+    }>(),
+    c.env.DB.prepare("SELECT id, content_type FROM booking_photos WHERE booking_id = ? ORDER BY id").bind(id).all<{ id: number; content_type: string }>(),
+    c.env.DB.prepare("SELECT kind, to_address, status, error, sent_at FROM emails WHERE booking_id = ? ORDER BY id DESC LIMIT 20").bind(id).all<{
+      kind: string;
+      to_address: string;
+      status: string;
+      error: string | null;
+      sent_at: string;
+    }>(),
+    c.env.DB.prepare("SELECT url, amount_ore FROM online_payments WHERE booking_id = ? AND status = 'open' ORDER BY id DESC LIMIT 1").bind(id).first<{ url: string; amount_ore: number }>(),
+    c.env.DB.prepare("SELECT hold_until, public_id, cancel_reason FROM bookings WHERE id = ?").bind(id).first<{ hold_until: string | null; public_id: string; cancel_reason: string | null }>(),
   ]);
+  const depositPaid = payments.results.filter((p) => p.kind === "deposit").reduce((sum, p) => sum + p.amount_ore, 0);
+  const answers = consent ? (JSON.parse(consent.answers_json) as ConsentAnswers) : null;
+  const flags = answers ? flaggedQuestions(answers) : [];
+  const age = consent?.birth_date ? ageOn(consent.birth_date, b.starts_at ? businessDate(b.starts_at) : today()) : null;
+  const consentLink = consentUrl(c.env, hold!.public_id);
   const paidTotal = payments.results.reduce((sum, p) => sum + p.amount_ore, 0);
   const duration = b.starts_at && b.ends_at ? Math.round((Date.parse(b.ends_at) - Date.parse(b.starts_at)) / 60000) : "";
 
@@ -450,9 +393,47 @@ admin.get("/bookings/:id", async (c) => {
         </div>
         <div class="card">
           <div class="muted">Egenerklæring</div>
-          {consent ? <div>Signert av {consent.signed_name}</div> : <div class="muted">Ikke signert</div>}
+          {consent ? (
+            <>
+              <div>
+                Signert av {consent.signed_name} {businessDate(consent.signed_at)}
+              </div>
+              {age != null && <div class={age < 18 ? "" : "muted"}>{age < 18 ? `⚠ ${age} år – foresatt: ${consent.guardian_name}` : `${age} år`}</div>}
+              {flags.length > 0 ? <div style="color:var(--warn)">⚠ {flags.length} helsesvar «ja» – se under</div> : <div class="muted">Ingen helseforbehold</div>}
+            </>
+          ) : (
+            <>
+              <div class="muted">Ikke signert</div>
+              <div style="font-size:.8rem;word-break:break-all" class="muted">{consentLink}</div>
+            </>
+          )}
         </div>
       </div>
+      {hold?.hold_until && (
+        <div class="flash error">Venter på depositum fra nettbooking. Timen frigjøres automatisk {localTime(hold.hold_until)} hvis den ikke betales.</div>
+      )}
+      {b.status === "cancelled" && hold?.cancel_reason && <div class="flash error">Avlyst: {hold.cancel_reason}</div>}
+      {answers && (flags.length > 0 || answers.details) && (
+        <div class="card">
+          <strong>Helseopplysninger</strong>
+          <ul>
+            {flags.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+          {answers.details && <p style="white-space:pre-wrap">{answers.details}</p>}
+          <div class="muted">{consent?.photo_consent ? "Samtykker til bilder i portefølje" : "Ikke samtykke til bilder"}</div>
+        </div>
+      )}
+      {photos.results.length > 0 && (
+        <div class="card" style="display:flex;gap:.5rem;flex-wrap:wrap">
+          {photos.results.map((p) => (
+            <a href={`/admin/photos/${p.id}`} target="_blank">
+              <img src={`/admin/photos/${p.id}`} alt="Referansebilde" style="height:140px;border-radius:10px;object-fit:cover" />
+            </a>
+          ))}
+        </div>
+      )}
 
       {(b.idea || b.placement || b.size || b.style || b.budget) && (
         <div class="card">
@@ -530,8 +511,52 @@ admin.get("/bookings/:id", async (c) => {
             {b.internal_notes ?? ""}
           </textarea>
         </label>
+        <label class="check">
+          <input type="checkbox" name="notify" value="1" checked />
+          <span>Send e-post til kunden når status endres (bekreftet, avlyst, fullført = etterbehandling)</span>
+        </label>
         <button>Lagre</button>
       </form>
+
+      <h2>Kunden</h2>
+      <div class="card">
+        <div class="row" style="align-items:center">
+          <form method="post" action={`/admin/bookings/${b.id}/send`} style="flex:0 0 auto">
+            <input type="hidden" name="what" value="confirmation" />
+            <button class="secondary" disabled={!b.client_email || !b.starts_at}>Send bekreftelse på nytt</button>
+          </form>
+          {b.deposit_ore > depositPaid && (
+            <form method="post" action={`/admin/bookings/${b.id}/send`} style="flex:0 0 auto">
+              <input type="hidden" name="what" value="deposit" />
+              <button class="secondary" disabled={!stripeEnabled(c.env)}>
+                Send depositum-lenke ({formatOre(b.deposit_ore - depositPaid)})
+              </button>
+            </form>
+          )}
+          {openPayment && (
+            <div class="muted" style="font-size:.8rem;word-break:break-all">
+              Betalingslenke: <a href={openPayment.url}>{openPayment.url.slice(0, 60)}…</a>
+            </div>
+          )}
+        </div>
+        {!stripeEnabled(c.env) && b.deposit_ore > depositPaid && <p class="muted">Nettbetaling er ikke satt opp ennå. Ta depositum i kassen og registrer det under.</p>}
+        {emails.results.length > 0 && (
+          <table style="margin-top:.5rem">
+            <tbody>
+              {emails.results.map((e) => (
+                <tr>
+                  <td>{EMAIL_LABELS[e.kind] ?? e.kind}</td>
+                  <td class="muted">{e.to_address}</td>
+                  <td>{e.status === "sent" ? "Sendt" : e.status === "skipped" ? "Ikke sendt (e-post ikke satt opp)" : `Feilet: ${e.error ?? ""}`}</td>
+                  <td class="muted">
+                    {businessDate(e.sent_at)} {localTime(e.sent_at)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
 
       <h2>Betalinger på avtalen</h2>
       <PaymentTable rows={payments.results} staff={staff} />
@@ -543,7 +568,7 @@ admin.get("/bookings/:id", async (c) => {
 admin.post("/bookings/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const body = await c.req.parseBody();
-  const existing = await c.env.DB.prepare("SELECT id FROM bookings WHERE id = ?").bind(id).first();
+  const existing = await c.env.DB.prepare("SELECT id, status, starts_at FROM bookings WHERE id = ?").bind(id).first<{ id: number; status: string; starts_at: string | null }>();
   if (!existing) return c.notFound();
 
   const status = str(body, "status");
@@ -580,7 +605,43 @@ admin.post("/bookings/:id", async (c) => {
     .bind(status, staffId, Number(str(body, "service_id")), startsAt, endsAt, price, deposit, str(body, "internal_notes") || null, id)
     .run();
   await audit(c.env, c.get("user"), "update", "booking", id, { status, staffId, startsAt, price, deposit });
+
+  if (str(body, "notify") === "1") {
+    const moved = startsAt !== existing.starts_at;
+    if (status === "confirmed" && (existing.status !== "confirmed" || moved)) {
+      if (existing.status === "confirmed") await afterConfirmed(c.env, id, { force: true });
+      else await afterConfirmed(c.env, id);
+    } else if (status === "cancelled" && existing.status !== "cancelled") await afterCancelled(c.env, id);
+    else if (status === "completed" && existing.status !== "completed") await afterCompleted(c.env, id);
+  }
+  if (status === "cancelled") await c.env.DB.prepare("UPDATE bookings SET hold_until = NULL WHERE id = ?").bind(id).run();
   return c.redirect(`/admin/bookings/${id}?ok=Lagret`);
+});
+
+admin.post("/bookings/:id/send", async (c) => {
+  const id = Number(c.req.param("id"));
+  const what = str(await c.req.parseBody(), "what");
+  if (what === "confirmation") {
+    await afterConfirmed(c.env, id, { force: true });
+    return c.redirect(`/admin/bookings/${id}?ok=Bekreftelse+sendt`);
+  }
+  if (what === "deposit") {
+    try {
+      const url = await sendDepositLink(c.env, id);
+      return c.redirect(`/admin/bookings/${id}?${url ? "ok=Depositum-lenke+sendt" : "error=Ingen+depositum+å+betale"}`);
+    } catch (error) {
+      return c.redirect(`/admin/bookings/${id}?error=${encodeURIComponent(String(error).slice(0, 120))}`);
+    }
+  }
+  return c.redirect(`/admin/bookings/${id}`);
+});
+
+admin.get("/photos/:id", async (c) => {
+  if (!c.env.PHOTOS) return c.notFound();
+  const row = await c.env.DB.prepare("SELECT r2_key, content_type FROM booking_photos WHERE id = ?").bind(Number(c.req.param("id"))).first<{ r2_key: string; content_type: string }>();
+  const object = row ? await c.env.PHOTOS.get(row.r2_key) : null;
+  if (!row || !object) return c.notFound();
+  return c.body(object.body, 200, { "Content-Type": row.content_type, "Cache-Control": "private, max-age=3600" });
 });
 
 // ---------- Clients ----------
@@ -797,12 +858,16 @@ function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?:
         <label>
           Betalingsløsning
           <select name="provider">
-            <option value="vippskassa">Vippskassa</option>
             <option value="zettle">Zettle</option>
+            <option value="vippskassa">Vippskassa</option>
             <option value="sumup">SumUp</option>
             <option value="stripe">Stripe (nett)</option>
             <option value="manual">Manuelt</option>
           </select>
+        </label>
+        <label>
+          Gavekortkode (ved gavekort)
+          <input name="gift_card_code" placeholder="INF-XXXX-XXXX" />
         </label>
         <label>
           Transaksjons-ID (valgfritt)
@@ -836,6 +901,12 @@ admin.get("/payments", async (c) => {
           <a class="button secondary" href={`/admin/export.csv?from=${date.slice(0, 8)}01&to=${date}`}>CSV for regnskap</a>
         </div>
       </div>
+      {zettleEnabled(c.env) && (
+        <form method="post" action="/admin/zettle-sync" class="noprint" style="margin-bottom:1rem">
+          <input type="hidden" name="back" value={`/admin/payments?date=${date}`} />
+          <button class="secondary">Hent nye betalinger fra Zettle</button>
+        </form>
+      )}
       <PaymentTable rows={rows.results} staff={staff} />
       <p>
         Sum: <strong>{formatOre(total)}</strong>
@@ -873,13 +944,30 @@ admin.post("/payments", async (c) => {
 
   const paidAt = date === today() ? new Date().toISOString() : osloToUtc(date, "12:00").toISOString();
   const providerRef = str(body, "provider_ref") || null;
+
+  // Paying with a gift card draws down its balance in the same batch as the payment.
+  let giftCard: { id: number; code: string } | null = null;
+  if (method === "gift_card" && kind !== "refund") {
+    const code = normalizeCode(str(body, "gift_card_code"));
+    const card = await c.env.DB.prepare("SELECT id, code, status, expires_on FROM gift_cards WHERE code = ?").bind(code).first<{ id: number; code: string; status: string; expires_on: string }>();
+    if (!card || card.status !== "active") return c.redirect(`${back}${sep}error=Fant+ikke+aktivt+gavekort+med+den+koden`);
+    if (card.expires_on < date) return c.redirect(`${back}${sep}error=Gavekortet+er+utløpt+${card.expires_on}`);
+    const balance = await giftCardBalance(c.env, card.id);
+    if (balance < amount) return c.redirect(`${back}${sep}error=${encodeURIComponent(`Gavekortet har bare ${formatOre(balance)} igjen`)}`);
+    giftCard = card;
+  }
   try {
     const row = await c.env.DB.prepare(
       `INSERT INTO payments (booking_id, staff_id, kind, method, amount_ore, provider, provider_ref, note, paid_at, business_date, recorded_by)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
     )
-      .bind(Number(str(body, "booking_id")) || null, Number(str(body, "staff_id")) || null, kind, method, amount, str(body, "provider") || "manual", providerRef, str(body, "note") || null, paidAt, date, user.email)
+      .bind(Number(str(body, "booking_id")) || null, Number(str(body, "staff_id")) || null, kind, method, amount, giftCard ? "gift_card" : str(body, "provider") || "manual", giftCard ? `${giftCard.code}:${crypto.randomUUID().slice(0, 8)}` : providerRef, str(body, "note") || (giftCard ? `Gavekort ${giftCard.code}` : null), paidAt, date, user.email)
       .first<{ id: number }>();
+    if (giftCard) {
+      await c.env.DB.prepare("INSERT INTO gift_card_movements (gift_card_id, amount_ore, booking_id, note, by) VALUES (?, ?, ?, ?, ?)")
+        .bind(giftCard.id, -amount, Number(str(body, "booking_id")) || null, `Betaling #${row!.id}`, user.email)
+        .run();
+    }
     await audit(c.env, user, "create", "payment", row!.id, { amount, kind, method });
   } catch (error) {
     if (String(error).includes("UNIQUE")) return c.redirect(`${back}${sep}error=Transaksjonen+er+allerede+registrert`);
@@ -1128,6 +1216,14 @@ admin.post("/report/close", async (c) => {
 
   const already = await c.env.DB.prepare("SELECT seq FROM day_reports WHERE business_date = ?").bind(date).first<{ seq: number }>();
   if (already) return c.redirect(`/admin/report/${already.seq}`);
+  // Make sure the latest till payments are in before the day is locked.
+  if (zettleEnabled(c.env)) {
+    try {
+      await syncZettle(c.env);
+    } catch (error) {
+      return c.redirect(`/admin/report?date=${date}&error=${encodeURIComponent(`Fikk ikke hentet fra Zettle: ${String(error).slice(0, 100)}`)}`);
+    }
+  }
 
   const report = await computeReport(c.env, date, counted);
   const user = c.get("user");
@@ -1174,4 +1270,16 @@ admin.get("/report/:seq", async (c) => {
       </p>
     </Layout>,
   );
+});
+
+admin.post("/zettle-sync", async (c) => {
+  const back = str(await c.req.parseBody(), "back");
+  const target = back.startsWith("/admin") ? back : "/admin/payments";
+  const sep = target.includes("?") ? "&" : "?";
+  try {
+    const result = await syncZettle(c.env);
+    return c.redirect(`${target}${sep}ok=${encodeURIComponent(`Hentet ${result.imported} nye betalinger fra Zettle`)}`);
+  } catch (error) {
+    return c.redirect(`${target}${sep}error=${encodeURIComponent(String(error).slice(0, 150))}`);
+  }
 });

@@ -15,4 +15,23 @@ export type Env = {
   NOTIFY?: SendEmail;
   NOTIFY_FROM?: string;
   NOTIFY_TO?: string;
+  /** Public URL of this worker, used in links sent to clients (consent form, payments). */
+  PUBLIC_BASE_URL: string;
+  /** The website, used for "back to site" links and payment return pages. */
+  SITE_URL: string;
+  /** Client emails (confirmations, reminders, aftercare). Resend free tier; skipped when unset. */
+  RESEND_API_KEY?: string;
+  EMAIL_FROM?: string;
+  EMAIL_REPLY_TO?: string;
+  /** Online deposits and gift cards through Stripe Checkout; disabled when unset. */
+  STRIPE_SECRET_KEY?: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  /** Optional R2 bucket for reference photos uploaded with booking requests. */
+  PHOTOS?: R2Bucket;
+  /** Zettle Purchase API (read-only) to import till payments automatically. */
+  ZETTLE_CLIENT_ID?: string;
+  ZETTLE_API_KEY?: string;
+  /** Printed on the personalliste. */
+  ORG_NAME?: string;
+  ORG_NUMBER?: string;
 };

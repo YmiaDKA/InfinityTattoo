@@ -28,7 +28,10 @@ type Service = {
 };
 type Day = { date: string; staff_id: number; staff_name: string; slots: { starts_at: string; time: string }[] };
 
+type Config = { online_payments: boolean; gift_cards: boolean; photos: boolean };
+
 const kroner = (ore: number) => `${Math.round(ore / 100).toLocaleString("nb-NO")} kr`;
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 export function StudioBooking() {
   if (!apiUrl) return <LineworkBooking />;
@@ -49,13 +52,34 @@ function StudioBookingForm({ api }: { api: string }) {
   const [state, setState] = useState<"idle" | "sending" | "done" | "error" | "taken">("idle");
   const [result, setResult] = useState<"requested" | "confirmed" | null>(null);
   const [reload, setReload] = useState(0);
+  const [config, setConfig] = useState<Config | null>(null);
 
   useEffect(() => {
-    fetch(`${api}/api/services`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((data: { services: Service[] }) => setServices(data.services))
+    Promise.all([
+      fetch(`${api}/api/services`).then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
+      fetch(`${api}/api/config`).then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([data, cfg]: [{ services: Service[] }, Config | null]) => {
+        setServices(data.services);
+        setConfig(cfg);
+        // Coming back from the deposit payment page.
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("booking") === "paid") {
+          setResult("confirmed");
+          setState("done");
+        }
+      })
       .catch(() => setLoadError(true));
   }, [api]);
+
+  useEffect(() => {
+    if (!turnstileSiteKey || document.querySelector("script[data-turnstile]")) return;
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    script.dataset.turnstile = "true";
+    document.head.appendChild(script);
+  }, []);
 
   const service = services?.find((s) => s.id === serviceId) ?? null;
   const needsTime = service ? !service.requires_approval : false;
@@ -129,10 +153,16 @@ function StudioBookingForm({ api }: { api: string }) {
           budget: get("budget"),
           timing: get("timing"),
           website: get("website"),
+          turnstile_token: get("cf-turnstile-response"),
           language: isNorwegian ? "no" : "en",
         }),
       });
-      const data = (await response.json()) as { status?: "requested" | "confirmed"; error?: string };
+      const data = (await response.json()) as {
+        status?: "requested" | "confirmed";
+        error?: string;
+        booking_id?: string;
+        payment_url?: string | null;
+      };
       if (response.status === 409) {
         setState("taken");
         setStartsAt(null);
@@ -141,6 +171,18 @@ function StudioBookingForm({ api }: { api: string }) {
         return;
       }
       if (!response.ok) throw new Error(data.error);
+
+      const photos = form.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
+      if (photos.length && data.booking_id) {
+        const upload = new FormData();
+        for (const photo of photos.slice(0, 5)) upload.append("photos", photo);
+        // Photos are a bonus; the request is already saved if this fails.
+        await fetch(`${api}/api/bookings/${data.booking_id}/photos`, { method: "POST", body: upload }).catch(() => undefined);
+      }
+      if (data.payment_url) {
+        window.location.assign(data.payment_url);
+        return;
+      }
       setResult(data.status ?? "requested");
       setState("done");
       window.dispatchEvent(new CustomEvent("studio-booking-complete"));
@@ -162,8 +204,8 @@ function StudioBookingForm({ api }: { api: string }) {
           {result === "confirmed"
             ? t("Du får en bekreftelse fra oss. Ta kontakt hvis du må endre timen.", "We'll confirm with you. Get in touch if you need to change the time.")
             : t(
-                "Vi ser på ideen din og tar kontakt for å avtale tid og pris. Send gjerne referansebilder på Instagram eller e-post.",
-                "We'll look at your idea and get back to you about time and price. Feel free to send reference photos on Instagram or email.",
+                "Vi ser på ideen din og tar kontakt for å avtale tid og pris. Du får en e-post med kopi av forespørselen.",
+                "We'll look at your idea and get back to you about time and price. You'll get an email with a copy of your request.",
               )}
         </p>
       </div>
@@ -355,20 +397,39 @@ function StudioBookingForm({ api }: { api: string }) {
               </>
             )}
 
+            {service.kind === "tattoo" && config?.photos && (
+              <Field>
+                <FieldLabel htmlFor="sb-photos">{t("Referansebilder (valgfritt, maks 5)", "Reference photos (optional, up to 5)")}</FieldLabel>
+                <Input id="sb-photos" name="photos" type="file" accept="image/*" multiple className="h-auto py-1.5" />
+              </Field>
+            )}
+
             {/* Honeypot for bots; hidden from people and screen readers. */}
             <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+
+            {turnstileSiteKey && <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="dark" />}
 
             <FieldDescription>
               {t(
                 "Vi bruker opplysningene bare til å håndtere bookingen din.",
                 "We only use your details to handle your booking.",
               )}
+              {service.deposit_ore > 0 && !service.requires_approval && config?.online_payments
+                ? t(
+                    ` Timen holdes av når depositumet på ${kroner(service.deposit_ore)} er betalt, og trekkes fra prisen.`,
+                    ` Your time is held once the ${kroner(service.deposit_ore)} deposit is paid. It comes off the price.`,
+                  )
+                : ""}
             </FieldDescription>
           </FieldGroup>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button className="w-full sm:w-fit" size="lg" type="submit" disabled={state === "sending"}>
-              {service.requires_approval ? t("Send forespørsel", "Send request") : t("Book time", "Book appointment")}
+              {service.requires_approval
+                ? t("Send forespørsel", "Send request")
+                : service.deposit_ore > 0 && config?.online_payments
+                  ? t("Book og betal depositum", "Book and pay deposit")
+                  : t("Book time", "Book appointment")}
               {state === "sending" ? <Loader2Icon className="animate-spin" data-icon="inline-end" /> : <SendIcon data-icon="inline-end" />}
             </Button>
             {state === "error" && (

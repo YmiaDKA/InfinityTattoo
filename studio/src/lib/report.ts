@@ -78,7 +78,7 @@ export function buildDayReport(
 
   for (const line of staffLines.values()) {
     const pct = line.staff_id == null ? 100 : (staffById.get(line.staff_id)?.studio_share_pct ?? 0);
-    line.studio_ore = Math.round((line.gross_ore * pct) / 100);
+    line.studio_ore = Math.round((line.gross_ore * pct) / 100) || 0;
     line.artist_ore = line.gross_ore - line.studio_ore;
   }
 

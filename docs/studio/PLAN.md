@@ -1,118 +1,99 @@
 # Infinity Studio: replacing Linework
 
-Plan for replacing Linework (linework.no) at Infinity Tattoo with a free, self-hosted booking and studio system.
-Written 2026-10-12. Sources are linked inline. Anything marked *inferred* was not confirmed from a primary source.
+Plan and status for replacing Linework (linework.no) at Infinity Tattoo with a free, self-hosted booking and studio system.
+Updated 2026-10-12. Sources are linked inline. Anything marked *inferred* was not confirmed from a primary source.
 
 ## 1. The short answer
 
-- **Booking, calendar, clients, consent forms, artist settlements and reports can be built ourselves and hosted free on Cloudflare.** This is what `studio/` does.
-- **The in-studio till cannot be self-built.** Norwegian law requires card, Vipps and cash payments taken in the studio to go through a *produkterklært kassasystem*, and the declaration must come from a supplier that is independent of the business ([Skatteetaten: egenutviklede kassasystemer](https://www.skatteetaten.no/rettskilder/type/uttalelser/prinsipputtalelser/egenutviklede-kassasystemer/)). The legal **Z-report must come from that till.**
-- So the recommended setup is: **our system for everything except the till + a cheap declared till app** (Vippskassa has no monthly fee; Zettle's kassasystem is 279 kr/month). Our system mirrors the till's payments and produces the studio's own *dagsoppgjør* (daily settlement per artist), which is what Linework's "reports" cover today.
-- **Check this with the owner:** Linework never claims to be a declared kassasystem (it only says it "syncs" with one, [linework.no/om-oss](https://linework.no/om-oss)). *Inferred:* if the studio takes in-person payments only through Linework today, it may already be out of line with the rules. Worth asking the owner/accountant what till produces their Z-report today.
+- **Everything Linework does except the till is built** in `studio/` and runs free on Cloudflare: booking, calendar, clients, consent forms, client emails, deposits, gift cards, staff log, daily and monthly reports.
+- **The till (kassasystem) must be a declared product from another company.** Norwegian law requires card, Vipps and cash taken in the studio to go through a *produkterklært kassasystem* whose supplier is independent of the business ([Skatteetaten](https://www.skatteetaten.no/rettskilder/type/uttalelser/prinsipputtalelser/egenutviklede-kassasystemer/)). The legal Z-report comes from that till. Fine for not using one: 10 rettsgebyr ≈ 13 450 kr, doubled on repeat ([Altinn](https://info.altinn.no/starte-og-drive/regnskap-og-revisjon/regnskap/kontantsalg-og-kassasystem/)).
+- **Recommended till: Zettle (PayPal POS).** The app is free with no fixed fees, card is 1.75 %, Vipps through Zettle has no extra Zettle fee, and Zettle says it is on Skatteetaten's declared list with Z-reports and journal ([prices](https://www.zettle.com/no/priser), [kassasystem](https://www.zettle.com/no/kassasystem/godkjent-kassasystem)). It also has an API, so **our system imports every till payment automatically** and the daily settlement/artist split match the till without typing. Alternative: Vippskassa (no monthly fee, 1.75 %, declared when its bookkeeping features, cash drawer and printer are switched on; [Vipps](https://help.vippsmobilepay.com/nb-NO/articles/bookkeeping-obligations)) but no import.
+- **Today:** the owner takes payments in Linework and uses its "Z-report". Linework never calls itself a kassasystem or mentions produkterklæring/Z-rapport on its site, and we couldn't read Skatteetaten's list from here (*inferred:* its report is a sales report, not a statutory Z-report). Worth checking the [list](https://www.skatteetaten.no/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/liste/) for "Linework" in a browser.
+- **Folio** is his business bank (Sparebanken Norge partnership, 89–359 kr/month) with receipts, accountant access and Fiken/Tripletex integration. It has no till or Z-report, so it doesn't replace either ([folio.no/priser](https://www.folio.no/priser)). Our CSV export works for his accountant alongside it.
 
-## 2. What Linework does (public info)
+## 2. Feature coverage vs Linework
 
-Source: [linework.no/priser](https://linework.no/priser), [/studioer](https://linework.no/studioer), [/artister](https://linework.no/artister), [App Store](https://apps.apple.com/app/id1611510851). We could not open the studio's own account, and the booking page (`booking.linework.com/infinity`) is a JS app our cloud environment cannot reach, so the exact fields and deposit rules are unverified.
+Linework features from [linework.no/priser](https://linework.no/priser), [/studioer](https://linework.no/studioer), [/artister](https://linework.no/artister) and the [App Store listing](https://apps.apple.com/app/id1611510851).
 
-| Area | Linework | Infinity Studio MVP |
+| Linework feature | Infinity Studio | Where |
 |---|---|---|
-| Online booking | Booking page per artist/studio, services and flash | ✅ Native form on infinitytattoo.no (instant slots for piercing/tooth gems/consults, requests for custom tattoos) |
-| Calendar | Shared studio calendar, day/3-day/week, block time, Google/Apple import | ✅ Day + week views, working hours per person, time off table. Backlog: drag-and-drop, iCal feed |
-| Clients | Client records | ✅ Client list, search, notes, history |
-| Consent / health forms | Sent automatically 1 h before, stored | 🟡 Table ready; signing page is backlog item #1 |
-| Deposits | Card/Vipps/Klarna via Dintero | 🟡 Recorded manually now; online deposit links (Stripe or Vipps) are backlog |
-| In-studio payment / POS | "Utsalgssted": cash, card terminal, credit | ❌ by design. Use a declared till (see §1). Payments are mirrored into our system |
-| Reports | Daily/weekly/monthly, "accounting-ready" | ✅ Numbered, locked daily settlement (X preview + close), per method/type/artist, cash count, CSV export for the accountant |
-| Studio rent / commission split | Automatic split studio vs artist | ✅ Per-artist studio share % in the daily settlement. Backlog: monthly settlement/invoice per artist |
-| Multiple artists, piercer | Each artist pays their own plan | ✅ Unlimited staff at no cost. Nora (piercing/tooth gems) is a staff member with her own services |
-| Gift cards | Sold by link, 2.99 % fee | 🟡 Gift card sale/redemption is tracked in payments. Backlog: selling them online with codes |
-| Reminders | SMS + email | Backlog (email first; SMS costs money with any provider) |
-| Aftercare | Sent with receipt | Backlog (email template per service) |
-| Products / ink inventory | Yes | Backlog |
-| Apps | iOS/Android for artists | The admin is a mobile-friendly web app. No native iOS app needed for the MVP (see §6) |
+| Online booking page | ✅ Native form on infinitytattoo.no (NO/EN), instant slots or tattoo request, reference photos, spam protection | Website + `/api` |
+| Deposits online (card/Vipps/Klarna via Dintero) | ✅ Card (+ whatever is switched on in Stripe) via Stripe Checkout. Instant bookings hold the slot 30 min until paid; staff can send a deposit link from any booking | `/api`, booking page |
+| Studio calendar, block time, availability | ✅ Day/week views, working hours per person, time off and studio closures, conflict check | Kalender, Innstillinger |
+| Calendar sync to phone | ✅ Private subscription link per artist (iPhone/Google) | Innstillinger |
+| Client records | ✅ Search, notes, birth date, history | Kunder |
+| Consent / health form | ✅ Sent with confirmation and reminder, signed on phone, 18+ check with guardian, health flags shown on the booking | `/skjema/…` |
+| SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ❌ SMS (costs per message anywhere) | Automatic |
+| Aftercare after the session | ✅ Per-service text (NO/EN), sent when the booking is set to completed | Innstillinger → Behandlinger |
+| Payment in the studio (Utsalgssted) | ↪ Zettle till (declared). Payments imported automatically; manual entry for anything else | Betalinger |
+| Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement; CSV for the accountant | Dagsoppgjør, Artistoppgjør |
+| Studio rent / commission split | ✅ Studio share % per artist on every report | Innstillinger → Ansatte |
+| Multiple artists, managers | ✅ Unlimited staff and logins for free (Cloudflare Access, up to 50) | |
+| Piercer | ✅ Nora is a staff member with her own services, hours and calendar | |
+| Gift cards (2.99 % fee) | ✅ Sold online (Stripe) or in the studio, unique code, balance, redeem as payment method, 3-year validity, outstanding liability shown | Gavekort, website |
+| Personalliste (needed for piercing as skjønnhetspleie) | ✅ Start/stop per person, append-only corrections with reason, printable. Linework doesn't have this | Personalliste |
+| Products / ink inventory | ❌ Backlog. Product sales are already tracked as a payment type | |
+| Flash booking | ❌ Backlog (can be a service with a fixed price today) | |
+| Mobile app | Admin works in the phone browser and can be added to the home screen. No native app needed | |
 
-### What Linework costs
+## 3. What it costs
 
-From [linework.no/priser](https://linework.no/priser): studio plan 790 kr/month + **490 kr/month per artist**, card 1.65 %, Vipps 1.75 %, Klarna 3.99 %, gift cards 2.99 %, SMS 0.99 kr, daily payouts 190 kr/month (all excl. VAT). SUPREME.GEMZ (Nora) has her own Linework booking page, so she likely pays her own plan too (*inferred*).
+| | Linework today | Infinity Studio |
+|---|---|---|
+| Monthly | 790 kr studio + 490 kr per artist (excl. VAT), +190 kr for daily payouts | 0 kr (Cloudflare free plan, Resend free email up to 100/day) |
+| Card in studio | 1.65 % | 1.75 % (Zettle) |
+| Vipps in studio | 1.75 % | Through Zettle: no Zettle fee; Vipps' own pricing applies (*inferred*). Vippskassa: 1.75 % |
+| Online deposits | Card 1.65 %, Vipps 1.75 %, Klarna 3.99 % | Stripe card fee (about 1.5 % + 1.80 kr for European cards; *check current Stripe pricing*) |
+| Gift cards | 2.99 % | Stripe card fee online; till fee in studio |
+| SMS | 0.99 kr each | Not used |
 
-### What the replacement costs
+**Is Vipps free for businesses?** No, but there's no monthly or setup fee: in person 1.75 %, payment links 2.49 % + 1 kr, integrated online payments 2.99 % + 1 kr ([Vipps pricing](https://vippsmobilepay.com/nb-NO/pricing)).
 
-| Item | Cost |
-|---|---|
-| Cloudflare Workers + D1 + Access (≤ 50 staff) + Email Routing | 0 kr (free plan limits are far above a single studio's use) |
-| Declared till | Vippskassa: no monthly fee ([Vipps](https://vippsmobilepay.com/nb-NO/mobilt-kassasystem)), per-transaction fees not confirmed. Zettle: 279 kr/month + 1.75 % ([Zettle](https://www.zettle.com/no/help/articles/undefined/no/help/articles/2645269-kassasystemfunksjon)). SumUp: 1.49 %, but its declared-kassasystem status is unverified |
-| Online deposits (later) | Stripe ~1.5–2.5 % per payment, no monthly fee |
+## 4. Rules that shape the design
 
-Confirm the chosen till on [Skatteetaten's list of declared systems](https://www.skatteetaten.no/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/liste/) before buying hardware.
+- Card and in-person Vipps count as *kontantsalg*; a bank terminal or Vipps alone is not a kassasystem ([Altinn](https://info.altinn.no/starte-og-drive/regnskap-og-revisjon/regnskap/kontantsalg-og-kassasystem/)).
+- Booking systems are outside the kassasystem rules ([Skatteetaten FAQ](https://www.skatteetaten.no/nn/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/sporsmal-og-svar-om-nye-kassasystemer/)). Our system never issues receipts and never writes into the till.
+- Online prepayments (deposits, gift cards online) are internet sales, not kontantsalg. Stripe's receipt email is the sales document ([Skatteetaten](https://www.skatteetaten.no/en/rettskilder/type/uttalelser/prinsipputtalelser/internet-sales-under-the-cash-register-systems-act-and-the-bookkeeping-regulation/)).
+- Piercing is *skjønnhetspleie* (bokføringsforskriften kap. 8-3): personalliste plus booking documentation ([Skatteetaten](https://www.skatteetaten.no/en/rettskilder/type/skattedirektoratets-meldinger/krav-til-foring-av-personalliste/)). Bookings are never deleted and all changes are in `audit_log`.
+- Health answers are sensitive personal data (GDPR art. 9): stored in Cloudflare D1, visible only to signed-in staff.
 
-## 3. Norwegian rules that shape the design
-
-- **Card and in-person Vipps count as *kontantsalg*.** A bank terminal alone is not a kassasystem ([Altinn](https://info.altinn.no/starte-og-drive/regnskap-og-revisjon/regnskap/kontantsalg-og-kassasystem/), [Skatteetaten FAQ](https://www.skatteetaten.no/nn/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/sporsmal-og-svar-om-nye-kassasystemer/)).
-- **Booking systems are outside the kassasystem rules** ("Ordre-/bookingsystemer mv. omfattes ikke", same FAQ). That's why our system never issues receipts and never acts as the till.
-- **Online prepayments/deposits are not kontantsalg** (internet sale). They still need a sales document per payment ([Skatteetaten on internet sales](https://www.skatteetaten.no/en/rettskilder/type/uttalelser/prinsipputtalelser/internet-sales-under-the-cash-register-systems-act-and-the-bookkeeping-regulation/)). The remainder paid in the studio goes through the till, with the deposit set off.
-- **Exemption:** under 50 000 kr/year in-person sales (excl. VAT). Not realistic for this studio.
-- **Penalty for using an undeclared system:** 10 rettsgebyr (≈ 13 450 kr), doubled on repeat ([Altinn](https://info.altinn.no/starte-og-drive/regnskap-og-revisjon/regnskap/kontantsalg-og-kassasystem/)).
-- **Piercing is "skjønnhetspleie"** under bokføringsforskriften kap. 8-3, which adds a *personalliste* (staff sign-in log) and appointment-booking documentation ([Skatteetaten](https://www.skatteetaten.no/en/rettskilder/type/skattedirektoratets-meldinger/krav-til-foring-av-personalliste/)). *Inferred:* the studio should assume this applies. Our system keeps booking history (nothing is deleted, every change is in `audit_log`), and a personalliste is on the backlog. Confirm the exact § 8-3-3 requirements with the accountant.
-
-What we must **not** do: build a till, write into the till provider's journal, call our report a "Z-rapport", or rely on the *kontantfaktura* route.
-
-## 4. Architecture
+## 5. Architecture
 
 ```
-infinitytattoo.no (Next.js, Vercel today → Cloudflare later)
-   └─ <StudioBooking/>  ──fetch──►  studio worker  /api/*   (public, CORS-limited)
-                                     │
-staff (phone/laptop) ──Cloudflare Access──► /admin/*  (server-rendered, no JS framework)
-                                     │
-                                     └─ D1 (SQLite): staff, services, hours, clients,
-                                        bookings, payments, day_reports, consents, audit_log
+infinitytattoo.no (Next.js; Vercel now, Cloudflare later)
+  ├─ <StudioBooking/>, <StudioGiftCard/>  ──►  studio worker /api/*  (CORS-limited)
+client email links ─────────────────────────►  /skjema/:id (consent), Stripe Checkout
+staff phone/laptop ──Cloudflare Access──────►  /admin/*  (server-rendered)
+artist phone calendar ──────────────────────►  /cal/:token.ics
+Stripe ──webhook──► /api/stripe/webhook        Zettle ◄── hourly import (read-only)
+cron (hourly): reminders, release unpaid holds, Zettle import
+D1: staff, services, hours, time_off, clients, bookings, consents, payments, day_reports,
+    gift_cards, online_payments, shifts, emails, audit_log      R2 (optional): reference photos
 ```
 
-- `studio/` is a standalone Cloudflare Worker (Hono + D1). It deploys separately, so the website can stay on Vercel until the planned move and nothing in the site's build changes.
-- The site shows the native form only when `NEXT_PUBLIC_STUDIO_API_URL` is set; otherwise (or if the API is down) it falls back to the Linework embed. Switching over is one environment variable.
-- **Staff login = Cloudflare Access** (free up to 50 users, email one-time code or Google). The worker verifies the Access JWT itself; no passwords to build or store.
-- **Money is integers in øre; times are UTC; business dates are Europe/Oslo.** Daily settlements are sequentially numbered, frozen as JSON at close, and payments on a closed day are locked (corrections go in as refunds on a later day).
-- New requests email the studio through Cloudflare Email Routing (free).
-- Open source reuse: we use Hono, jose and zod. Full open-source booking systems (Cal.com, Easy!Appointments) were not a fit: they need a server/Postgres or PHP host, don't run on the free Cloudflare tier, and know nothing about artist settlements. *Inferred:* their scheduling ideas are simple enough to reimplement in the ~100 lines in `src/lib/slots.ts`.
+- `studio/` is a standalone Cloudflare Worker (Hono + D1). The website keeps working unchanged until `NEXT_PUBLIC_STUDIO_API_URL` is set, and falls back to Linework if the API is down.
+- Each integration (email, Stripe, Zettle, R2 photos, Turnstile, studio notifications) switches on by adding its key; nothing breaks without it. *Innstillinger → Tilkoblinger* shows what's on.
+- Money is integers in øre, times UTC, business dates Europe/Oslo. Daily settlements are sequentially numbered and frozen; payments on a closed day are locked.
 
-## 5. MVP (in this PR) and backlog
+## 6. Remaining backlog
 
-**MVP, done in this PR**
-1. Native booking form on the homepage (bilingual, instant slots or tattoo request, honeypot + optional Turnstile, Google Ads conversion still fires).
-2. Booking API with availability, double-booking protection and client de-duplication.
-3. Admin: today, requests, week calendar, booking detail/edit, new booking (phone/Instagram/walk-in), clients.
-4. Payments mirror (from the till) with duplicate protection, and per-artist split.
-5. Daily settlement: X preview, close with cash count, numbered and locked, printable, CSV export.
+1. Products and ink inventory with stock counts.
+2. Flash sheet booking (fixed design + price on the website).
+3. SMS reminders (needs a paid SMS provider).
+4. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
+5. Move the website from Vercel to Cloudflare and serve the API on the same domain.
 
-**Backlog, in suggested order**
-1. Consent/health form: signing link sent before the appointment (stored in `consents`, 18+ check).
-2. Email confirmations and reminders to clients (Resend free tier or similar), aftercare email per service.
-3. Online deposits: Stripe Checkout or Vipps payment link, webhook writes the deposit into `payments`.
-4. Import payments from the till's API/export (Zettle has an API; Vippskassa: check) instead of typing them.
-5. Settings pages: services, prices, working hours, time off, staff share % (now edited in the database).
-6. Monthly artist settlement / studio rent invoice per artist.
-7. Personalliste (staff check-in/out) if the accountant confirms kap. 8-3 applies.
-8. Reference photo upload on the booking form (R2).
-9. Gift cards sold online with codes and balance.
-10. iCal feed per artist (subscribe from the phone calendar), Google Calendar import.
-11. SMS reminders (costs per SMS with any provider).
-12. Product and ink inventory.
-13. Flash sheet booking (fixed design + price).
-14. Move the website from Vercel to Cloudflare (OpenNext), then serve the API on the same domain.
+## 7. Questions for the owner
 
-## 6. Do we need an iOS app?
+1. **Till:** OK to switch in-studio payments from Linework to Zettle? (Needs a cash drawer + printer only if he takes cash.)
+2. **Studio share:** what % does the studio keep from Filip and from Nora?
+3. **Deposits:** amount per service, and is it refundable on cancellation?
+4. **Logins:** which emails get access, and who is the owner (can change settings)?
+5. **Org.nr.** for the personalliste header, and whether Nora's SUPREME.GEMZ is the same business or her own (affects whose till/report her sales belong to).
+6. **Age policy:** tattoos under 18 at all? (The form currently requires a guardian's name under 18.)
+7. **Health data retention:** how long to keep signed consent forms (we keep them until deleted).
 
-Not for the MVP. The admin works in a phone browser and can be added to the home screen. A native app becomes worth it for push notifications on new requests and tap-to-pay, and tap-to-pay belongs to the till provider's app anyway. Revisit after backlog item 2.
+## Notes
 
-## 7. Open questions for the owner
-
-1. Which till/kassasystem produces the Z-report today, and does the accountant need anything specific from us (SAF-T, CSV layout, Fiken/Tripletex)?
-2. The studio/artist split for Filip and Nora (and any guest artists).
-3. Deposit rules: amount per service, and whether it's refundable.
-4. Which emails should get admin access.
-5. What Nora's SUPREME.GEMZ Linework account is used for, and whether she moves too.
-
-## Notes on the referenced repos
-
-- `morluto/rea` is a reverse-engineering MCP tool. We planned to use its browser/JS-bundle analysis on Linework's booking page, but this cloud environment blocks linework.com, so the feature map above comes from public pages. It can be run locally against `booking.linework.com/infinity` (or a trial account) to confirm fields and deposit rules.
-- The "minlønn" repo (`YmiaDKA/Loenna`) is empty on GitHub, so no conventions could be borrowed from it. Conventions here follow the site's own `AGENTS.md`.
+- `morluto/rea` (reverse-engineering MCP) couldn't be run against Linework from the cloud environment because linework.com is blocked there; the feature map is from public pages. It can be run locally against a trial account to double-check details.
+- The "minlønn" repo (`YmiaDKA/Loenna`) is empty on GitHub, so conventions follow this repo's `AGENTS.md`.

@@ -3,7 +3,10 @@ import { cors } from "hono/cors";
 import { z } from "zod";
 
 import type { Env } from "../env";
+import { afterConfirmed, afterRequestCreated, DEPOSIT_HOLD_MIN, depositCheckoutUrl, recordCheckoutPaid, stripeEnabled } from "../lib/bookings";
+import { giftCardExpiry, newGiftCardCode } from "../lib/giftcards";
 import { notifyStudio } from "../lib/notify";
+import { createCheckout, verifyStripeEvent } from "../lib/stripe";
 import { freeSlots, type Busy, type WorkingHours } from "../lib/slots";
 import { addDays, businessDate, isDateString, localTime } from "../lib/time";
 
@@ -26,8 +29,14 @@ publicApi.use(
     origin: (origin, c) =>
       (c.env as Env).ALLOWED_ORIGINS.split(",").map((o: string) => o.trim()).includes(origin) ? origin : null,
     allowMethods: ["GET", "POST"],
+    allowHeaders: ["Content-Type"],
     maxAge: 86400,
   }),
+);
+
+/** What the website form can offer, so it never shows a feature that isn't set up. */
+publicApi.get("/config", (c) =>
+  c.json({ online_payments: stripeEnabled(c.env), gift_cards: stripeEnabled(c.env), photos: Boolean(c.env.PHOTOS) }),
 );
 
 publicApi.get("/services", async (c) => {
@@ -178,14 +187,17 @@ publicApi.post("/bookings", async (c) => {
 
   const status = service.requires_approval ? "requested" : "confirmed";
   const publicId = crypto.randomUUID();
+  // Instant bookings with a deposit hold the slot until the deposit is paid online.
+  const needsDeposit = status === "confirmed" && service.deposit_ore > 0 && stripeEnabled(c.env);
+  const holdUntil = needsDeposit ? new Date(Date.now() + (DEPOSIT_HOLD_MIN + 5) * 60000).toISOString() : null;
 
   const client = await upsertClient(c.env, input);
 
   // Insert only if nobody grabbed the same time in the meantime (single atomic statement).
   const insert = await c.env.DB.prepare(
     `INSERT INTO bookings (public_id, client_id, staff_id, service_id, status, starts_at, ends_at,
-        idea, placement, size, style, first_tattoo, budget, deposit_ore, price_ore, internal_notes, source, language)
-     SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'web', ?
+        idea, placement, size, style, first_tattoo, budget, deposit_ore, price_ore, internal_notes, source, language, hold_until)
+     SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'web', ?, ?
      WHERE ? IS NULL OR NOT EXISTS (
        SELECT 1 FROM bookings WHERE staff_id = ? AND status IN ('requested', 'confirmed')
          AND starts_at < ? AND ends_at > ?)`,
@@ -194,11 +206,26 @@ publicApi.post("/bookings", async (c) => {
       publicId, client, staffId, service.id, status, startsAt, endsAt,
       input.idea ?? null, input.placement ?? null, input.size ?? null, input.style ?? null,
       input.first_tattoo == null ? null : Number(input.first_tattoo), input.budget ?? null,
-      service.deposit_ore, service.price_ore, input.timing ? `Ønsket tid: ${input.timing}` : null, input.language,
+      service.deposit_ore, service.price_ore, input.timing ? `Ønsket tid: ${input.timing}` : null, input.language, holdUntil,
       startsAt, staffId, endsAt, startsAt,
     )
     .run();
   if (!insert.meta.changes) return c.json({ error: "slot_taken" }, 409);
+  const bookingId = Number(insert.meta.last_row_id);
+
+  let paymentUrl: string | null = null;
+  if (needsDeposit) {
+    try {
+      paymentUrl = await depositCheckoutUrl(c.env, bookingId, DEPOSIT_HOLD_MIN);
+    } catch (error) {
+      // Keep the booking; the studio can send a deposit link from the admin.
+      console.error("deposit checkout failed", error);
+      await c.env.DB.prepare("UPDATE bookings SET hold_until = NULL WHERE id = ?").bind(bookingId).run();
+    }
+  }
+  c.executionCtx.waitUntil(
+    status === "requested" ? afterRequestCreated(c.env, bookingId) : paymentUrl ? Promise.resolve() : afterConfirmed(c.env, bookingId),
+  );
 
   const when = startsAt ? `${businessDate(startsAt)} kl. ${localTime(startsAt)}` : "ingen tid valgt";
   c.executionCtx.waitUntil(
@@ -222,7 +249,7 @@ publicApi.post("/bookings", async (c) => {
     ),
   );
 
-  return c.json({ ok: true, status, booking_id: publicId, starts_at: startsAt }, 201);
+  return c.json({ ok: true, status, booking_id: publicId, starts_at: startsAt, payment_url: paymentUrl }, 201);
 });
 
 async function upsertClient(env: Env, input: z.infer<typeof bookingSchema>): Promise<number> {
@@ -258,3 +285,95 @@ async function turnstileOk(secret: string, token: string | undefined, ip: string
   const data = (await res.json()) as { success?: boolean };
   return Boolean(data.success);
 }
+
+// ---------- Reference photos ----------
+
+const MAX_PHOTOS = 5;
+const MAX_PHOTO_BYTES = 8 * 1024 * 1024;
+const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+
+/** Upload right after creating a booking. The unguessable booking id is the credential; uploads close after an hour. */
+publicApi.post("/bookings/:publicId/photos", async (c) => {
+  if (!c.env.PHOTOS) return c.json({ error: "photos_disabled" }, 404);
+  const booking = await c.env.DB.prepare("SELECT id, created_at FROM bookings WHERE public_id = ?")
+    .bind(c.req.param("publicId"))
+    .first<{ id: number; created_at: string }>();
+  if (!booking || Date.now() - Date.parse(booking.created_at) > 3600 * 1000) return c.json({ error: "not_found" }, 404);
+
+  const existing = await c.env.DB.prepare("SELECT COUNT(*) AS n FROM booking_photos WHERE booking_id = ?").bind(booking.id).first<{ n: number }>();
+  const form = await c.req.formData();
+  const files = form.getAll("photos").filter((f): f is File => typeof f === "object" && f !== null && "arrayBuffer" in f);
+  if (!files.length) return c.json({ error: "invalid" }, 400);
+  if ((existing?.n ?? 0) + files.length > MAX_PHOTOS) return c.json({ error: "too_many" }, 400);
+  for (const file of files) {
+    if (!PHOTO_TYPES.includes(file.type) || file.size > MAX_PHOTO_BYTES) return c.json({ error: "invalid_file" }, 400);
+  }
+  for (const file of files) {
+    const key = `bookings/${booking.id}/${crypto.randomUUID()}`;
+    await c.env.PHOTOS.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
+    await c.env.DB.prepare("INSERT INTO booking_photos (booking_id, r2_key, content_type, bytes) VALUES (?, ?, ?, ?)")
+      .bind(booking.id, key, file.type, file.size)
+      .run();
+  }
+  return c.json({ ok: true, count: files.length }, 201);
+});
+
+// ---------- Gift cards sold online ----------
+
+const giftCardSchema = z.object({
+  amount_kr: z.coerce.number().int().min(200).max(20000),
+  buyer_name: z.string().trim().min(2).max(120),
+  buyer_email: z.email().max(200),
+  recipient_name: z.string().trim().max(120).nullish(),
+  message: z.string().trim().max(300).nullish(),
+  website: z.string().max(500).optional(),
+});
+
+publicApi.post("/gift-cards", async (c) => {
+  if (!stripeEnabled(c.env)) return c.json({ error: "disabled" }, 404);
+  const parsed = giftCardSchema.safeParse(await c.req.json().catch(() => null));
+  if (!parsed.success) return c.json({ error: "invalid", fields: parsed.error.issues.map((i) => i.path.join(".")) }, 400);
+  const input = parsed.data;
+  if (input.website) return c.json({ ok: true, payment_url: null }, 201);
+
+  const amountOre = input.amount_kr * 100;
+  const card = await c.env.DB.prepare(
+    `INSERT INTO gift_cards (code, initial_ore, status, buyer_name, buyer_email, recipient_name, message, source, expires_on)
+     VALUES (?, ?, 'pending', ?, ?, ?, ?, 'online', ?) RETURNING id`,
+  )
+    .bind(newGiftCardCode(), amountOre, input.buyer_name, input.buyer_email, input.recipient_name ?? null, input.message ?? null, giftCardExpiry())
+    .first<{ id: number }>();
+
+  const site = c.env.SITE_URL.replace(/\/$/, "");
+  const checkout = await createCheckout(c.env, {
+    amountOre,
+    name: `Gavekort ${input.amount_kr} kr – Infinity Tattoo`,
+    email: input.buyer_email,
+    successUrl: `${site}/?giftcard=paid#booking`,
+    cancelUrl: `${site}/?giftcard=cancelled#booking`,
+    metadata: { purpose: "gift_card", gift_card_id: String(card!.id) },
+  });
+  await c.env.DB.prepare("INSERT INTO online_payments (purpose, gift_card_id, amount_ore, provider, session_id, url) VALUES ('gift_card', ?, ?, 'stripe', ?, ?)")
+    .bind(card!.id, amountOre, checkout.id, checkout.url)
+    .run();
+  return c.json({ ok: true, payment_url: checkout.url }, 201);
+});
+
+// ---------- Stripe webhook ----------
+
+publicApi.post("/stripe/webhook", async (c) => {
+  if (!c.env.STRIPE_WEBHOOK_SECRET) return c.json({ error: "disabled" }, 404);
+  const payload = await c.req.text();
+  const event = await verifyStripeEvent(payload, c.req.header("Stripe-Signature") ?? null, c.env.STRIPE_WEBHOOK_SECRET);
+  if (!event) return c.json({ error: "bad_signature" }, 400);
+
+  if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
+    const session = event.data.object as { id: string; payment_status?: string; payment_intent?: string | null };
+    if (session.payment_status === "paid") await recordCheckoutPaid(c.env, session.id, session.payment_intent ?? null);
+  }
+  if (event.type === "checkout.session.expired") {
+    const session = event.data.object as { id: string };
+    await c.env.DB.prepare("UPDATE online_payments SET status = 'expired' WHERE session_id = ? AND status = 'open'").bind(session.id).run();
+  }
+  return c.json({ received: true });
+});
