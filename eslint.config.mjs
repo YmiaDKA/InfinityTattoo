@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Studio worker has its own toolchain.
+    "studio/**",
   ]),
 ]);
 

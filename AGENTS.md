@@ -1,7 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # Infinity Tattoo
@@ -75,3 +79,11 @@ Important phrases can be used naturally:
 Check the diff.
 Avoid unrelated file changes.
 Keep commit messages short and clear.
+
+## Studio system (`studio/`)
+
+`studio/` is the booking API and internal admin (Cloudflare Worker + D1) that replaces Linework. It has its own `package.json` and deploys separately from the website; see `studio/README.md` and `docs/studio/PLAN.md`.
+
+- Never turn it into a till/kassasystem: no receipts, and don't call its daily settlement a Z-report. In-studio payments go through a declared kassasystem (see the plan).
+- The website shows the native booking form only when `NEXT_PUBLIC_STUDIO_API_URL` is set, otherwise the Linework embed.
+- Schema changes go in a new numbered file in `studio/migrations/`.

@@ -18,7 +18,7 @@ import {
 import { InstagramPill } from "@/components/instagram-pill";
 import { StudioAddress } from "@/components/studio-address";
 import { ArtistSpotlight } from "@/components/artist-spotlight";
-import { LineworkBooking } from "@/components/linework-booking";
+import { StudioBooking } from "@/components/studio-booking";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
@@ -898,7 +898,7 @@ export default function Home() {
             duration={9}
             size={240}
           />
-          <LineworkBooking />
+          <StudioBooking />
         </div>
 
         <div
