@@ -14,7 +14,8 @@ import {
 import { loadFeatures } from "./features";
 import { sendBookingSms } from "./sms";
 import { createCheckout } from "./stripe";
-import { businessDate } from "./time";
+import { syncStripeMoney } from "./stripe-sync";
+import { addDays, businessDate, localTime } from "./time";
 import { syncZettle, zettleEnabled } from "./zettle";
 
 /** How long an online booking holds its slot while waiting for the deposit. */
@@ -241,7 +242,16 @@ export async function runScheduled(env: Env, now = new Date()) {
     }
   }
 
-  // 4. Mark expired online checkouts.
+  // 4. Once a night: Stripe fees and payouts for the accountant's file (last 45 days).
+  if (stripeEnabled(env) && localTime(now) < "01:00") {
+    try {
+      await syncStripeMoney(env, addDays(businessDate(now), -45), addDays(businessDate(now), 1));
+    } catch (error) {
+      console.error("stripe money sync failed", error);
+    }
+  }
+
+  // 5. Mark expired online checkouts.
   await env.DB.prepare("UPDATE online_payments SET status = 'expired' WHERE status = 'open' AND created_at < ?")
     .bind(new Date(now.getTime() - 25 * 3600 * 1000).toISOString())
     .run();

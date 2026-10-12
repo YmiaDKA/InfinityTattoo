@@ -31,7 +31,8 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ✅ SMS reminder the day before through 46elks (0.70 SEK ≈ 0.70 kr each) | Automatic |
 | Aftercare after the session | ✅ Per-service text (NO/EN), sent when the booking is set to completed | Innstillinger → Behandlinger |
 | Payment in the studio (Utsalgssted) | ↪ Zettle till with Tap to Pay on iPhone (no hardware). Payments imported automatically; manual entry for anything else | Betalinger |
-| Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement; CSV for the accountant | Dagsoppgjør, Artistoppgjør |
+| Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement | Rapporter, Oppgjør |
+| File for the accountant / accounting integration | ✅ Monthly voucher CSV (account numbers, VAT, Stripe fee and payout date), artist CSV and a PDF summary; downloaded or emailed to the accountant with one button | Rapporter → Regnskap |
 | Studio rent / commission split | ✅ Studio share % per artist on every report | Innstillinger → Ansatte |
 | Multiple artists, managers | ✅ Unlimited staff and logins for free (Cloudflare Access, up to 50) | |
 | Piercer | ✅ Nora is a staff member with her own services, hours and calendar | |
@@ -107,7 +108,14 @@ Defaults that can be changed any time in *Innstillinger*, so they don't block la
 
 Not live yet (Ibrahim's call). It will run on Ibrahim's Cloudflare account; going live needs a Cloudflare API token and the staff emails that should get a login.
 
-**Look and feel:** the admin can be reshaped to follow Linework's dashboard layout (same pages, order and wording) so the switch feels familiar. Plan: Ibrahim makes a Linework trial account and a session looks through it with him logged in, then adjusts the admin to match. No passwords shared.
+**Look and feel:** the admin follows Linework's dashboard layout so the switch feels familiar: top bar (Tattoo-forespørsler, Nytt depositum, Nytt salg), sidebar with the studio card and the same menu order (Kalender, Kunder; Økonomi: Salg, Gavekort, Oppgjør, Rapporter; Artister, Ledere, Personalliste, Produkter, Innstillinger), a time-grid calendar with Day/Week, mini month and week numbers, and a "Kom i gang" checklist. Our own name and colours, not Linework's brand. Page-by-page details follow the capture in `docs/studio/linework-reference/`.
+
+**Accounting export** (owner's must-have; spec in the project files):
+- Defaults: VAT-registered, 25 % on services (per service: 25/15/12/0 %), program Fiken, NS 4102 accounts (3000 tattoo, 3010 piercing, 2900 gift card liability, 1940 Stripe clearing, 7770 fees, 1920 bank, 1900 cash, 3600 rent). All set in *Innstillinger → Regnskap*.
+- Files per month: `bilag.csv` (semicolon, comma decimals, UTF-8 with BOM: date, source, gross, VAT, Stripe fee, net, debit/credit, payout date, reference), `artister.csv`, `oppsummering.pdf`.
+- Zettle sales are listed but marked "not posted here": Zettle's own connector posts them to Fiken/Tripletex/PowerOffice. Gift cards go to 2900 without VAT when sold and get VAT when used.
+- Stripe fees and payout dates are read from Stripe nightly (read-only) and before each download.
+- Fiken has no voucher-file import, so the files go to the accountant (button sends them by email via Resend). Pushing straight into Fiken would need Fiken's API add-on (99 kr/month); not built.
 
 ## 8. Moving data from Linework
 

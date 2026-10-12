@@ -15,7 +15,7 @@ main{max-width:1100px;margin:0 auto;padding:1rem}h1{font-size:1.4rem;margin:.5re
 table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:500;font-size:.85rem}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:.6rem}input,select,textarea{display:block;width:100%;margin-top:.2rem;padding:.5rem .6rem;border-radius:10px;border:1px solid var(--line);background:#0e0e10;color:var(--text);font:inherit}
 button,.button{display:inline-block;padding:.55rem 1rem;border-radius:999px;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
-button.secondary,.button.secondary{background:var(--panel);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:not-allowed}button.secondary,.button.secondary{background:var(--panel);border:1px solid var(--line)}
 .pill{display:inline-block;padding:.1rem .55rem;border-radius:999px;font-size:.78rem;border:1px solid var(--line)}
 .pill.requested{color:var(--warn);border-color:var(--warn)}.pill.confirmed{color:var(--ok);border-color:var(--ok)}.pill.cancelled,.pill.no_show{color:var(--muted)}
 .muted{color:var(--muted)}.big{font-size:1.6rem;font-weight:700}.row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:end}.row>*{flex:1 1 160px}
@@ -79,6 +79,7 @@ body.nav-open .side{transform:none}body.nav-open .scrim{display:block;position:f
 .setup-check{width:2.1rem;height:2.1rem;flex:0 0 2.1rem;border-radius:8px;border:1px dashed #52525b;display:grid;place-items:center}.setup-item.done .setup-check{background:var(--ok);border:0;color:#052e16}.setup-item.done strong{color:var(--muted);text-decoration:line-through}
 @media (max-width:1560px){.cal:has(.setup) .cal-side{display:none}}@media (max-width:1200px){.setup{display:none}}
 @media (max-width:860px){.cal-side{display:none}.cal-toolbar{padding:.5rem .6rem}.cal-toolbar h1{font-size:1rem;margin-left:.2rem}.cal-week{display:none}.cal-toolbar>.iconbtn:first-child{display:none}.cal-head,.cal-body{grid-template-columns:2.75rem repeat(var(--cols),minmax(6.5rem,1fr))}}
+.filecard{display:flex;flex-direction:column;gap:.25rem;text-decoration:none}.filecard:hover{border-color:#3f3f46}.filecard strong{font-weight:600}.filecard .muted{font-size:.85rem}
 @media print{body.app{display:block;height:auto;overflow:visible}.topbar,.side{display:none!important}.content{overflow:visible;border:0;padding:0}}
 @media print{header,form,.noprint{display:none!important}body{background:#fff;color:#000}.card{border-color:#ccc;background:#fff}th{color:#333}}
 `;

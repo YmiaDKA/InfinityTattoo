@@ -20,6 +20,7 @@ import { Layout, StatusPill } from "../views/layout";
 import { extra } from "./admin-extra";
 import { bookingStudioData, ProjectAndInks, studio } from "./admin-studio";
 import { calendar } from "./admin-calendar";
+import { accounting, ReportTabs } from "./admin-accounting";
 import {
   adminApp,
   METHOD_LABELS,
@@ -58,6 +59,7 @@ admin.use("*", async (c, next) => {
 admin.route("/", extra);
 admin.route("/", studio);
 admin.route("/", calendar);
+admin.route("/", accounting);
 
 // ---------- Start page ----------
 
@@ -1103,6 +1105,7 @@ admin.get("/report", async (c) => {
 
   return c.html(
     <Layout title="Dagsoppgjør" path="/admin/report" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
+      {c.get("user").role === "owner" && <ReportTabs active="day" />}
       <div class="row" style="justify-content:space-between">
         <h1>Dagsoppgjør {date}</h1>
         <div style="flex:0 0 auto">

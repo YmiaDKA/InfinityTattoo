@@ -55,3 +55,4 @@ To try the website form against it, run the site with `NEXT_PUBLIC_STUDIO_API_UR
 - **Artistoppgjør**: monthly totals and studio share per artist. Artists only see their own.
 - **Personalliste**: start/stop when someone starts and leaves work. Required for piercing.
 - **CSV for regnskap** on the payments page exports a period for the accountant.
+- **Rapporter → Regnskap** (owner): pick a month, download `bilag.csv`, `artister.csv` and `oppsummering.pdf`, or press *Send til regnskapsfører*. Set the accountant's email, program, VAT and account numbers in *Innstillinger → Regnskap*. Sending needs Resend.

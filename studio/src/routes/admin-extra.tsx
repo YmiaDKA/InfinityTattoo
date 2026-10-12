@@ -6,6 +6,7 @@ import { formatOre, parseKroner } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
 import { ALWAYS_ON, FEATURES, setFeature, type FeatureKey } from "../lib/features";
 import { Layout } from "../views/layout";
+import { AccountingSettingsSection } from "./admin-accounting";
 import { adminApp, audit, KIND_LABELS, METHOD_LABELS, str, today, type AdminEnv } from "./admin-shared";
 
 export const extra = adminApp();
@@ -63,6 +64,7 @@ type ServiceRow = {
   active: number;
   sort: number;
   needs_consent: number;
+  vat_pct?: number;
   aftercare_no: string | null;
   aftercare_en: string | null;
 };
@@ -220,6 +222,8 @@ extra.get("/settings", async (c) => {
         </ul>
         {isOwner(c) && <button>Lagre funksjoner</button>}
       </form>
+
+      {isOwner(c) && <AccountingSettingsSection c={c} />}
 
       <h2 id="tilkoblinger">Tilkoblinger</h2>
       <div class="card">
@@ -544,6 +548,16 @@ extra.get("/settings/services/:id", async (c) => {
             <input name="deposit" inputmode="decimal" value={String(s.deposit_ore / 100)} />
           </label>
           <label>
+            Mva-sats
+            <select name="vat_pct">
+              {[25, 15, 12, 0].map((v) => (
+                <option value={v} selected={(s.vat_pct ?? 25) === v}>
+                  {v} %
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
             Rekkefølge
             <input name="sort" type="number" value={String(s.sort)} />
           </label>
@@ -609,12 +623,13 @@ extra.post("/settings/services/:id", async (c) => {
     str(body, "aftercare_no") || null,
     str(body, "aftercare_en") || null,
     Math.max(0, Math.round(Number(str(body, "buffer_min")) || 0)),
+    [0, 12, 15, 25].includes(Number(str(body, "vat_pct"))) ? Number(str(body, "vat_pct")) : 25,
   ];
   let id: number;
   if (isNew) {
     const row = await c.env.DB.prepare(
-      `INSERT INTO services (name_no, name_en, kind, duration_min, price_ore, deposit_ore, requires_approval, public, active, sort, needs_consent, aftercare_no, aftercare_en, buffer_min)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+      `INSERT INTO services (name_no, name_en, kind, duration_min, price_ore, deposit_ore, requires_approval, public, active, sort, needs_consent, aftercare_no, aftercare_en, buffer_min, vat_pct)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
     )
       .bind(...values)
       .first<{ id: number }>();
@@ -623,7 +638,7 @@ extra.post("/settings/services/:id", async (c) => {
     id = Number(c.req.param("id"));
     await c.env.DB.prepare(
       `UPDATE services SET name_no = ?, name_en = ?, kind = ?, duration_min = ?, price_ore = ?, deposit_ore = ?, requires_approval = ?,
-         public = ?, active = ?, sort = ?, needs_consent = ?, aftercare_no = ?, aftercare_en = ?, buffer_min = ? WHERE id = ?`,
+         public = ?, active = ?, sort = ?, needs_consent = ?, aftercare_no = ?, aftercare_en = ?, buffer_min = ?, vat_pct = ? WHERE id = ?`,
     )
       .bind(...values, id)
       .run();
