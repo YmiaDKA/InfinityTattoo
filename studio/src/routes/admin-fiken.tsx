@@ -1,4 +1,7 @@
-import { loadAccounting, type AccountKey } from "../lib/accounting";
+import type { Context } from "hono";
+
+import { isMonth, loadAccounting, type AccountKey } from "../lib/accounting";
+import { monthName } from "../lib/accounting-pdf";
 import { setFeature } from "../lib/features";
 import {
   fikenBankAccounts,
@@ -11,10 +14,18 @@ import {
   type FikenBankAccount,
   type FikenCompany,
 } from "../lib/fiken";
-import { formatOre } from "../lib/report";
-import { SettingsTitle } from "../views/ui";
+import { approveBilag, bilagPdf, buildBilag, VAT_CODE_LABELS, type BankInput, type BilagRow, type PayoutProvider } from "../lib/fiken-bilag";
+import { formatOre, parseKroner } from "../lib/report";
+import { importReport } from "../lib/report-import";
+import { addDays } from "../lib/time";
+import { zettleEnabled } from "../lib/zettle";
+import { Layout } from "../views/layout";
+import { SettingsTitle, shiftMonth as shiftDate } from "../views/ui";
+import { ReportTabs } from "./admin-accounting";
 import { SettingsPage } from "./admin-settings";
-import { adminApp, audit, str } from "./admin-shared";
+import { adminApp, audit, str, today, type AdminEnv } from "./admin-shared";
+
+const shiftMonth = (month: string, by: number) => shiftDate(`${month}-01`, by).slice(0, 7);
 
 /** Innstillinger → Integrasjoner → Fiken: API token, company, bank accounts, preview and history. Owner only. */
 export const fiken = adminApp();
@@ -200,4 +211,295 @@ fiken.post("/settings/fiken/push", async (c) => {
   const r = await pushToFiken(c.env, c.get("user").email);
   await audit(c.env, c.get("user"), "send", "fiken", null, r);
   return c.redirect(r.error ? `/admin/settings/fiken?error=${encodeURIComponent(r.error)}` : `/admin/settings/fiken?ok=${encodeURIComponent(`${r.sent} posteringer sendt til Fiken`)}`);
+});
+
+// =====================================================================
+// Rapporter → Regnskap → Fiken-bilag: the semi-automatic month entry
+// =====================================================================
+
+const PROVIDER_FIELDS: PayoutProvider[] = ["zettle", "sumup", "stripe"];
+
+function bankFrom(get: (k: string) => string | undefined): BankInput {
+  const bank: BankInput = {};
+  for (const p of PROVIDER_FIELDS) {
+    const v = parseKroner(get(`bank_${p}`) ?? "");
+    if (v != null) bank[p] = v;
+  }
+  return bank;
+}
+
+const monthOf = (q: string | undefined) => (isMonth(q) ? q : addDays(`${today().slice(0, 7)}-01`, -1).slice(0, 7));
+const orgOf = (c: Context<AdminEnv>) => ({ name: c.env.ORG_NAME ?? "Infinity Tattoo", number: c.env.ORG_NUMBER });
+
+fiken.get("/accounting/fiken", async (c) => {
+  if (c.get("user").role !== "owner") return c.redirect("/admin/report");
+  const month = monthOf(c.req.query("month"));
+  const bank = bankFrom((k) => c.req.query(k));
+  const [b, f, history, imports] = await Promise.all([
+    buildBilag(c.env, month, bank),
+    loadFiken(c.env),
+    c.env.DB.prepare("SELECT id, status, error, approved_by, created_at, location FROM fiken_bilag WHERE month = ? ORDER BY id DESC").bind(month).all<{
+      id: number;
+      status: string;
+      error: string | null;
+      approved_by: string;
+      created_at: string;
+      location: string | null;
+    }>(),
+    c.env.DB.prepare("SELECT provider, filename, imported, skipped, from_date, to_date, created_at FROM report_imports ORDER BY id DESC LIMIT 5").all<{
+      provider: string;
+      filename: string;
+      imported: number;
+      skipped: number;
+      from_date: string | null;
+      to_date: string | null;
+      created_at: string;
+    }>(),
+  ]);
+  const viaApi = Boolean(f.token && f.company);
+  const bankVal = (p: PayoutProvider) => (bank[p] != null ? (bank[p]! / 100).toFixed(2).replace(".", ",") : "");
+  const q = (m: string) => `/admin/accounting/fiken?month=${m}`;
+  const o = b.overview;
+
+  return c.html(
+    <Layout title="Fiken-bilag" path="/admin/report" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
+      <ReportTabs active="accounting" owner />
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <h2 style="margin:0;font-size:1.3rem">Fiken-bilag for {monthName(month)}</h2>
+        <div style="flex:0 0 auto">
+          <a class="button secondary" href={q(shiftMonth(month, -1))} aria-label="Forrige måned">
+            ←
+          </a>{" "}
+          <a class="button secondary" href={q(shiftMonth(month, 1))} aria-label="Neste måned">
+            →
+          </a>
+        </div>
+      </div>
+      <p class="muted">
+        Hele måneden som noen få linjer til en fri postering i Fiken. Sjekk utbetalingene mot banken, godkjenn, og før linjene inn i Fiken med PDF-en som vedlegg.
+        {viaApi ? " Fiken er koblet til, så godkjenning sender linjene dit med en gang." : ""}
+      </p>
+
+      <form method="post" action="/admin/accounting/import" enctype="multipart/form-data" class="card toolbar" style="flex-wrap:wrap">
+        <div style="flex:1 1 260px">
+          <strong>Legg til rapport fra kassen</strong>
+          <div class="muted">
+            CSV med transaksjoner fra SumUp{zettleEnabled(c.env) ? "" : " eller Zettle"}. Samme fil to ganger legger ikke inn noe dobbelt.
+            {zettleEnabled(c.env) ? " Zettle hentes automatisk." : ""}
+          </div>
+        </div>
+        <select name="provider" style="flex:0 0 auto;width:auto">
+          <option value="sumup">SumUp</option>
+          {!zettleEnabled(c.env) && <option value="zettle">Zettle</option>}
+        </select>
+        <input type="file" name="file" accept=".csv,text/csv" required style="flex:0 1 auto;width:auto" />
+        <button class="secondary" style="flex:0 0 auto">
+          Les inn
+        </button>
+      </form>
+      {imports.results.length > 0 && (
+        <p class="muted">
+          Siste: {imports.results.map((r) => `${r.filename} (${r.imported} nye, ${r.from_date ?? "?"}–${r.to_date ?? "?"})`).join(" · ")}
+        </p>
+      )}
+
+      <h2>Oversikt</h2>
+      <div class="card scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Kilde</th>
+              <th class="num">Antall</th>
+              <th class="num">Gebyr</th>
+              <th class="num">Brutto</th>
+            </tr>
+          </thead>
+          <tbody>
+            {o.sources.map((t) => (
+              <tr>
+                <td>{t.name}</td>
+                <td class="num">{t.count}</td>
+                <td class="num">{t.fee == null ? "–" : formatOre(t.fee)}</td>
+                <td class="num">{formatOre(t.gross)}</td>
+              </tr>
+            ))}
+            {o.artists !== 0 && (
+              <tr>
+                <td>Artistenes andel</td>
+                <td></td>
+                <td></td>
+                <td class="num">{formatOre(o.artists)}</td>
+              </tr>
+            )}
+            {o.rent > 0 && (
+              <tr>
+                <td>Stolleie</td>
+                <td></td>
+                <td></td>
+                <td class="num">{formatOre(o.rent)}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        {!o.sources.length && <p class="muted">Ingen salg som ikke allerede er bokført denne måneden.</p>}
+      </div>
+
+      <h2>Sjekk mot banken</h2>
+      <form method="get" action="/admin/accounting/fiken" class="card">
+        <input type="hidden" name="month" value={month} />
+        <p class="muted" style="margin-top:0">
+          Skriv inn hva som kom inn på konto fra hver av dem i {monthName(month)} (se Folio). Utbetalinger kommer 1–2 dager etter salget, så små avvik rundt månedsskiftet er
+          normalt.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Fra</th>
+              <th class="num">Forventet</th>
+              <th>I banken</th>
+              <th class="num">Avvik</th>
+            </tr>
+          </thead>
+          <tbody>
+            {PROVIDER_FIELDS.map((p) => {
+              const row = o.payouts.find((x) => x.provider === p);
+              const diff = row?.expected != null && row.bank != null ? row.bank - row.expected : null;
+              return (
+                <tr>
+                  <td>
+                    {{ zettle: "Zettle", sumup: "SumUp", stripe: "Stripe" }[p]}
+                    {row && <div class="muted" style="font-size:.8rem">{row.note}</div>}
+                  </td>
+                  <td class="num">{row?.expected == null ? "–" : formatOre(row.expected)}</td>
+                  <td>
+                    <input name={`bank_${p}`} value={bankVal(p)} inputmode="decimal" placeholder="kr" style="max-width:9rem" />
+                  </td>
+                  <td class="num" style={diff && Math.abs(diff) > 100 ? "color:var(--err,#c0392b);font-weight:600" : undefined}>
+                    {diff == null ? "–" : Math.abs(diff) <= 100 ? "Stemmer" : formatOre(diff)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <button class="secondary">Sjekk</button>
+      </form>
+
+      <h2>Linjer til Fiken</h2>
+      <div class="card scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Beskrivelse</th>
+              <th>Debet</th>
+              <th>Kredit</th>
+              <th>Mva-kode</th>
+              <th class="num">Beløp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {b.lines.map((l) => (
+              <tr>
+                <td>{l.description}</td>
+                <td>{l.debitAccount}</td>
+                <td>{l.creditAccount}</td>
+                <td>{l.creditVatCode ? VAT_CODE_LABELS[l.creditVatCode] : l.debitVatCode ? `${VAT_CODE_LABELS[l.debitVatCode]} (på debet)` : "–"}</td>
+                <td class="num">{formatOre(l.amount)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!b.lines.length && <p class="muted">Ingenting å bokføre.</p>}
+        <p class="muted">
+          Dato {b.date}. Beløpet er inkl. mva når mva-koden står på kredit. Kontoene endres under <a href="/admin/settings/accounting">Innstillinger → Regnskap</a>
+          {b.unmapped.length > 0 && <>; i Fiken heter bankkontoene noe som {b.unmapped[0]}:10001 (velg dem under Integrasjoner → Fiken)</>}.
+        </p>
+      </div>
+
+      <form method="post" action={`/admin/accounting/fiken/approve?month=${month}`} class="card toolbar">
+        {PROVIDER_FIELDS.map((p) => (
+          <input type="hidden" name={`bank_${p}`} value={bankVal(p)} />
+        ))}
+        <div style="flex:1">
+          <strong>Godkjenn {monthName(month)}</strong>
+          <div class="muted">
+            {viaApi
+              ? `Linjene sendes til Fiken${f.trial ? " som åpen postering (prøvemodus)" : ""} med PDF-en som vedlegg.`
+              : "Du får en PDF med linjene. Før dem inn i Fiken under Bilag → Fri postering og legg ved PDF-en."}{" "}
+            Salgene merkes som bokført, så de ikke kommer med to ganger.
+          </div>
+        </div>
+        <button disabled={!b.lines.length || (viaApi && b.unmapped.length > 0)}>{viaApi ? "Godkjenn og send til Fiken" : "Godkjenn"}</button>
+      </form>
+
+      {history.results.length > 0 && (
+        <div class="card" style="margin-top:.6rem">
+          <strong>Godkjent for {monthName(month)}</strong>
+          <table>
+            <tbody>
+              {history.results.map((h) => (
+                <tr>
+                  <td>
+                    <a href={`/admin/accounting/fiken/${h.id}/pdf`} target="_blank">
+                      Bilag nr. {h.id}
+                    </a>
+                  </td>
+                  <td>
+                    {h.status === "posted" ? (
+                      <span class="pill confirmed">Sendt til Fiken</span>
+                    ) : h.status === "approved" ? (
+                      <span class="pill">Føres for hånd</span>
+                    ) : (
+                      <span class="pill cancelled">Feilet</span>
+                    )}
+                  </td>
+                  <td class="muted">{h.error ?? `${h.created_at.slice(0, 16).replace("T", " ")} · ${h.approved_by}`}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Layout>,
+  );
+});
+
+fiken.post("/accounting/fiken/approve", async (c) => {
+  if (c.get("user").role !== "owner") return c.text("Ingen tilgang", 403);
+  const month = monthOf(c.req.query("month"));
+  const body = await c.req.parseBody();
+  const bank = bankFrom((k) => (typeof body[k] === "string" ? (body[k] as string) : undefined));
+  const back = `/admin/accounting/fiken?month=${month}`;
+  try {
+    const r = await approveBilag(c.env, month, bank, c.get("user").email, orgOf(c));
+    await audit(c.env, c.get("user"), "approve", "fiken_bilag", r.row.id, { month, status: r.row.status });
+    if (r.error) return c.redirect(`${back}&error=${encodeURIComponent(`Fiken svarte: ${r.error}. Ingenting er merket som bokført; prøv igjen.`)}`);
+    return c.redirect(`${back}&ok=${encodeURIComponent(r.posted ? `Bilag nr. ${r.row.id} sendt til Fiken` : `Bilag nr. ${r.row.id} godkjent. Last ned PDF-en og før linjene i Fiken.`)}`);
+  } catch (error) {
+    return c.redirect(`${back}&error=${encodeURIComponent(String(error instanceof Error ? error.message : error))}`);
+  }
+});
+
+fiken.get("/accounting/fiken/:id/pdf", async (c) => {
+  if (c.get("user").role !== "owner") return c.text("Ingen tilgang", 403);
+  const row = await c.env.DB.prepare("SELECT * FROM fiken_bilag WHERE id = ?").bind(Number(c.req.param("id"))).first<BilagRow>();
+  if (!row) return c.notFound();
+  return new Response(bilagPdf(row, orgOf(c)), {
+    headers: { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="fiken-bilag-${row.month}-${row.id}.pdf"`, "Cache-Control": "no-store" },
+  });
+});
+
+fiken.post("/accounting/import", async (c) => {
+  if (c.get("user").role !== "owner") return c.text("Ingen tilgang", 403);
+  const body = await c.req.parseBody();
+  const file = body.file;
+  const provider = str(body, "provider") === "zettle" && !zettleEnabled(c.env) ? "zettle" : "sumup";
+  const back = c.req.header("Referer")?.includes("/admin/accounting/fiken") ? new URL(c.req.header("Referer")!).pathname + new URL(c.req.header("Referer")!).search.replace(/&?(ok|error)=[^&]*/g, "") : "/admin/accounting/fiken";
+  const sep = back.includes("?") ? "&" : "?";
+  if (!(file instanceof File) || file.size === 0) return c.redirect(`${back}${sep}error=Velg+en+CSV-fil`);
+  if (file.size > 3 * 1024 * 1024) return c.redirect(`${back}${sep}error=Filen+er+for+stor+(maks+3+MB)`);
+  const r = await importReport(c.env, provider, file.name, await file.text(), c.get("user").email);
+  await audit(c.env, c.get("user"), "import", "report", null, { provider, file: file.name, ...r });
+  if (r.missing.length) return c.redirect(`${back}${sep}error=${encodeURIComponent(`Fant ikke kolonnene for ${r.missing.map((m) => (m === "date" ? "dato" : "beløp")).join(" og ")} i filen`)}`);
+  return c.redirect(`${back}${sep}ok=${encodeURIComponent(`${r.imported} salg lest inn${r.skipped ? `, ${r.skipped} hoppet over` : ""}${r.from ? ` (${r.from}–${r.to})` : ""}`)}`);
 });

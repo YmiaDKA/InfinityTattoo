@@ -17,6 +17,7 @@ export const ACCOUNTS = {
   bank: { label: "Bank", default: "1920" },
   cash: { label: "Kontanter", default: "1900" },
   rent_income: { label: "Stolleie fra artister", default: "3600" },
+  sumup_clearing: { label: "SumUp (mellomkonto)", default: "1942" },
   // Only used by the Fiken push, which also posts Zettle's sales and the artists' share.
   zettle_clearing: { label: "Zettle (mellomkonto, brukes med Fiken)", default: "1941" },
   artist_share: { label: "Artistenes andel (brukes med Fiken)", default: "4500" },
@@ -135,8 +136,11 @@ export function voucherLines(
     } else if (p.method === "gift_card") {
       [source, debit, credit, vatPct] = ["Gavekort brukt som betaling", a.gift_card_liability, revenue, salesVat];
     } else if (p.kind === "gift_card_sale") {
-      [source, debit, credit, vatPct] = ["Gavekort solgt i studio", byMethod, a.gift_card_liability, 0];
+      [source, debit, credit, vatPct] = ["Gavekort solgt i studio", p.provider === "sumup" ? a.sumup_clearing : byMethod, a.gift_card_liability, 0];
       if (p.provider === "zettle") [debit, post] = options.postZettle ? [a.zettle_clearing, true] : [debit, false];
+    } else if (p.provider === "sumup") {
+      // SumUp has no connector to the accounting programs, so its sales are always posted from here.
+      [source, debit, credit, vatPct] = ["SumUp", a.sumup_clearing, revenue, salesVat];
     } else if (p.provider === "zettle") {
       [source, debit, credit, vatPct, post] = options.postZettle
         ? ["Zettle (kassen)", a.zettle_clearing, revenue, salesVat, true]
@@ -166,19 +170,21 @@ export function voucherLines(
     line.description = `${line.source}, ${refs.length} ${refs.length === 1 ? "betaling" : "betalinger"}`;
     line.reference = refs.join(" ").slice(0, 240);
     lines.push(line);
-    // Stripe keeps its fee before paying out; book it as a cost against the clearing account.
-    if (line.debit === a.stripe_clearing && line.fee) {
+    // Stripe, SumUp and Zettle keep their fee before paying out; book it as a cost against the clearing account.
+    const clearing = { [a.stripe_clearing]: "Stripe", [a.sumup_clearing]: "SumUp", [a.zettle_clearing]: "Zettle" }[line.debit];
+    if (clearing && line.fee) {
       lines.push({
         date: line.date,
-        source: "Stripe-gebyr",
-        description: line.source.startsWith("Gavekort") ? "Stripe-gebyr på gavekort" : "Stripe-gebyr på depositum",
+        source: `${clearing}-gebyr`,
+        description:
+          clearing === "Stripe" ? (line.source.startsWith("Gavekort") ? "Stripe-gebyr på gavekort" : "Stripe-gebyr på depositum") : `${clearing}-gebyr`,
         gross: line.fee,
         vatPct: 0,
         vat: 0,
         fee: null,
         net: null,
         debit: a.fees,
-        credit: a.stripe_clearing,
+        credit: line.debit,
         payoutDate: line.payoutDate,
         reference: line.reference,
         post: true,
@@ -260,7 +266,8 @@ export type MonthData = {
 
 export const PAYMENT_ACCOUNTING_SELECT = `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
             sv.kind AS service_kind, sv.vat_pct, s.role AS staff_role,
-            st.fee_ore, st.net_ore, st.payout_date
+            COALESCE(st.fee_ore, p.fee_ore) AS fee_ore,
+            COALESCE(st.net_ore, p.amount_ore - p.fee_ore) AS net_ore, st.payout_date
      FROM payments p
      LEFT JOIN bookings b ON b.id = p.booking_id
      LEFT JOIN services sv ON sv.id = b.service_id

@@ -69,6 +69,29 @@ async function call<T>(token: string, path: string, init: RequestInit = {}): Pro
   return { data: text ? (JSON.parse(text) as T) : null, location: res.headers.get("Location") };
 }
 
+/** Posts a general journal entry ("fri postering") and returns its URL in Fiken. */
+export async function postJournal(token: string, company: string, body: { description: string; open: boolean; journalEntries: FikenEntry[] }): Promise<string | null> {
+  return (await call<unknown>(token, `/companies/${encodeURIComponent(company)}/generalJournalEntries`, { method: "POST", body: JSON.stringify(body) })).location;
+}
+
+/** Attaches a PDF to the journal entry just created (best effort: the Location URL is read back for its id). */
+export async function attachPdf(token: string, company: string, location: string, pdf: Uint8Array, filename: string): Promise<void> {
+  const res = await fetch(location, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } });
+  if (!res.ok) throw new Error(`Fiken ${res.status}`);
+  const data = (await res.json()) as { journalEntryId?: number; journalEntries?: { journalEntryId?: number }[] };
+  const id = data.journalEntryId ?? data.journalEntries?.[0]?.journalEntryId;
+  if (!id) throw new Error("fant ikke bilaget i Fiken");
+  const form = new FormData();
+  form.append("filename", filename);
+  form.append("file", new Blob([pdf], { type: "application/pdf" }), filename);
+  const up = await fetch(`${API}/companies/${encodeURIComponent(company)}/journalEntries/${id}/attachments`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+  if (!up.ok) throw new Error(`Fiken ${up.status}: ${(await up.text()).slice(0, 200)}`);
+}
+
 export type FikenCompany = { slug: string; name: string; organizationNumber?: string; hasApiAccess?: boolean };
 export type FikenBankAccount = { accountCode: string; name: string; bankAccountNumber?: string; inactive?: boolean };
 
@@ -106,7 +129,7 @@ export function toFikenLine(l: VoucherLine, s: AccountingSettings, bankMap: Reco
   };
 }
 
-type PushPayment = PaymentForAccounting & { staff_id: number | null; studio_share_pct: number | null; staff_name: string | null };
+export type PushPayment = PaymentForAccounting & { staff_id: number | null; studio_share_pct: number | null; staff_name: string | null };
 
 /** Pure: one day's entries (sales lines plus each artist's share). Exported for tests. */
 export function dayEntries(date: string, payments: PushPayment[], payouts: { id: string; amount_ore: number; arrival_date: string }[], s: AccountingSettings, bankMap: Record<string, string>): FikenEntry[] {
@@ -114,13 +137,18 @@ export function dayEntries(date: string, payments: PushPayment[], payouts: { id:
     .filter((l) => l.post && l.gross !== 0)
     .map((l) => ({ description: l.description.slice(0, 200), date, lines: [toFikenLine(l, s, bankMap)] }));
 
-  // The artist's part of what they took in (gift card sales count when the card is used).
+  return [...entries, ...artistEntries(date, payments, s)];
+}
+
+/** Pure: each artist's part of what they took in (gift card sales count when the card is used). */
+export function artistEntries(date: string, payments: PushPayment[], s: AccountingSettings): FikenEntry[] {
   const byArtist = new Map<string, number>();
   for (const p of payments) {
     if (p.kind === "gift_card_sale" || p.staff_id == null || !p.staff_name) continue;
     const share = p.amount_ore - Math.round((p.amount_ore * (p.studio_share_pct ?? 0)) / 100);
     byArtist.set(p.staff_name, (byArtist.get(p.staff_name) ?? 0) + share);
   }
+  const entries: FikenEntry[] = [];
   for (const [name, amount] of byArtist) {
     if (!amount) continue;
     const [debit, credit] = amount > 0 ? [s.accounts.artist_share, s.accounts.artist_payable] : [s.accounts.artist_payable, s.accounts.artist_share];
@@ -131,6 +159,9 @@ export function dayEntries(date: string, payments: PushPayment[], payouts: { id:
 
 const lastDay = (month: string) => monthRange(month).to;
 
+/** Payments with what the Fiken entries need: the accounting fields plus the artist and their share. */
+export const PUSH_SELECT = PAYMENT_ACCOUNTING_SELECT.replace("SELECT p.id,", "SELECT p.id, p.staff_id, s.studio_share_pct, s.name AS staff_name,");
+
 /** Everything not yet posted, up to yesterday, as batches ready to send. Also used for the preview. */
 export async function pendingBatches(env: Env, now = new Date()): Promise<{ batches: FikenBatch[]; unmapped: string[] }> {
   const since = await fikenSince(env);
@@ -139,15 +170,15 @@ export async function pendingBatches(env: Env, now = new Date()): Promise<{ batc
   const [s, f, features] = await Promise.all([loadAccounting(env), loadFiken(env), loadFeatures(env)]);
   const [payments, payouts] = await Promise.all([
     env.DB.prepare(
-      `${PAYMENT_ACCOUNTING_SELECT.replace("SELECT p.id,", "SELECT p.id, p.staff_id, s.studio_share_pct, s.name AS staff_name,")}
-       WHERE p.fiken_push_id IS NULL AND p.business_date >= ? AND p.business_date < ?
+      `${PUSH_SELECT}
+       WHERE p.fiken_push_id IS NULL AND p.fiken_bilag_id IS NULL AND p.business_date >= ? AND p.business_date < ?
          AND NOT (p.provider = 'stripe' AND st.fee_ore IS NULL AND p.business_date > ?)
        ORDER BY p.business_date, p.id`,
     )
       // Stripe fees arrive with the nightly sync; wait up to three days for them.
       .bind(since, today, addDays(today, -4))
       .all<PushPayment>(),
-    env.DB.prepare("SELECT id, amount_ore, arrival_date FROM stripe_payouts WHERE fiken_push_id IS NULL AND status = 'paid' AND arrival_date >= ? AND arrival_date < ?")
+    env.DB.prepare("SELECT id, amount_ore, arrival_date FROM stripe_payouts WHERE fiken_push_id IS NULL AND fiken_bilag_id IS NULL AND status = 'paid' AND arrival_date >= ? AND arrival_date < ?")
       .bind(since, today)
       .all<{ id: string; amount_ore: number; arrival_date: string }>(),
   ]);
@@ -164,7 +195,11 @@ export async function pendingBatches(env: Env, now = new Date()): Promise<{ batc
   // Chair rent: one entry per finished month.
   if (features.rent) {
     const sent = new Set(
-      (await env.DB.prepare("SELECT ref FROM fiken_pushes WHERE kind = 'rent' AND status = 'sent'").all<{ ref: string }>()).results.map((r) => r.ref),
+      (
+        await env.DB.prepare("SELECT ref FROM fiken_pushes WHERE kind = 'rent' AND status = 'sent' UNION SELECT month FROM fiken_bilag WHERE rent = 1 AND status != 'failed'").all<{
+          ref: string;
+        }>()
+      ).results.map((r) => r.ref),
     );
     const staff = (await env.DB.prepare("SELECT name, monthly_rent_ore FROM staff WHERE active = 1 AND monthly_rent_ore > 0").all<{ name: string; monthly_rent_ore: number }>()).results;
     for (let m = since.slice(0, 7); lastDay(m) < today; m = addDays(lastDay(m), 1).slice(0, 7)) {
@@ -210,7 +245,7 @@ export async function pushToFiken(env: Env, by: string, now = new Date()): Promi
       journalEntries: b.entries,
     };
     try {
-      const { location } = await call<unknown>(f.token, `/companies/${encodeURIComponent(f.company)}/generalJournalEntries`, { method: "POST", body: JSON.stringify(body) });
+      const location = await postJournal(f.token, f.company, body);
       const row = await env.DB.prepare("INSERT INTO fiken_pushes (kind, ref, status, total_ore, lines_json, location, pushed_by) VALUES (?, ?, 'sent', ?, ?, ?, ?) RETURNING id")
         .bind(b.kind, b.ref, b.total, JSON.stringify(b.entries), location, by)
         .first<{ id: number }>();

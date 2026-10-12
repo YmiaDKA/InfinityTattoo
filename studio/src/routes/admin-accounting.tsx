@@ -164,6 +164,10 @@ accounting.get("/accounting", async (c) => {
           <strong>Månedsoppsummering</strong>
           <span class="muted">PDF med summer, gavekortsaldo, depositum og dag for dag</span>
         </a>
+        <a class="card filecard" href={`/admin/accounting/fiken?${q}`}>
+          <strong>Lag Fiken-bilag</strong>
+          <span class="muted">Hele måneden, også Zettle og SumUp, som noen få linjer til Fiken, sjekket mot banken</span>
+        </a>
       </div>
 
       <form method="post" action={`/admin/accounting/send?${q}`} class="card row" style="align-items:center">
