@@ -47,11 +47,14 @@ export function ProjectAndInks(props: {
   kind: string;
   data: Awaited<ReturnType<typeof bookingStudioData>>;
   when: (iso: string | null) => string;
+  features?: import("../lib/features").Features;
 }) {
   const { data, bookingId } = props;
   const today = new Date().toISOString().slice(0, 10);
   return (
     <>
+      {props.features?.sessions !== false && (
+      <>
       <h2>Økter</h2>
       <div class="card">
         {data.sessions.length > 1 ? (
@@ -87,8 +90,10 @@ export function ProjectAndInks(props: {
           </div>
         </form>
       </div>
+      </>
+      )}
 
-      {props.kind === "tattoo" && (
+      {props.kind === "tattoo" && props.features?.inks !== false && (
         <>
           <h2>Blekk brukt</h2>
           <div class="card">

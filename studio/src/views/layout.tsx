@@ -1,6 +1,7 @@
 import type { Child } from "hono/jsx";
 
 import type { StaffUser } from "../lib/auth";
+import type { FeatureKey } from "../lib/features";
 
 export const css = `
 :root{--bg:#0b0b0c;--panel:#141416;--line:#26262a;--text:#f4f4f5;--muted:#a1a1aa;--accent:#dc2626;--ok:#22c55e;--warn:#f59e0b}
@@ -25,19 +26,19 @@ fieldset{border:1px solid var(--line);border-radius:12px;padding:.75rem 1rem;mar
 @media print{header,form,.noprint{display:none!important}body{background:#fff;color:#000}.card{border-color:#ccc;background:#fff}th{color:#333}}
 `;
 
-const links = [
+const links: readonly (readonly [string, string, FeatureKey?])[] = [
   ["/admin", "I dag"],
   ["/admin/requests", "Forespørsler"],
   ["/admin/calendar", "Kalender"],
   ["/admin/clients", "Kunder"],
   ["/admin/payments", "Betalinger"],
   ["/admin/report", "Dagsoppgjør"],
-  ["/admin/settlements", "Artistoppgjør"],
-  ["/admin/gift-cards", "Gavekort"],
-  ["/admin/inks", "Blekk"],
+  ["/admin/settlements", "Artistoppgjør", "settlements"],
+  ["/admin/gift-cards", "Gavekort", "gift_cards"],
+  ["/admin/inks", "Blekk", "inks"],
   ["/admin/shifts", "Personalliste"],
   ["/admin/settings", "Innstillinger"],
-] as const;
+];
 
 export function Layout(props: { title: string; path: string; user: StaffUser; flash?: string; error?: string; children: Child }) {
   return (
@@ -59,7 +60,7 @@ export function Layout(props: { title: string; path: string; user: StaffUser; fl
         <header>
           <strong>Infinity Studio</strong>
           <nav>
-            {links.map(([href, label]) => (
+            {links.filter(([, , feature]) => !feature || props.user.features?.[feature] !== false).map(([href, label]) => (
               <a href={href} aria-current={(href === "/admin" ? props.path === href : props.path.startsWith(href)) ? "page" : undefined}>
                 {label}
               </a>

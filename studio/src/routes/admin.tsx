@@ -14,6 +14,7 @@ import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../li
 import { afterCancelled, afterCompleted, afterConfirmed, consentUrl, sendDepositLink, stripeEnabled } from "../lib/bookings";
 import { ageOn, flaggedQuestions, type ConsentAnswers } from "../lib/consent";
 import { giftCardBalance, normalizeCode } from "../lib/giftcards";
+import { FEATURE_PATHS, FEATURES, loadFeatures } from "../lib/features";
 import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Layout, StatusPill } from "../views/layout";
 import { extra } from "./admin-extra";
@@ -40,6 +41,10 @@ export const admin = adminApp();
 admin.use("*", async (c, next) => {
   const user = await staffFromRequest(c.req.raw, c.env);
   if (!user) return c.text("Ingen tilgang. Logg inn via Cloudflare Access med en ansatt-e-post.", 403);
+  user.features = await loadFeatures(c.env);
+  const path = new URL(c.req.url).pathname;
+  const blocked = FEATURE_PATHS.find(([prefix, key]) => path.startsWith(prefix) && !user.features![key]);
+  if (blocked) return c.redirect(`/admin/settings?error=${encodeURIComponent(`${FEATURES[blocked[1]].label} er slått av under Funksjoner.`)}`);
   c.set("user", user);
   await next();
 });
@@ -522,7 +527,7 @@ admin.get("/bookings/:id", async (c) => {
         <button>Lagre</button>
       </form>
 
-      <ProjectAndInks bookingId={b.id} kind={b.service_kind} data={studioData} when={(iso) => (iso ? `${businessDate(iso)} ${localTime(iso)}` : "Ikke satt")} />
+      <ProjectAndInks bookingId={b.id} kind={b.service_kind} data={studioData} features={c.get("user").features} when={(iso) => (iso ? `${businessDate(iso)} ${localTime(iso)}` : "Ikke satt")} />
 
       <h2>Kunden</h2>
       <div class="card">

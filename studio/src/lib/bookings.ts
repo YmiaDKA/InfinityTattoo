@@ -11,6 +11,7 @@ import {
   requestReceivedEmail,
   type MessageBooking,
 } from "./messages";
+import { loadFeatures } from "./features";
 import { sendBookingSms } from "./sms";
 import { createCheckout } from "./stripe";
 import { businessDate } from "./time";
@@ -215,6 +216,7 @@ export async function runScheduled(env: Env, now = new Date()) {
   // 2. Reminders 20–28 hours before (runs hourly, so every booking falls in the window once).
   const from = new Date(now.getTime() + 20 * 3600 * 1000).toISOString();
   const to = new Date(now.getTime() + 28 * 3600 * 1000).toISOString();
+  const features = await loadFeatures(env);
   const upcoming = await env.DB.prepare(
     "SELECT id FROM bookings WHERE status = 'confirmed' AND hold_until IS NULL AND starts_at >= ? AND starts_at < ?",
   )
@@ -227,7 +229,7 @@ export async function runScheduled(env: Env, now = new Date()) {
       const consent = b.needs_consent && !(await hasConsent(env, id)) ? consentUrl(env, b.public_id) : undefined;
       await sendBookingEmail(env, id, "reminder", reminderEmail(b, { consent }));
     }
-    if (b.client_phone) await sendBookingSms(env, id, "reminder_sms", b.client_phone, reminderSms(b));
+    if (b.client_phone && features.sms) await sendBookingSms(env, id, "reminder_sms", b.client_phone, reminderSms(b));
   }
 
   // 3. Pull new till payments from Zettle.

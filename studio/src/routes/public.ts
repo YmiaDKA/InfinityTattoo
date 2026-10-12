@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import type { Env } from "../env";
 import { afterConfirmed, afterRequestCreated, DEPOSIT_HOLD_MIN, depositCheckoutUrl, recordCheckoutPaid, stripeEnabled } from "../lib/bookings";
+import { loadFeatures } from "../lib/features";
 import { giftCardExpiry, newGiftCardCode } from "../lib/giftcards";
 import { notifyStudio } from "../lib/notify";
 import { createCheckout, verifyStripeEvent } from "../lib/stripe";
@@ -36,9 +37,14 @@ publicApi.use(
 );
 
 /** What the website form can offer, so it never shows a feature that isn't set up. */
-publicApi.get("/config", (c) =>
-  c.json({ online_payments: stripeEnabled(c.env), gift_cards: stripeEnabled(c.env), photos: Boolean(c.env.PHOTOS) }),
-);
+publicApi.get("/config", async (c) => {
+  const features = await loadFeatures(c.env);
+  return c.json({
+    online_payments: stripeEnabled(c.env),
+    gift_cards: stripeEnabled(c.env) && features.gift_cards,
+    photos: Boolean(c.env.PHOTOS) && features.photos,
+  });
+});
 
 publicApi.get("/services", async (c) => {
   const services = await c.env.DB.prepare(
@@ -295,7 +301,7 @@ const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "ima
 
 /** Upload right after creating a booking. The unguessable booking id is the credential; uploads close after an hour. */
 publicApi.post("/bookings/:publicId/photos", async (c) => {
-  if (!c.env.PHOTOS) return c.json({ error: "photos_disabled" }, 404);
+  if (!c.env.PHOTOS || !(await loadFeatures(c.env)).photos) return c.json({ error: "photos_disabled" }, 404);
   const booking = await c.env.DB.prepare("SELECT id, created_at FROM bookings WHERE public_id = ?")
     .bind(c.req.param("publicId"))
     .first<{ id: number; created_at: string }>();
@@ -331,7 +337,7 @@ const giftCardSchema = z.object({
 });
 
 publicApi.post("/gift-cards", async (c) => {
-  if (!stripeEnabled(c.env)) return c.json({ error: "disabled" }, 404);
+  if (!stripeEnabled(c.env) || !(await loadFeatures(c.env)).gift_cards) return c.json({ error: "disabled" }, 404);
   const parsed = giftCardSchema.safeParse(await c.req.json().catch(() => null));
   if (!parsed.success) return c.json({ error: "invalid", fields: parsed.error.issues.map((i) => i.path.join(".")) }, 400);
   const input = parsed.data;

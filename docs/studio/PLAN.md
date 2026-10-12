@@ -82,7 +82,8 @@ D1: staff, services, hours, time_off, clients, bookings, consents, payments, day
 ```
 
 - `studio/` is a standalone Cloudflare Worker (Hono + D1). The website keeps working unchanged until `NEXT_PUBLIC_STUDIO_API_URL` is set, and falls back to Linework if the API is down.
-- Each integration (email, Stripe, Zettle, R2 photos, Turnstile, studio notifications) switches on by adding its key; nothing breaks without it. *Innstillinger → Tilkoblinger* shows what's on.
+- Each integration (email, SMS, Stripe, Zettle, R2 photos, Turnstile, studio notifications) switches on by adding its key; nothing breaks without it. *Innstillinger → Tilkoblinger* shows what's on.
+- Optional modules (gift cards, ink register, linked sessions, chair rent, artist settlements, reference photos, SMS) can be switched off by the owner under *Innstillinger → Funksjoner*. Off means hidden from menus, forms and the website; no data is deleted. Booking, calendar, consent forms, daily settlement and personalliste are always on.
 - Money is integers in øre, times UTC, business dates Europe/Oslo. Daily settlements are sequentially numbered and frozen; payments on a closed day are locked.
 
 ## 6. Remaining backlog

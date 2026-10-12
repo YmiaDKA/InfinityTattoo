@@ -2,7 +2,14 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 
 import type { Env } from "../env";
 
-export type StaffUser = { email: string; staffId: number | null; name: string; role: string };
+export type StaffUser = {
+  email: string;
+  staffId: number | null;
+  name: string;
+  role: string;
+  /** Which optional modules are switched on; filled in by the admin middleware. */
+  features?: import("./features").Features;
+};
 
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
 

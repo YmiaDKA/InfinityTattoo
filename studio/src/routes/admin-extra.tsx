@@ -4,6 +4,7 @@ import { activateGiftCard, stripeEnabled } from "../lib/bookings";
 import { giftCardBalance, giftCardExpiry, newGiftCardCode, normalizeCode } from "../lib/giftcards";
 import { formatOre, parseKroner } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
+import { ALWAYS_ON, FEATURES, setFeature, type FeatureKey } from "../lib/features";
 import { Layout } from "../views/layout";
 import { adminApp, audit, KIND_LABELS, METHOD_LABELS, str, today, type AdminEnv } from "./admin-shared";
 
@@ -77,6 +78,7 @@ extra.get("/settings", async (c) => {
       .all<{ id: number; staff_id: number | null; staff_name: string | null; starts_at: string; ends_at: string; reason: string | null }>(),
   ]);
   const base = c.env.PUBLIC_BASE_URL.replace(/\/$/, "");
+  const features = c.get("user").features!;
   const integrations = [
     ["E-post til kunder", Boolean(c.env.RESEND_API_KEY && c.env.EMAIL_FROM)],
     ["SMS-påminnelser", Boolean(c.env.ELKS_API_USER && c.env.ELKS_API_PASSWORD)],
@@ -225,6 +227,28 @@ extra.get("/settings", async (c) => {
         </form>
       </div>
 
+      <h2>Funksjoner</h2>
+      <form method="post" action="/admin/settings/features" class="card">
+        <p class="muted" style="margin-top:0">Slå av det studioet ikke bruker. Det skjules fra menyen og skjemaene, men ingenting slettes, og du kan slå det på igjen når som helst.</p>
+        {(Object.keys(FEATURES) as FeatureKey[]).map((key) => (
+          <label class="check">
+            <input type="checkbox" name={`f_${key}`} value="1" checked={features[key]} disabled={!isOwner(c)} />
+            <span>
+              {FEATURES[key].label} <span class="muted">– {FEATURES[key].note}</span>
+            </span>
+          </label>
+        ))}
+        <p class="muted" style="margin-bottom:.3rem">Alltid på:</p>
+        <ul class="muted" style="margin-top:0">
+          {ALWAYS_ON.map(([label, why]) => (
+            <li>
+              {label} – {why}
+            </li>
+          ))}
+        </ul>
+        {isOwner(c) && <button>Lagre funksjoner</button>}
+      </form>
+
       <h2>Tilkoblinger</h2>
       <div class="card">
         <table>
@@ -241,6 +265,14 @@ extra.get("/settings", async (c) => {
       </div>
     </Layout>,
   );
+});
+
+extra.post("/settings/features", async (c) => {
+  if (!isOwner(c)) return ownerOnly(c);
+  const body = await c.req.parseBody();
+  for (const key of Object.keys(FEATURES) as FeatureKey[]) await setFeature(c.env, key, checked(body, `f_${key}`) === 1);
+  await audit(c.env, c.get("user"), "update", "features", null, body);
+  return c.redirect("/admin/settings?ok=Funksjoner+lagret");
 });
 
 // ---------- Staff ----------
@@ -290,7 +322,7 @@ extra.get("/settings/staff/:id", async (c) => {
             Studioandel av omsetning (%)
             <input name="studio_share_pct" type="number" min="0" max="100" value={String(s.studio_share_pct)} />
           </label>
-          <label>
+          <label style={c.get("user").features?.rent === false ? "display:none" : undefined}>
             Fast stolleie per måned (kr)
             <input name="monthly_rent" inputmode="decimal" value={String((s.monthly_rent_ore ?? 0) / 100)} />
           </label>
@@ -1032,6 +1064,7 @@ extra.get("/settlements", async (c) => {
       .all<{ id: number; staff_id: number | null; kind: string; method: string; amount_ore: number; business_date: string; note: string | null }>(),
   ]);
   const user = c.get("user");
+  const showRent = user.features?.rent !== false;
   // Artists see only their own settlement; the owner sees everyone.
   const visible = staff.results.filter((s) => isOwner(c) || s.id === user.staffId);
   const lines = visible
@@ -1039,7 +1072,7 @@ extra.get("/settlements", async (c) => {
       const own = payments.results.filter((p) => p.staff_id === s.id);
       const gross = own.reduce((sum, p) => sum + p.amount_ore, 0);
       const studio = Math.round((gross * s.studio_share_pct) / 100) || 0;
-      const rent = s.monthly_rent_ore * rentMonths;
+      const rent = showRent ? s.monthly_rent_ore * rentMonths : 0;
       return { ...s, own, gross, studio, rent, artist: gross - studio - rent };
     })
     .filter((l) => l.own.length > 0 || l.rent > 0 || isOwner(c));
@@ -1059,7 +1092,7 @@ extra.get("/settlements", async (c) => {
           </button>
         </div>
       </div>
-      <p class="muted">Omsetning registrert på hver artist i perioden (gavekortsalg er ikke med før kortet brukes). Studioandel og fast stolleie settes under Innstillinger.</p>
+      <p class="muted">Omsetning registrert på hver artist i perioden (gavekortsalg er ikke med før kortet brukes). Studioandel{showRent ? " og fast stolleie" : ""} settes under Innstillinger.</p>
       <div class="card">
         <table>
           <thead>
@@ -1068,7 +1101,7 @@ extra.get("/settlements", async (c) => {
               <th class="num">Antall</th>
               <th class="num">Omsetning</th>
               <th class="num">Studioandel</th>
-              <th class="num">Stolleie</th>
+              {showRent && <th class="num">Stolleie</th>}
               <th class="num">Til artist</th>
             </tr>
           </thead>
@@ -1081,7 +1114,7 @@ extra.get("/settlements", async (c) => {
                 <td class="num">{l.own.length}</td>
                 <td class="num">{formatOre(l.gross)}</td>
                 <td class="num">{formatOre(l.studio)}</td>
-                <td class="num">{formatOre(l.rent)}</td>
+                {showRent && <td class="num">{formatOre(l.rent)}</td>}
                 <td class="num">{formatOre(l.artist)}</td>
               </tr>
             ))}
