@@ -4,7 +4,8 @@ import type { Child } from "hono/jsx";
 import { stripeEnabled } from "../lib/bookings";
 import { formatOrgNumber, loadCompany, saveCompany } from "../lib/company";
 import { CONFIRMATIONS, HEALTH_QUESTIONS } from "../lib/consent";
-import { ALWAYS_ON, FEATURES, type FeatureKey } from "../lib/features";
+import { ALWAYS_ON, FEATURES, setFeature, type FeatureKey } from "../lib/features";
+import { autoEmail, invoicesSince, sellerMissing } from "../lib/invoices";
 import { formatOre } from "../lib/report";
 import { businessDate, localTime } from "../lib/time";
 import { zettleEnabled } from "../lib/zettle";
@@ -322,10 +323,18 @@ settings.get("/settings/instructions", async (c) => {
 
 // ---------- Kassesystem ----------
 
-settings.get("/settings/register", (c) =>
-  c.html(
+settings.get("/settings/register", async (c) => {
+  const on = Boolean(c.get("user").features?.invoices);
+  const [company, auto, count, since] = await Promise.all([
+    loadCompany(c.env),
+    autoEmail(c.env),
+    c.env.DB.prepare("SELECT COUNT(*) AS n FROM invoices").first<{ n: number }>(),
+    invoicesSince(c.env),
+  ]);
+  const missing = sellerMissing(company);
+  return c.html(
     <SettingsPage c={c} active="/admin/settings/register">
-      <SettingsTitle icon="register" title="Kassesystem" sub="Betaling i studio skal gå gjennom et godkjent kassesystem. Det er Zettle." />
+      <SettingsTitle icon="register" title="Kassesystem" sub="Salg i studio må dokumenteres. Det gjøres med Zettle, eller med en faktura på hvert salg." />
       <div class="card toolbar">
         <div style="flex:1">
           <strong>Zettle</strong>
@@ -333,12 +342,63 @@ settings.get("/settings/register", (c) =>
         </div>
         <On on={zettleEnabled(c.env)} yes="Koblet til" />
       </div>
-      <p class="muted">
-        Studio-systemet tar ikke betalt selv. Det henter salgene fra Zettle, fordeler dem på artistene og lager dagsoppgjøret for studioet og filene til regnskapet.
-      </p>
+      <form method="post" action="/admin/settings/register" class="card" style="margin-top:.6rem">
+        <div class="toolbar" style="margin:0">
+          <div style="flex:1">
+            <strong>Faktura på hvert salg</strong>
+            <div class="muted">
+              Hvert salg får en nummerert faktura med kundens navn og adresse, studioets org.nr., hva som ble gjort, beløp og mva (bokføringsforskriften § 5-1-1).
+              Da trengs ikke kassesystem for kort og Vipps, men bare hvis regnskapsføreren har godkjent det.
+            </div>
+          </div>
+          <On on={on} yes="På" no="Av" />
+        </div>
+        <label class="check">
+          <input type="checkbox" name="invoices" value="1" checked={on} disabled={!isOwner(c)} />
+          <span>Lag faktura for hvert salg</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="auto_email" value="1" checked={auto} disabled={!isOwner(c)} />
+          <span>Send fakturaen på e-post til kunden med en gang</span>
+        </label>
+        {missing.length > 0 && (
+          <p class="muted">
+            Fyll inn studioets {missing.join(" og ")} under <a href="/admin/settings/company">Firmaopplysninger</a> først. Det må stå på fakturaen.
+          </p>
+        )}
+        <p class="muted">
+          Når det er på, må kundens navn og adresse fylles inn ved hvert salg. Kunden kan også skrive adressen i helseskjemaet. Salg som kommer inn av seg selv (Zettle, nett) får
+          faktura så snart adressen er kjent. Fakturaer kan ikke endres eller slettes; en refusjon gir en kreditnota.
+        </p>
+        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+          {isOwner(c) && <button>Lagre</button>}
+          {(on || (count?.n ?? 0) > 0) && (
+            <a href="/admin/invoices">
+              Se fakturaer ({count?.n ?? 0}){since ? `, på siden ${since.slice(0, 10)}` : ""}
+            </a>
+          )}
+        </div>
+      </form>
+      <p class="muted">Studio-systemet tar aldri betalt selv og er ikke et kassesystem. Det fordeler salgene på artistene og lager dagsoppgjøret og filene til regnskapet.</p>
     </SettingsPage>,
-  ),
-);
+  );
+});
+
+settings.post("/settings/register", async (c) => {
+  if (!isOwner(c)) return c.text("Ingen tilgang", 403);
+  const body = await c.req.parseBody();
+  const on = str(body, "invoices") === "1";
+  if (on && sellerMissing(await loadCompany(c.env)).length) return c.redirect("/admin/settings/register?error=Fyll+inn+org.nr.+og+adresse+under+Firmaopplysninger+først");
+  await setFeature(c.env, "invoices", on);
+  await c.env.DB.prepare(
+    `INSERT INTO settings (key, value) VALUES ('invoices.auto_email', ?)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`,
+  )
+    .bind(str(body, "auto_email") === "1" ? "1" : "0")
+    .run();
+  await audit(c.env, c.get("user"), "update", "invoices", null, { on });
+  return c.redirect("/admin/settings/register?ok=Lagret");
+});
 
 // ---------- Firmaopplysninger ----------
 
@@ -430,6 +490,18 @@ settings.get("/settings/integrations", (c) => {
           <On on={on} />
         </div>
       ))}
+      <div class="card toolbar" style="margin-bottom:.6rem">
+        <div style="flex:1">
+          <strong>Fiken</strong>
+          <div class="muted">Bokfører salgene i Fiken hver natt (krever Fikens API-modul)</div>
+        </div>
+        <On on={Boolean(c.get("user").features?.fiken)} no="Av" />
+        {isOwner(c) && (
+          <a class="button secondary" href="/admin/settings/fiken">
+            Sett opp
+          </a>
+        )}
+      </div>
       <p class="muted">Oppsett er beskrevet i studio/README.md.</p>
     </SettingsPage>,
   );

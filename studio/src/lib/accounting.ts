@@ -17,6 +17,10 @@ export const ACCOUNTS = {
   bank: { label: "Bank", default: "1920" },
   cash: { label: "Kontanter", default: "1900" },
   rent_income: { label: "Stolleie fra artister", default: "3600" },
+  // Only used by the Fiken push, which also posts Zettle's sales and the artists' share.
+  zettle_clearing: { label: "Zettle (mellomkonto, brukes med Fiken)", default: "1941" },
+  artist_share: { label: "Artistenes andel (brukes med Fiken)", default: "4500" },
+  artist_payable: { label: "Skyldig artister (brukes med Fiken)", default: "2990" },
 } as const;
 
 export type AccountKey = keyof typeof ACCOUNTS;
@@ -88,7 +92,7 @@ export type VoucherLine = {
   post: boolean;
 };
 
-type PaymentForAccounting = {
+export type PaymentForAccounting = {
   id: number;
   business_date: string;
   kind: string;
@@ -104,13 +108,15 @@ type PaymentForAccounting = {
   payout_date: string | null;
 };
 
-const vatOf = (gross: number, pct: number) => (pct ? Math.round((gross * pct) / (100 + pct)) : 0);
+export const vatOf = (gross: number, pct: number) => (pct ? Math.round((gross * pct) / (100 + pct)) : 0);
 
 /** Pure: turns a month's payments (and Stripe payouts) into grouped voucher lines. Exported for tests. */
 export function voucherLines(
   payments: PaymentForAccounting[],
   payouts: { id: string; amount_ore: number; arrival_date: string }[],
   s: AccountingSettings,
+  /** The Fiken push posts Zettle's sales too (through a clearing account), replacing a paid connector. */
+  options: { postZettle?: boolean } = {},
 ): VoucherLine[] {
   const a = s.accounts;
   const groups = new Map<string, VoucherLine & { refs: string[] }>();
@@ -130,9 +136,11 @@ export function voucherLines(
       [source, debit, credit, vatPct] = ["Gavekort brukt som betaling", a.gift_card_liability, revenue, salesVat];
     } else if (p.kind === "gift_card_sale") {
       [source, debit, credit, vatPct] = ["Gavekort solgt i studio", byMethod, a.gift_card_liability, 0];
-      if (p.provider === "zettle") post = false;
+      if (p.provider === "zettle") [debit, post] = options.postZettle ? [a.zettle_clearing, true] : [debit, false];
     } else if (p.provider === "zettle") {
-      [source, debit, credit, vatPct, post] = ["Zettle (kassen)", a.bank, revenue, salesVat, false];
+      [source, debit, credit, vatPct, post] = options.postZettle
+        ? ["Zettle (kassen)", a.zettle_clearing, revenue, salesVat, true]
+        : ["Zettle (kassen)", a.bank, revenue, salesVat, false];
     } else {
       [source, debit, credit, vatPct] = ["Registrert for hånd", byMethod, revenue, salesVat];
     }
@@ -250,17 +258,18 @@ export type MonthData = {
   stripeMissingFees: number;
 };
 
-function paymentsForAccounting(env: Env, from: string, to: string) {
-  return env.DB.prepare(
-    `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
+export const PAYMENT_ACCOUNTING_SELECT = `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
             sv.kind AS service_kind, sv.vat_pct, s.role AS staff_role,
             st.fee_ore, st.net_ore, st.payout_date
      FROM payments p
      LEFT JOIN bookings b ON b.id = p.booking_id
      LEFT JOIN services sv ON sv.id = b.service_id
      LEFT JOIN staff s ON s.id = p.staff_id
-     LEFT JOIN stripe_transactions st ON p.provider = 'stripe' AND st.provider_ref = p.provider_ref
-     WHERE p.business_date BETWEEN ? AND ? ORDER BY p.business_date, p.id`,
+     LEFT JOIN stripe_transactions st ON p.provider = 'stripe' AND st.provider_ref = p.provider_ref`;
+
+function paymentsForAccounting(env: Env, from: string, to: string) {
+  return env.DB.prepare(
+    `${PAYMENT_ACCOUNTING_SELECT} WHERE p.business_date BETWEEN ? AND ? ORDER BY p.business_date, p.id`,
   )
     .bind(from, to)
     .all<PaymentForAccounting>();

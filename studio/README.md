@@ -44,7 +44,8 @@ To try the website form against it, run the site with `NEXT_PUBLIC_STUDIO_API_UR
 | SMS reminders the day before | [46elks](https://46elks.com) account (0.70 SEK per SMS to Norway, prepaid by card, no monthly fee). `wrangler secret put ELKS_API_USER` and `ELKS_API_PASSWORD` (from the 46elks dashboard). Optional var `SMS_FROM` (sender name, max 11 letters A–Z/0–9; default `Infinity`). |
 | Spam protection | Create a Turnstile widget. `wrangler secret put TURNSTILE_SECRET` and set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` on the website. |
 | New-request notice to the studio inbox | Enable Email Routing on the domain, verify the inbox, add `"send_email": [{ "name": "NOTIFY", "destination_address": "infinitytattoo99@gmail.com" }]` and vars `NOTIFY_FROM` and `NOTIFY_TO`. |
-| Personalliste header | Vars `ORG_NAME` and `ORG_NUMBER`. |
+| Personalliste header | Vars `ORG_NAME` and `ORG_NUMBER` (or *Innstillinger → Firmaopplysninger*). |
+| Fiken push (optional) | Order Fiken's API module, create a personal API token (Fiken: *Rediger konto → API*), paste it in *Innstillinger → Integrasjoner → Fiken* (or `wrangler secret put FIKEN_API_TOKEN`), then pick the company and bank accounts and switch it on. |
 
 ## Daily use
 
@@ -55,4 +56,5 @@ To try the website form against it, run the site with `NEXT_PUBLIC_STUDIO_API_UR
 - **Artistoppgjør**: monthly totals and studio share per artist. Artists only see their own.
 - **Personalliste**: start/stop when someone starts and leaves work. Required for piercing.
 - **CSV for regnskap** on the payments page exports a period for the accountant.
+- **Fakturaer** (only in invoice mode, *Innstillinger → Kassesystem*): every sale gets a numbered invoice with the client's name and address; *Uten faktura* lists sales still missing an address.
 - **Rapporter → Regnskap** (owner): pick a month, download `bilag.csv`, `artister.csv` and `oppsummering.pdf`, or press *Send til regnskapsfører*. Set the accountant's email, program, VAT and account numbers in *Innstillinger → Regnskap*. Sending needs Resend.

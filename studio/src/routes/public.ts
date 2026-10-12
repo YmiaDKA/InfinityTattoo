@@ -141,6 +141,10 @@ const bookingSchema = z.object({
   email: z.email().max(200),
   phone: z.string().trim().min(5).max(30),
   birth_date: z.iso.date().nullish(),
+  // Optional; needed on the invoice in invoice mode (otherwise asked on the health form).
+  address: z.string().trim().max(200).nullish(),
+  postcode: z.string().trim().max(10).nullish(),
+  city: z.string().trim().max(100).nullish(),
   idea: z.string().trim().max(4000).nullish(),
   placement: z.string().trim().max(200).nullish(),
   size: z.string().trim().max(100).nullish(),
@@ -268,16 +272,16 @@ async function upsertClient(env: Env, input: z.infer<typeof bookingSchema>): Pro
   if (existing) {
     await env.DB.prepare(
       `UPDATE clients SET name = ?, email = ?, phone = ?, birth_date = COALESCE(?, birth_date),
-         marketing_consent = MAX(marketing_consent, ?) WHERE id = ?`,
+         marketing_consent = MAX(marketing_consent, ?), address = COALESCE(?, address), postcode = COALESCE(?, postcode), city = COALESCE(?, city) WHERE id = ?`,
     )
-      .bind(input.name, input.email, input.phone, input.birth_date ?? null, Number(input.marketing_consent), existing.id)
+      .bind(input.name, input.email, input.phone, input.birth_date ?? null, Number(input.marketing_consent), input.address || null, input.postcode || null, input.city || null, existing.id)
       .run();
     return existing.id;
   }
   const created = await env.DB.prepare(
-    "INSERT INTO clients (name, email, phone, birth_date, marketing_consent) VALUES (?, ?, ?, ?, ?) RETURNING id",
+    "INSERT INTO clients (name, email, phone, birth_date, marketing_consent, address, postcode, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
   )
-    .bind(input.name, input.email, input.phone, input.birth_date ?? null, Number(input.marketing_consent))
+    .bind(input.name, input.email, input.phone, input.birth_date ?? null, Number(input.marketing_consent), input.address || null, input.postcode || null, input.city || null)
     .first<{ id: number }>();
   return created!.id;
 }

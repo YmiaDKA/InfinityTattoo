@@ -22,7 +22,7 @@ export function textWidth(text: string, size: number, bold = false): number {
 
 /** Maps a string to WinAnsi bytes (as a latin1 string) and escapes PDF string syntax. */
 function winAnsi(text: string): string {
-  const special: Record<string, number> = { "–": 0x96, "—": 0x97, "‘": 0x91, "’": 0x92, "“": 0x93, "”": 0x94, "•": 0x95, "€": 0x80, "…": 0x85 };
+  const special: Record<string, number> = { "−": 0x2d, "–": 0x96, "—": 0x97, "‘": 0x91, "’": 0x92, "“": 0x93, "”": 0x94, "•": 0x95, "€": 0x80, "…": 0x85 };
   let out = "";
   for (const ch of text) {
     const code = ch.codePointAt(0)!;

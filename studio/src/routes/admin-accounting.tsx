@@ -15,7 +15,7 @@ import {
   type AccountKey,
 } from "../lib/accounting";
 import { monthName, summaryPdf } from "../lib/accounting-pdf";
-import { sendEmail } from "../lib/email";
+import { sendEmail, toBase64 } from "../lib/email";
 import { formatOre } from "../lib/report";
 import { syncStripeMoney } from "../lib/stripe-sync";
 import { addDays, isDateString } from "../lib/time";
@@ -294,12 +294,7 @@ accounting.get("/accounting/oppsummering.pdf", async (c) => {
   return download(summaryPdf(await monthFor(c, month, true), orgOf(c)), "application/pdf", `manedsoppsummering-${month}.pdf`);
 });
 
-const base64 = (data: string | Uint8Array) => {
-  const bytes = typeof data === "string" ? new TextEncoder().encode(data) : data;
-  let bin = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  return btoa(bin);
-};
+const base64 = toBase64;
 
 accounting.post("/accounting/send", async (c) => {
   if (!ownerOnly(c)) return c.text("Ingen tilgang", 403);

@@ -15,6 +15,7 @@ import { afterCancelled, afterCompleted, afterConfirmed, consentUrl, sendDeposit
 import { ageOn, flaggedQuestions, type ConsentAnswers } from "../lib/consent";
 import { giftCardBalance, normalizeCode } from "../lib/giftcards";
 import { FEATURE_PATHS, FEATURES, loadFeatures } from "../lib/features";
+import { buyerComplete, saveClientAddress, type Buyer } from "../lib/invoices";
 import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Icon, Layout, StatusPill } from "../views/layout";
 import { Empty, FilterSelect, PageHead, PeriodNav, periodRange, SegTabs, type PeriodUnit } from "../views/ui";
@@ -23,6 +24,8 @@ import { bookingStudioData, ProjectAndInks, studio } from "./admin-studio";
 import { calendar } from "./admin-calendar";
 import { accounting, ReportTabs } from "./admin-accounting";
 import { clients } from "./admin-clients";
+import { fiken } from "./admin-fiken";
+import { buyerFrom, BuyerFields, invoiceAfterSale, invoices } from "./admin-invoices";
 import { settings } from "./admin-settings";
 import {
   adminApp,
@@ -73,6 +76,8 @@ admin.route("/", calendar);
 admin.route("/", accounting);
 admin.route("/", clients);
 admin.route("/", settings);
+admin.route("/", invoices);
+admin.route("/", fiken);
 
 // ---------- Start page ----------
 
@@ -227,6 +232,20 @@ admin.get("/bookings/new", async (c) => {
         </div>
         <div class="row">
           <label>
+            Adresse{c.get("user").features?.invoices ? "" : " (valgfritt)"}
+            <input name="address" />
+          </label>
+          <label>
+            Postnummer
+            <input name="postcode" inputmode="numeric" maxlength={4} />
+          </label>
+          <label>
+            Sted
+            <input name="city" />
+          </label>
+        </div>
+        <div class="row">
+          <label>
             Behandling
             <select name="service_id">
               {services.map((s) => (
@@ -307,6 +326,7 @@ admin.post("/bookings", async (c) => {
       .bind(name, phone, email)
       .first<{ id: number }>();
   }
+  await saveClientAddress(c.env, client!.id, { address: str(body, "address"), postcode: str(body, "postcode"), city: str(body, "city") });
 
   const source = ["phone", "instagram", "walk_in", "staff"].includes(str(body, "source")) ? str(body, "source") : "staff";
   const created = await c.env.DB.prepare(
@@ -326,7 +346,9 @@ admin.get("/bookings/:id", async (c) => {
   const [staff, services, payments, consent, photos, emails, openPayment, hold] = await Promise.all([
     staffList(c.env),
     serviceList(c.env),
-    c.env.DB.prepare("SELECT * FROM payments WHERE booking_id = ? ORDER BY paid_at").bind(id).all<PaymentRow>(),
+    c.env.DB.prepare("SELECT p.*, i.id AS invoice_id, i.number AS invoice_number FROM payments p LEFT JOIN invoices i ON i.payment_id = p.id WHERE p.booking_id = ? ORDER BY p.paid_at")
+      .bind(id)
+      .all<PaymentRow>(),
     c.env.DB.prepare("SELECT * FROM consents WHERE booking_id = ? ORDER BY id DESC LIMIT 1").bind(id).first<{
       signed_name: string;
       signed_at: string;
@@ -551,7 +573,19 @@ admin.get("/bookings/:id", async (c) => {
 
       <h2>Betalinger på avtalen</h2>
       <PaymentTable rows={payments.results} staff={staff} />
-      <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} bookingId={b.id} staffId={b.staff_id} date={today()} back={`/admin/bookings/${b.id}`} />
+      <PaymentForm
+        staff={staff}
+        methods={paymentMethods(c.get("user"))}
+        bookingId={b.id}
+        staffId={b.staff_id}
+        date={today()}
+        back={`/admin/bookings/${b.id}`}
+        buyer={
+          c.get("user").features?.invoices
+            ? await c.env.DB.prepare("SELECT name, email, address, postcode, city FROM clients WHERE id = ?").bind(b.client_id).first<Partial<Buyer>>()
+            : undefined
+        }
+      />
     </Layout>,
   );
 });
@@ -647,6 +681,9 @@ admin.get("/clients/:id", async (c) => {
     birth_date: string | null;
     notes: string | null;
     marketing_consent: number;
+    address: string | null;
+    postcode: string | null;
+    city: string | null;
   }>();
   if (!client) return c.notFound();
   const bookings = await c.env.DB.prepare(`${BOOKING_SELECT} WHERE b.client_id = ? ORDER BY COALESCE(b.starts_at, b.created_at) DESC`).bind(id).all<BookingRow>();
@@ -672,6 +709,20 @@ admin.get("/clients/:id", async (c) => {
             <input name="birth_date" type="date" value={client.birth_date ?? ""} />
           </label>
         </div>
+        <div class="row">
+          <label>
+            Adresse
+            <input name="address" value={client.address ?? ""} />
+          </label>
+          <label>
+            Postnummer
+            <input name="postcode" value={client.postcode ?? ""} inputmode="numeric" maxlength={4} />
+          </label>
+          <label>
+            Sted
+            <input name="city" value={client.city ?? ""} />
+          </label>
+        </div>
         <label>
           Notater (allergier, hudtype, tidligere arbeid…)
           <textarea name="notes" rows={4}>
@@ -690,8 +741,18 @@ admin.post("/clients/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const body = await c.req.parseBody();
   const birth = str(body, "birth_date");
-  await c.env.DB.prepare("UPDATE clients SET name = ?, phone = ?, email = ?, birth_date = ?, notes = ? WHERE id = ?")
-    .bind(str(body, "name"), str(body, "phone") || null, str(body, "email") || null, isDateString(birth) ? birth : null, str(body, "notes") || null, id)
+  await c.env.DB.prepare("UPDATE clients SET name = ?, phone = ?, email = ?, birth_date = ?, notes = ?, address = ?, postcode = ?, city = ? WHERE id = ?")
+    .bind(
+      str(body, "name"),
+      str(body, "phone") || null,
+      str(body, "email") || null,
+      isDateString(birth) ? birth : null,
+      str(body, "notes") || null,
+      str(body, "address") || null,
+      str(body, "postcode") || null,
+      str(body, "city") || null,
+      id,
+    )
     .run();
   await audit(c.env, c.get("user"), "update", "client", id);
   return c.redirect(`/admin/clients/${id}?ok=Lagret`);
@@ -713,6 +774,8 @@ type PaymentRow = {
   business_date: string;
   report_id: number | null;
   recorded_by: string | null;
+  invoice_id?: number | null;
+  invoice_number?: number | null;
 };
 
 function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number; name: string }[] }) {
@@ -729,6 +792,7 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
             <th>Metode</th>
             <th>Artist</th>
             <th>Ref.</th>
+            {rows.some((p) => p.invoice_id) && <th>Faktura</th>}
             <th class="num">Beløp</th>
           </tr>
         </thead>
@@ -751,6 +815,17 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
               <td>{METHOD_LABELS[p.method]}</td>
               <td>{p.staff_id ? names.get(p.staff_id) : "Studio"}</td>
               <td class="muted">{[p.provider, p.provider_ref, p.note].filter(Boolean).join(" · ")}</td>
+              {rows.some((r) => r.invoice_id) && (
+                <td>
+                  {p.invoice_id ? (
+                    <a href={`/admin/invoices/${p.invoice_id}/pdf`} target="_blank">
+                      {p.invoice_number}
+                    </a>
+                  ) : (
+                    "–"
+                  )}
+                </td>
+              )}
               <td class="num">{formatOre(p.amount_ore)}</td>
             </tr>
           ))}
@@ -760,7 +835,16 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
   );
 }
 
-function PaymentForm(props: { staff: { id: number; name: string }[]; methods: string[]; bookingId?: number; staffId?: number | null; date: string; back: string }) {
+function PaymentForm(props: {
+  staff: { id: number; name: string }[];
+  methods: string[];
+  bookingId?: number;
+  staffId?: number | null;
+  date: string;
+  back: string;
+  /** Invoice mode: the buyer's name and address go on the invoice (prefilled from the booking's client). */
+  buyer?: Partial<Buyer> | null;
+}) {
   return (
     <form method="post" action="/admin/payments" class="card noprint" id="ny">
       <input type="hidden" name="booking_id" value={props.bookingId ? String(props.bookingId) : ""} />
@@ -828,6 +912,7 @@ function PaymentForm(props: { staff: { id: number; name: string }[]; methods: st
           <input name="note" />
         </label>
       </div>
+      {props.buyer !== undefined && <BuyerFields buyer={props.buyer} phone={!props.bookingId} />}
       <button>Registrer betaling</button>
     </form>
   );
@@ -857,7 +942,7 @@ admin.get("/payments/new", async (c) => {
       {closed ? (
         <p class="muted">Dagen er avsluttet (dagsoppgjør nr. {closed.seq}). Nye salg registreres i morgen.</p>
       ) : tab === "gift" ? (
-        <GiftCardSaleForm methods={paymentMethods(c.get("user")).filter((m) => m !== "gift_card" && m !== "bank")} />
+        <GiftCardSaleForm methods={paymentMethods(c.get("user")).filter((m) => m !== "gift_card" && m !== "bank")} invoice={Boolean(c.get("user").features?.invoices)} />
       ) : (
         <>
           <p class="muted">
@@ -865,7 +950,7 @@ admin.get("/payments/new", async (c) => {
               ? "Ta betalt i Zettle, så kommer salget inn her av seg selv. Registrer bare det som ikke gikk gjennom Zettle."
               : "Ta betalt i kassen som vanlig, og registrer salget her."}
           </p>
-          <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} date={date} back="/admin/payments" />
+          <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} date={date} back="/admin/payments" buyer={c.get("user").features?.invoices ? null : undefined} />
         </>
       )}
     </Layout>,
@@ -952,8 +1037,9 @@ admin.get("/payments", async (c) => {
   if (PROVIDERS[f.provider]) where.push(`p.provider = '${f.provider}'`);
   const [rows, staff, closed] = await Promise.all([
     c.env.DB.prepare(
-      `SELECT p.*, s.name AS staff_name, cl.name AS client_name, cl.id AS client_id FROM payments p
-       LEFT JOIN staff s ON s.id = p.staff_id LEFT JOIN bookings b ON b.id = p.booking_id LEFT JOIN clients cl ON cl.id = b.client_id
+      `SELECT p.*, s.name AS staff_name, cl.name AS client_name, cl.id AS client_id, i.id AS invoice_id, i.number AS invoice_number FROM payments p
+       LEFT JOIN staff s ON s.id = p.staff_id LEFT JOIN bookings b ON b.id = p.booking_id LEFT JOIN clients cl ON cl.id = COALESCE(p.client_id, b.client_id)
+       LEFT JOIN invoices i ON i.payment_id = p.id
        WHERE ${where.join(" AND ")} ORDER BY p.paid_at DESC, p.id DESC`,
     )
       .bind(range.from, range.to)
@@ -1004,6 +1090,7 @@ admin.get("/payments", async (c) => {
                 <th>Artist</th>
                 <th>Kilde</th>
                 <th>Kunde</th>
+                {c.get("user").features?.invoices && <th>Faktura</th>}
                 <th class="num">Beløp</th>
               </tr>
             </thead>
@@ -1026,6 +1113,19 @@ admin.get("/payments", async (c) => {
                   <td>{p.staff_name ?? "Studio"}</td>
                   <td>{PROVIDERS[p.provider ?? ""] ?? p.provider}</td>
                   <td>{p.client_id ? <a href={`/admin/clients/${p.client_id}`}>{p.client_name}</a> : "–"}</td>
+                  {c.get("user").features?.invoices && (
+                    <td>
+                      {p.invoice_id ? (
+                        <a href={`/admin/invoices/${p.invoice_id}/pdf`} target="_blank">
+                          {p.invoice_number}
+                        </a>
+                      ) : (
+                        <a href={`/admin/invoices/new/${p.id}`} data-drawer>
+                          Lag faktura
+                        </a>
+                      )}
+                    </td>
+                  )}
                   <td class="num">{formatOre(p.amount_ore)}</td>
                 </tr>
               ))}
@@ -1068,6 +1168,7 @@ admin.post("/payments", async (c) => {
   }
   if (date > today()) return c.redirect(`${back}${sep}error=Kan+ikke+registrere+på+en+fremtidig+dato`);
   if (method === "cash" && !user.features?.cash) return c.redirect(`${back}${sep}error=Studioet+tar+ikke+kontanter`);
+  if (user.features?.invoices && !buyerComplete(buyerFrom(body))) return c.redirect(`${back}${sep}error=Fakturamodus:+fyll+inn+kundens+navn+og+adresse`);
   // Refunds are always stored as negative amounts so sums stay correct.
   amount = kind === "refund" ? -Math.abs(amount) : Math.abs(amount);
 
@@ -1088,6 +1189,7 @@ admin.post("/payments", async (c) => {
     if (balance < amount) return c.redirect(`${back}${sep}error=${encodeURIComponent(`Gavekortet har bare ${formatOre(balance)} igjen`)}`);
     giftCard = card;
   }
+  let paymentId = 0;
   try {
     const row = await c.env.DB.prepare(
       `INSERT INTO payments (booking_id, staff_id, kind, method, amount_ore, provider, provider_ref, note, paid_at, business_date, recorded_by)
@@ -1101,11 +1203,13 @@ admin.post("/payments", async (c) => {
         .run();
     }
     await audit(c.env, user, "create", "payment", row!.id, { amount, kind, method });
+    paymentId = row!.id;
   } catch (error) {
     if (String(error).includes("UNIQUE")) return c.redirect(`${back}${sep}error=Transaksjonen+er+allerede+registrert`);
     throw error;
   }
-  return c.redirect(`${back}${sep}ok=Betaling+registrert`);
+  const invoiceLine = user.features?.invoices ? await invoiceAfterSale(c, paymentId, body) : "";
+  return c.redirect(`${back}${sep}ok=${encodeURIComponent(`Betaling registrert${invoiceLine}`)}`);
 });
 
 admin.get("/export.csv", async (c) => {

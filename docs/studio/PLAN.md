@@ -117,7 +117,18 @@ Not live yet (Ibrahim's call). It will run on Ibrahim's Cloudflare account; goin
 - Files per month: `bilag.csv` (semicolon, comma decimals, UTF-8 with BOM: date, source, gross, VAT, Stripe fee, net, debit/credit, payout date, reference), `artister.csv`, `oppsummering.pdf`.
 - Zettle sales are listed but marked "not posted here": Zettle's own connector posts them to Fiken/Tripletex/PowerOffice. Gift cards go to 2900 without VAT when sold and get VAT when used.
 - Stripe fees and payout dates are read from Stripe nightly (read-only) and before each download.
-- Fiken has no voucher-file import, so the files go to the accountant (button sends them by email via Resend). Pushing straight into Fiken would need Fiken's API add-on (99 kr/month); not built.
+- Fiken has no voucher-file import, so the files go to the accountant (button sends them by email via Resend), or use the Fiken push below.
+
+**Invoice mode** (off by default; *Innstillinger → Kassesystem*): a numbered cash invoice (kontantfaktura) for every sale, so card and Vipps can be taken on any terminal without a declared till, under the exemption in bokføringsforskriften § 5-1-1. **Only rely on it once the accountant has approved it.**
+- Each invoice has: one unbroken number series (credit notes included), issue and delivery date, seller's name, address and org.nr. (with "MVA" when registered), buyer's name and address, what was done and by whom, amount with VAT per rate, and "paid with card/Vipps". Delivered in the studio. PDF, emailed to the client straight away if they have an email.
+- The sale form and the gift card form ask for the buyer's name and address (prefilled from the booking's client); clients can also enter it on the health form, which then requires it. Walk-ins become clients.
+- Sales that arrive on their own (Zettle import, Stripe) get their invoice as soon as the buyer is known; *Fakturaer → Uten faktura* lists the rest with a form to add the buyer. A refund gets a credit note against the client's last invoice. Invoices are never edited or deleted, and stay readable after the mode is switched off.
+- Needs org.nr. and address under *Firmaopplysninger*. If the company is an AS, "Foretaksregisteret" should also go on the invoice (not added; ask the accountant). Gift cards are sold without VAT and get VAT when used.
+
+**Fiken push** (off by default; *Innstillinger → Integrasjoner → Fiken*, owner): replaces a paid Zettle→Fiken connector (iizy 495 kr/month) with Fiken's API module (99 kr/month).
+- Each night, everything not yet posted up to yesterday goes to Fiken as one general journal entry ("fri postering") per day: Zettle sales (to a Zettle clearing account, 1941), Stripe deposits and gift cards with fees and payouts, gift cards used, sales registered by hand, and each artist's share (4500 against 2990 "skyldig artister"). Chair rent: one entry per finished month (2990 against 3600). Payments are marked when posted, so late arrivals go in the next entry. Stripe payments wait up to three days for their fee.
+- Settings: personal API token (or the `FIKEN_API_TOKEN` secret), company, and which Fiken bank account each of Bank, Stripe and Zettle is. A preview shows what will be sent; *Send nå* sends it at once.
+- VAT codes 3/31/33 on the revenue side; refunds reverse with the VAT on the debit side. Built from Fiken's API v2 spec but **not yet tried against a live Fiken company**, so entries go as "open" (deletable) while *Prøvemodus* is on. Zettle's fees aren't in its purchase API; the Zettle payout is matched against 1941 in Fiken's bank reconciliation.
 
 ## 8. Moving data from Linework
 

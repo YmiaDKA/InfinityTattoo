@@ -9,6 +9,12 @@ export const FEATURES = {
   settlements: { label: "Artistoppgjør", note: "Måneds- og årsoppgjør per artist." },
   photos: { label: "Referansebilder", note: "Kunden kan laste opp bilder med tatoveringsforespørselen." },
   sms: { label: "SMS-påminnelser", note: "SMS dagen før (koster ca. 0,70 kr per SMS)." },
+  invoices: {
+    label: "Faktura på hvert salg",
+    note: "Nummerert kontantfaktura med kundens navn og adresse for hvert salg. Kan erstatte kassesystemet hvis regnskapsføreren godkjenner det. Av som standard.",
+    defaultOff: true,
+  },
+  fiken: { label: "Send til Fiken", note: "Bokfører hver dag i Fiken automatisk (krever Fikens API-modul). Av som standard.", defaultOff: true },
   cash: { label: "Kontanter", note: "Kontant som betalingsmåte, med opptelling i dagsoppgjøret. Av som standard: studioet tar ikke kontanter.", defaultOff: true },
 } as const;
 
@@ -29,10 +35,11 @@ export async function loadFeatures(env: Env): Promise<Features> {
   return Object.fromEntries(Object.entries(FEATURES).map(([k, f]) => [k, saved.get(k) ?? !("defaultOff" in f)])) as Features;
 }
 
+/** updated_at only moves when the switch actually changes; invoice mode and the Fiken push count from it. */
 export async function setFeature(env: Env, key: FeatureKey, enabled: boolean) {
   await env.DB.prepare(
     `INSERT INTO features (key, enabled, updated_at) VALUES (?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
-     ON CONFLICT(key) DO UPDATE SET enabled = excluded.enabled, updated_at = excluded.updated_at`,
+     ON CONFLICT(key) DO UPDATE SET enabled = excluded.enabled, updated_at = excluded.updated_at WHERE features.enabled != excluded.enabled`,
   )
     .bind(key, enabled ? 1 : 0)
     .run();
@@ -43,4 +50,5 @@ export const FEATURE_PATHS: [string, FeatureKey][] = [
   ["/admin/gift-cards", "gift_cards"],
   ["/admin/inks", "inks"],
   ["/admin/settlements", "settlements"],
+  // Not /admin/invoices: issued invoices must stay readable after invoice mode is switched off.
 ];

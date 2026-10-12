@@ -2,6 +2,7 @@ import { Hono } from "hono";
 
 import type { Env } from "../env";
 import { ageOn, CONFIRMATIONS, HEALTH_QUESTIONS, type ConsentAnswers } from "../lib/consent";
+import { loadFeatures } from "../lib/features";
 import { STUDIO } from "../lib/messages";
 import { businessDate, localTime } from "../lib/time";
 import { PublicLayout } from "../views/layout";
@@ -16,6 +17,9 @@ type ConsentBooking = {
   starts_at: string | null;
   client_name: string;
   birth_date: string | null;
+  address: string | null;
+  postcode: string | null;
+  city: string | null;
   service_no: string;
   service_en: string;
   kind: string;
@@ -25,7 +29,7 @@ type ConsentBooking = {
 async function bookingFor(env: Env, publicId: string) {
   return env.DB.prepare(
     `SELECT b.id, b.public_id, b.status, b.starts_at, b.language, c.name AS client_name, c.birth_date,
-            sv.name_no AS service_no, sv.name_en AS service_en, sv.kind
+            c.address, c.postcode, c.city, sv.name_no AS service_no, sv.name_en AS service_en, sv.kind
      FROM bookings b JOIN clients c ON c.id = b.client_id JOIN services sv ON sv.id = b.service_id
      WHERE b.public_id = ?`,
   )
@@ -42,6 +46,8 @@ client.get("/skjema/:publicId", async (c) => {
     .bind(b.id)
     .first<{ signed_at: string }>();
   const error = c.req.query("error");
+  // Invoice mode: the address goes on the invoice for the session.
+  const askAddress = (await loadFeatures(c.env)).invoices;
 
   return c.html(
     <PublicLayout title={t("Egenerklæring", "Consent form")} lang={lang}>
@@ -82,6 +88,22 @@ client.get("/skjema/:publicId", async (c) => {
             <input name="birth_date" type="date" required value={b.birth_date ?? ""} autocomplete="bday" />
           </label>
         </div>
+        {askAddress && (
+          <div class="row">
+            <label>
+              {t("Adresse (står på fakturaen)", "Address (for your invoice)")}
+              <input name="address" required value={b.address ?? ""} autocomplete="street-address" />
+            </label>
+            <label>
+              {t("Postnummer", "Postcode")}
+              <input name="postcode" required value={b.postcode ?? ""} inputmode="numeric" autocomplete="postal-code" />
+            </label>
+            <label>
+              {t("Sted", "City")}
+              <input name="city" required value={b.city ?? ""} autocomplete="address-level2" />
+            </label>
+          </div>
+        )}
         <fieldset>
           <legend>{t("Helse", "Health")}</legend>
           {HEALTH_QUESTIONS.map((q) => (
@@ -164,13 +186,19 @@ client.post("/skjema/:publicId", async (c) => {
   if (age < 18 && b.kind === "tattoo") return c.redirect(`${back}&error=tattoo_age`);
   if (age < 18 && guardian.length < 2) return c.redirect(`${back}&error=age`);
 
+  const address = { address: get("address").slice(0, 200), postcode: get("postcode").slice(0, 10), city: get("city").slice(0, 100) };
+  if ((await loadFeatures(c.env)).invoices && (!address.address || !address.postcode || !address.city)) return c.redirect(`${back}&error=missing`);
+
   const answers: ConsentAnswers = { health, details: get("details").slice(0, 2000), confirmations };
   await c.env.DB.batch([
     c.env.DB.prepare(
       `INSERT INTO consents (booking_id, answers_json, signed_name, signed_at, ip, birth_date, guardian_name, photo_consent, language)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(b.id, JSON.stringify(answers), signedName, new Date().toISOString(), c.req.header("CF-Connecting-IP") ?? null, birthDate, guardian || null, get("photo_consent") === "1" ? 1 : 0, lang),
-    c.env.DB.prepare("UPDATE clients SET birth_date = ? WHERE id = (SELECT client_id FROM bookings WHERE id = ?)").bind(birthDate, b.id),
+    c.env.DB.prepare(
+      `UPDATE clients SET birth_date = ?, address = COALESCE(NULLIF(?, ''), address), postcode = COALESCE(NULLIF(?, ''), postcode),
+         city = COALESCE(NULLIF(?, ''), city) WHERE id = (SELECT client_id FROM bookings WHERE id = ?)`,
+    ).bind(birthDate, address.address, address.postcode, address.city, b.id),
   ]);
   return c.redirect(back);
 });

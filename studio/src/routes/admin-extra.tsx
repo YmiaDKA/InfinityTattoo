@@ -5,8 +5,10 @@ import { giftCardBalance, giftCardExpiry, newGiftCardCode, normalizeCode } from 
 import { formatOre, parseKroner } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
 import { FEATURES, setFeature, type FeatureKey } from "../lib/features";
+import { buyerComplete } from "../lib/invoices";
 import { Icon, Layout } from "../views/layout";
 import { Empty, FilterSelect, PageHead, PeriodNav, periodRange, SegTabs, type PeriodUnit } from "../views/ui";
+import { buyerFrom, BuyerFields, invoiceAfterSale } from "./admin-invoices";
 import { SettingsPage } from "./admin-settings";
 import { adminApp, audit, KIND_LABELS, METHOD_LABELS, str, today, type AdminEnv } from "./admin-shared";
 
@@ -549,7 +551,7 @@ type CardRow = {
 const CARD_SELECT = `SELECT g.*, COALESCE((SELECT SUM(amount_ore) FROM gift_card_movements m WHERE m.gift_card_id = g.id), 0) AS balance_ore FROM gift_cards g`;
 
 /** Selling a gift card in the studio: from the gift card page and from "Nytt salg". */
-export function GiftCardSaleForm({ methods }: { methods: string[] }) {
+export function GiftCardSaleForm({ methods, invoice }: { methods: string[]; invoice?: boolean }) {
   return (
     <form method="post" action="/admin/gift-cards">
       <div class="row">
@@ -565,15 +567,18 @@ export function GiftCardSaleForm({ methods }: { methods: string[] }) {
             ))}
           </select>
         </label>
-        <label>
-          Kjøpers navn
-          <input name="buyer_name" />
-        </label>
+        {!invoice && (
+          <label>
+            Kjøpers navn
+            <input name="buyer_name" />
+          </label>
+        )}
         <label>
           Til (mottaker)
           <input name="recipient_name" />
         </label>
       </div>
+      {invoice && <BuyerFields phone />}
       <p class="muted">Ta betalt i kassen som vanlig. Her registreres gavekortet og betalingen, og koden skrives på kortet.</p>
       <button>Lag gavekort</button>
     </form>
@@ -710,6 +715,7 @@ extra.post("/gift-cards", async (c) => {
   const method = str(body, "method");
   if (!amount || amount <= 0 || !["card", "vipps", ...(c.get("user").features?.cash ? ["cash"] : [])].includes(method)) return c.redirect("/admin/gift-cards?error=Sjekk+beløp");
   const user = c.get("user");
+  if (user.features?.invoices && !buyerComplete(buyerFrom(body))) return c.redirect("/admin/payments/new?tab=gift&error=Fakturamodus:+fyll+inn+kjøpers+navn+og+adresse");
   const date = today();
   const closed = await c.env.DB.prepare("SELECT 1 FROM day_reports WHERE business_date = ?").bind(date).first();
   if (closed) return c.redirect("/admin/gift-cards?error=Dagen+er+avsluttet");
@@ -721,15 +727,16 @@ extra.post("/gift-cards", async (c) => {
     .bind(newGiftCardCode(), amount, str(body, "buyer_name") || null, str(body, "recipient_name") || null, giftCardExpiry(), user.email)
     .first<{ id: number; code: string }>();
   const now = new Date().toISOString();
-  await c.env.DB.prepare(
+  const payment = await c.env.DB.prepare(
     `INSERT INTO payments (kind, method, amount_ore, provider, provider_ref, note, paid_at, business_date, recorded_by)
-     VALUES ('gift_card_sale', ?, ?, 'manual', ?, ?, ?, ?, ?)`,
+     VALUES ('gift_card_sale', ?, ?, 'manual', ?, ?, ?, ?, ?) RETURNING id`,
   )
     .bind(method, amount, `giftcard:${card!.code}`, `Gavekort ${card!.code}`, now, date, user.email)
-    .run();
+    .first<{ id: number }>();
   await activateGiftCard(c.env, card!.id, user.email);
   await audit(c.env, user, "create", "gift_card", card!.id, { amount });
-  return c.redirect(`/admin/gift-cards/${card!.id}?ok=${encodeURIComponent(`Gavekort ${card!.code} laget`)}`);
+  const invoiceLine = user.features?.invoices ? await invoiceAfterSale(c, payment!.id, body) : "";
+  return c.redirect(`/admin/gift-cards/${card!.id}?ok=${encodeURIComponent(`Gavekort ${card!.code} laget${invoiceLine}`)}`);
 });
 
 extra.get("/gift-cards/:id", async (c) => {

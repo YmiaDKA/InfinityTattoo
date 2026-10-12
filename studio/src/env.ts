@@ -36,6 +36,8 @@ export type Env = {
   /** Zettle Purchase API (read-only) to import till payments automatically. */
   ZETTLE_CLIENT_ID?: string;
   ZETTLE_API_KEY?: string;
+  /** Optional: Fiken personal API token as a secret, instead of saving it under Innstillinger. */
+  FIKEN_API_TOKEN?: string;
   /** Printed on the personalliste. */
   ORG_NAME?: string;
   ORG_NUMBER?: string;

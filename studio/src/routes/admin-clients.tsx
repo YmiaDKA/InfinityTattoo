@@ -126,6 +126,20 @@ clients.get("/clients/new", (c) =>
           Telefon
           <input name="phone" type="tel" placeholder="+47 900 00 000" />
         </label>
+        <label>
+          Adresse
+          <input name="address" placeholder="Gate og nummer" />
+        </label>
+        <div class="row">
+          <label>
+            Postnummer
+            <input name="postcode" inputmode="numeric" maxlength={4} />
+          </label>
+          <label>
+            Sted
+            <input name="city" />
+          </label>
+        </div>
         <button>Opprett kunde</button>
       </form>
     </Layout>,
@@ -136,8 +150,8 @@ clients.post("/clients", async (c) => {
   const body = await c.req.parseBody();
   const name = str(body, "name");
   if (!name) return c.redirect("/admin/clients/new?error=Skriv+inn+navn");
-  const row = await c.env.DB.prepare("INSERT INTO clients (name, email, phone) VALUES (?, ?, ?) RETURNING id")
-    .bind(name, str(body, "email").toLowerCase() || null, str(body, "phone") || null)
+  const row = await c.env.DB.prepare("INSERT INTO clients (name, email, phone, address, postcode, city) VALUES (?, ?, ?, ?, ?, ?) RETURNING id")
+    .bind(name, str(body, "email").toLowerCase() || null, str(body, "phone") || null, str(body, "address") || null, str(body, "postcode") || null, str(body, "city") || null)
     .first<{ id: number }>();
   await audit(c.env, c.get("user"), "create", "client", row!.id);
   return c.redirect(`/admin/clients/${row!.id}?ok=Kunde+opprettet`);

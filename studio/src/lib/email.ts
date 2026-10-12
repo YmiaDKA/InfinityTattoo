@@ -2,6 +2,14 @@ import type { Env } from "../env";
 
 export type Email = { to: string; subject: string; text: string; attachments?: { filename: string; content: string }[] };
 
+/** Base64 for email attachments. */
+export function toBase64(data: string | Uint8Array): string {
+  const bytes = typeof data === "string" ? new TextEncoder().encode(data) : data;
+  let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+
 export type EmailResult = { status: "sent" | "failed" | "skipped"; error?: string };
 
 /** Sends a plain-text email to a client through Resend. Skipped (not failed) when not configured. */

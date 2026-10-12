@@ -188,6 +188,7 @@ const NAV: { heading?: string; bottom?: boolean; items: NavItem[] }[] = [
     heading: "Økonomi",
     items: [
       { href: "/admin/payments", label: "Salg", icon: "sales" },
+      { href: "/admin/invoices", label: "Fakturaer", icon: "ledger", feature: "invoices" },
       {
         href: "/admin/gift-cards",
         label: "Gavekort",

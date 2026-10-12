@@ -12,6 +12,8 @@ import {
   type MessageBooking,
 } from "./messages";
 import { loadFeatures } from "./features";
+import { pushToFiken } from "./fiken";
+import { sweepInvoices } from "./invoices";
 import { sendBookingSms } from "./sms";
 import { createCheckout } from "./stripe";
 import { syncStripeMoney } from "./stripe-sync";
@@ -251,7 +253,26 @@ export async function runScheduled(env: Env, now = new Date()) {
     }
   }
 
-  // 5. Mark expired online checkouts.
+  // 5. Invoice mode: issue invoices for sales that came in by themselves (Zettle, Stripe).
+  if (features.invoices) {
+    try {
+      await sweepInvoices(env);
+    } catch (error) {
+      console.error("invoice sweep failed", error);
+    }
+  }
+
+  // 6. Once a night, after the Stripe sync: post the previous days to Fiken.
+  if (features.fiken && localTime(now) < "01:00") {
+    try {
+      const result = await pushToFiken(env, "system", now);
+      if (result.error) console.error("fiken push", result.error);
+    } catch (error) {
+      console.error("fiken push failed", error);
+    }
+  }
+
+  // 7. Mark expired online checkouts.
   await env.DB.prepare("UPDATE online_payments SET status = 'expired' WHERE status = 'open' AND created_at < ?")
     .bind(new Date(now.getTime() - 25 * 3600 * 1000).toISOString())
     .run();
