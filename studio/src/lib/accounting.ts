@@ -250,24 +250,53 @@ export type MonthData = {
   stripeMissingFees: number;
 };
 
+function paymentsForAccounting(env: Env, from: string, to: string) {
+  return env.DB.prepare(
+    `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
+            sv.kind AS service_kind, sv.vat_pct, s.role AS staff_role,
+            st.fee_ore, st.net_ore, st.payout_date
+     FROM payments p
+     LEFT JOIN bookings b ON b.id = p.booking_id
+     LEFT JOIN services sv ON sv.id = b.service_id
+     LEFT JOIN staff s ON s.id = p.staff_id
+     LEFT JOIN stripe_transactions st ON p.provider = 'stripe' AND st.provider_ref = p.provider_ref
+     WHERE p.business_date BETWEEN ? AND ? ORDER BY p.business_date, p.id`,
+  )
+    .bind(from, to)
+    .all<PaymentForAccounting>();
+}
+
+export type Revenue = { rent: number; service: number; product: number; total: number; fees: number; vat: number; net: number; giftCardsSold: number };
+
+/** The numbers on Rapporter → Omsetning (Linework's Revenue report) for any period. */
+export async function revenueSummary(env: Env, from: string, to: string, rentMonths: number): Promise<Revenue> {
+  const [settings, payments, rent] = await Promise.all([
+    loadAccounting(env),
+    paymentsForAccounting(env, from, to),
+    rentMonths ? env.DB.prepare("SELECT COALESCE(SUM(monthly_rent_ore), 0) AS n FROM staff WHERE active = 1").first<{ n: number }>() : null,
+  ]);
+  const r: Revenue = { rent: (rent?.n ?? 0) * rentMonths, service: 0, product: 0, total: 0, fees: 0, vat: 0, net: 0, giftCardsSold: 0 };
+  for (const p of payments.results) {
+    r.fees += p.fee_ore ?? 0;
+    if (p.kind === "gift_card_sale") {
+      r.giftCardsSold += p.amount_ore;
+      continue;
+    }
+    if (p.kind === "product") r.product += p.amount_ore;
+    else r.service += p.amount_ore;
+    r.vat += vatOf(p.amount_ore, settings.vatRegistered ? (p.kind === "product" ? 25 : (p.vat_pct ?? 25)) : 0);
+  }
+  r.total = r.rent + r.service + r.product;
+  r.net = r.total - r.fees - r.vat;
+  return r;
+}
+
 export async function buildMonth(env: Env, month: string, withRent: boolean): Promise<MonthData> {
   const { from, to } = monthRange(month);
   const settings = await loadAccounting(env);
   const endIso = `${addDays(to, 1)}T00:00:00.000Z`;
   const [payments, payouts, artists, liability, held, reports] = await Promise.all([
-    env.DB.prepare(
-      `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
-              sv.kind AS service_kind, sv.vat_pct, s.role AS staff_role,
-              st.fee_ore, st.net_ore, st.payout_date
-       FROM payments p
-       LEFT JOIN bookings b ON b.id = p.booking_id
-       LEFT JOIN services sv ON sv.id = b.service_id
-       LEFT JOIN staff s ON s.id = p.staff_id
-       LEFT JOIN stripe_transactions st ON p.provider = 'stripe' AND st.provider_ref = p.provider_ref
-       WHERE p.business_date BETWEEN ? AND ? ORDER BY p.business_date, p.id`,
-    )
-      .bind(from, to)
-      .all<PaymentForAccounting>(),
+    paymentsForAccounting(env, from, to),
     env.DB.prepare("SELECT id, amount_ore, arrival_date FROM stripe_payouts WHERE arrival_date BETWEEN ? AND ? AND status = 'paid' ORDER BY arrival_date")
       .bind(from, to)
       .all<{ id: string; amount_ore: number; arrival_date: string }>(),

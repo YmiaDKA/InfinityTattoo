@@ -4,9 +4,10 @@ import { activateGiftCard, stripeEnabled } from "../lib/bookings";
 import { giftCardBalance, giftCardExpiry, newGiftCardCode, normalizeCode } from "../lib/giftcards";
 import { formatOre, parseKroner } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
-import { ALWAYS_ON, FEATURES, setFeature, type FeatureKey } from "../lib/features";
-import { Layout } from "../views/layout";
-import { AccountingSettingsSection } from "./admin-accounting";
+import { FEATURES, setFeature, type FeatureKey } from "../lib/features";
+import { Icon, Layout } from "../views/layout";
+import { Empty, FilterSelect, PageHead, PeriodNav, periodRange, SegTabs, type PeriodUnit } from "../views/ui";
+import { SettingsPage } from "./admin-settings";
 import { adminApp, audit, KIND_LABELS, METHOD_LABELS, str, today, type AdminEnv } from "./admin-shared";
 
 export const extra = adminApp();
@@ -69,186 +70,12 @@ type ServiceRow = {
   aftercare_en: string | null;
 };
 
-extra.get("/settings", async (c) => {
-  const [staff, services, timeOff] = await Promise.all([
-    c.env.DB.prepare("SELECT * FROM staff ORDER BY active DESC, id").all<StaffRow>(),
-    c.env.DB.prepare("SELECT * FROM services ORDER BY active DESC, sort, id").all<ServiceRow>(),
-    c.env.DB.prepare(
-      "SELECT t.*, s.name AS staff_name FROM time_off t LEFT JOIN staff s ON s.id = t.staff_id WHERE t.ends_at > ? ORDER BY t.starts_at",
-    )
-      .bind(new Date().toISOString())
-      .all<{ id: number; staff_id: number | null; staff_name: string | null; starts_at: string; ends_at: string; reason: string | null }>(),
-  ]);
-  const base = c.env.PUBLIC_BASE_URL.replace(/\/$/, "");
-  const features = c.get("user").features!;
-  const integrations = [
-    ["E-post til kunder", Boolean(c.env.RESEND_API_KEY && c.env.EMAIL_FROM)],
-    ["SMS-påminnelser", Boolean(c.env.ELKS_API_USER && c.env.ELKS_API_PASSWORD)],
-    ["Nettbetaling (depositum, gavekort)", stripeEnabled(c.env)],
-    ["Referansebilder", Boolean(c.env.PHOTOS)],
-    ["Zettle-synk", Boolean(c.env.ZETTLE_CLIENT_ID && c.env.ZETTLE_API_KEY)],
-    ["Varsel om nye forespørsler", Boolean(c.env.NOTIFY && c.env.NOTIFY_TO)],
-    ["Spamsjekk (Turnstile)", Boolean(c.env.TURNSTILE_SECRET)],
-  ] as const;
-
-  return c.html(
-    <Layout title="Innstillinger" path="/admin/settings" user={c.get("user")} {...flash(c)}>
-      <h1>Innstillinger</h1>
-      <p>
-        <a href="/admin/setup/show">Vis «Kom i gang»-listen i kalenderen</a>
-      </p>
-
-      <h2>Ansatte</h2>
-      <p>
-        Artister og ledere har egne sider i menyen: <a href="/admin/artists">Artister</a> og <a href="/admin/managers">Ledere</a>.
-      </p>
-
-      <h2 id="behandlinger">Behandlinger og priser</h2>
-      <div class="card" style="overflow-x:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Behandling</th>
-              <th>Type</th>
-              <th class="num">Varighet</th>
-              <th class="num">Pris</th>
-              <th class="num">Depositum</th>
-              <th>Booking</th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.results.map((s) => (
-              <tr class={s.active ? "" : "muted"}>
-                <td>
-                  <a href={`/admin/settings/services/${s.id}`}>{s.name_no}</a>
-                  {!s.active && " (inaktiv)"}
-                </td>
-                <td>{KINDS[s.kind]}</td>
-                <td class="num">{s.duration_min} min</td>
-                <td class="num">{s.price_ore == null ? "Etter avtale" : formatOre(s.price_ore)}</td>
-                <td class="num">{formatOre(s.deposit_ore)}</td>
-                <td>{!s.public ? "Bare internt" : s.requires_approval ? "Forespørsel" : "Direkte"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p>
-          <a class="button secondary" href="/admin/settings/services/new">
-            Ny behandling
-          </a>
-        </p>
-      </div>
-
-      <h2>Fravær og stengte dager</h2>
-      <div class="card">
-        {timeOff.results.length ? (
-          <table>
-            <tbody>
-              {timeOff.results.map((t) => (
-                <tr>
-                  <td>{t.staff_name ?? "Hele studioet"}</td>
-                  <td>
-                    {businessDate(t.starts_at)} {localTime(t.starts_at)} – {businessDate(t.ends_at)} {localTime(t.ends_at)}
-                  </td>
-                  <td class="muted">{t.reason}</td>
-                  <td>
-                    <form method="post" action={`/admin/settings/time-off/${t.id}/delete`}>
-                      <button class="secondary">Fjern</button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p class="muted">Ingen planlagt fravær.</p>
-        )}
-        <form method="post" action="/admin/settings/time-off">
-          <div class="row">
-            <label>
-              Hvem
-              <select name="staff_id">
-                <option value="">Hele studioet</option>
-                {staff.results
-                  .filter((s) => s.active)
-                  .map((s) => (
-                    <option value={s.id}>{s.name}</option>
-                  ))}
-              </select>
-            </label>
-            <label>
-              Fra dato
-              <input name="from_date" type="date" required value={today()} />
-            </label>
-            <label>
-              Fra kl.
-              <input name="from_time" type="time" value="00:00" />
-            </label>
-            <label>
-              Til dato
-              <input name="to_date" type="date" required value={today()} />
-            </label>
-            <label>
-              Til kl.
-              <input name="to_time" type="time" value="23:59" />
-            </label>
-            <label>
-              Grunn
-              <input name="reason" placeholder="Ferie, guest spot, syk…" />
-            </label>
-          </div>
-          <button>Legg til fravær</button>
-        </form>
-      </div>
-
-      <h2>Funksjoner</h2>
-      <form method="post" action="/admin/settings/features" class="card">
-        <p class="muted" style="margin-top:0">Slå av det studioet ikke bruker. Det skjules fra menyen og skjemaene, men ingenting slettes, og du kan slå det på igjen når som helst.</p>
-        {(Object.keys(FEATURES) as FeatureKey[]).map((key) => (
-          <label class="check">
-            <input type="checkbox" name={`f_${key}`} value="1" checked={features[key]} disabled={!isOwner(c)} />
-            <span>
-              {FEATURES[key].label} <span class="muted">– {FEATURES[key].note}</span>
-            </span>
-          </label>
-        ))}
-        <p class="muted" style="margin-bottom:.3rem">Alltid på:</p>
-        <ul class="muted" style="margin-top:0">
-          {ALWAYS_ON.map(([label, why]) => (
-            <li>
-              {label} – {why}
-            </li>
-          ))}
-        </ul>
-        {isOwner(c) && <button>Lagre funksjoner</button>}
-      </form>
-
-      {isOwner(c) && <AccountingSettingsSection c={c} />}
-
-      <h2 id="tilkoblinger">Tilkoblinger</h2>
-      <div class="card">
-        <table>
-          <tbody>
-            {integrations.map(([label, on]) => (
-              <tr>
-                <td>{label}</td>
-                <td>{on ? <span class="pill confirmed">På</span> : <span class="pill">Ikke satt opp</span>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p class="muted">Oppsett er beskrevet i studio/README.md.</p>
-      </div>
-    </Layout>,
-  );
-});
-
 extra.post("/settings/features", async (c) => {
   if (!isOwner(c)) return ownerOnly(c);
   const body = await c.req.parseBody();
   for (const key of Object.keys(FEATURES) as FeatureKey[]) await setFeature(c.env, key, checked(body, `f_${key}`) === 1);
   await audit(c.env, c.get("user"), "update", "features", null, body);
-  return c.redirect("/admin/settings?ok=Funksjoner+lagret");
+  return c.redirect("/admin/settings/features?ok=Funksjoner+lagret");
 });
 
 // ---------- Staff ----------
@@ -260,10 +87,19 @@ extra.post("/settings/features", async (c) => {
 const MANAGER_ROLES = ["owner", "reception"];
 const staffSection = (role: string) => (role === "reception" ? "/admin/managers" : "/admin/artists");
 
+// Linework's Artists/Managers pages: Aktive · Inviterte · Inaktive · Alle, with the invite button on the right.
 async function staffPage(c: Context<AdminEnv>, kind: "artists" | "managers") {
-  const rows = (await c.env.DB.prepare("SELECT * FROM staff ORDER BY active DESC, id").all<StaffRow>()).results.filter((s) =>
+  const all = (await c.env.DB.prepare("SELECT * FROM staff ORDER BY active DESC, id").all<StaffRow & { last_login_at: string | null }>()).results.filter((s) =>
     kind === "managers" ? MANAGER_ROLES.includes(s.role) : !MANAGER_ROLES.includes(s.role) || (s.role === "owner" && s.bookable),
   );
+  const groups = {
+    active: all.filter((s) => s.active && (!s.email || s.last_login_at)),
+    invited: all.filter((s) => s.active && s.email && !s.last_login_at),
+    inactive: all.filter((s) => !s.active),
+    all,
+  };
+  const tab = (["active", "invited", "inactive", "all"] as const).find((t) => t === c.req.query("tab")) ?? "active";
+  const rows = groups[tab];
   const linked = await c.env.DB.prepare(
     "SELECT ss.staff_id, COUNT(*) AS n FROM staff_services ss JOIN services sv ON sv.id = ss.service_id WHERE sv.active = 1 GROUP BY ss.staff_id",
   ).all<{ staff_id: number; n: number }>();
@@ -272,57 +108,73 @@ async function staffPage(c: Context<AdminEnv>, kind: "artists" | "managers") {
   const owner = isOwner(c);
   const rentOn = c.get("user").features?.rent !== false;
   const title = kind === "artists" ? "Artister" : "Ledere";
+  const path = `/admin/${kind}`;
+  const tabHref = (t: string) => (t === "active" ? path : `${path}?tab=${t}`);
   return c.html(
-    <Layout title={title} path={`/admin/${kind}`} user={c.get("user")} {...flash(c)}>
-      <div class="row" style="justify-content:space-between;align-items:center">
-        <h1>{title}</h1>
+    <Layout title={title} path={path} user={c.get("user")} {...flash(c)}>
+      <PageHead
+        title={title}
+        sub={kind === "artists" ? "Artistene i studioet og innstillingene deres: timer, behandlinger, andel og leie." : "De som driver studioet og kan logge inn."}
+      />
+      <div class="toolbar" style="justify-content:space-between">
+        <SegTabs
+          active={tabHref(tab)}
+          tabs={[
+            { href: tabHref("active"), label: "Aktive", count: groups.active.length },
+            { href: tabHref("invited"), label: "Inviterte", count: groups.invited.length },
+            { href: tabHref("inactive"), label: "Inaktive", count: groups.inactive.length },
+            { href: tabHref("all"), label: kind === "artists" ? "Alle artister" : "Alle" },
+          ]}
+        />
         {owner && (
-          <a class="button" style="flex:0 0 auto" href={`/admin/settings/staff/new?role=${kind === "artists" ? "artist" : "reception"}`}>
-            {kind === "artists" ? "Inviter artist" : "Legg til leder"}
+          <a class="button" href={`/admin/settings/staff/new?role=${kind === "artists" ? "artist" : "reception"}`}>
+            {kind === "artists" ? "Inviter artist" : "Inviter leder"}
           </a>
         )}
       </div>
-      <p class="muted">
-        {kind === "artists"
-          ? "Alle som tar imot kunder: tatovører, piercere og gjesteartister. Hver har egne timer, behandlinger, farge i kalenderen og oppgjør."
-          : "De som driver studioet. Eieren ser alt og kan endre innstillinger; resepsjon kan booke og registrere betalinger."}
-      </p>
-      <div class="card scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Navn</th>
-              <th>Rolle</th>
-              <th>Innlogging</th>
-              {kind === "artists" && <th class="num">Studioandel</th>}
-              {kind === "artists" && rentOn && <th class="num">Stolleie</th>}
-              {kind === "artists" && <th class="num">Behandlinger</th>}
-              <th>Kalender på telefonen</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((s) => (
-              <tr class={s.active ? "" : "muted"}>
-                <td>
-                  <span class="dot" style={`background:${s.color}`} />
-                  {owner ? <a href={`/admin/settings/staff/${s.id}`}>{s.name}</a> : s.name}
-                  {!s.active && " (inaktiv)"}
-                </td>
-                <td>{ROLES[s.role] ?? s.role}</td>
-                <td>{s.email ?? <span class="muted">Ikke invitert</span>}</td>
-                {kind === "artists" && <td class="num">{s.studio_share_pct} %</td>}
-                {kind === "artists" && rentOn && <td class="num">{formatOre(s.monthly_rent_ore ?? 0)}</td>}
-                {kind === "artists" && <td class="num">{servicesOf(s.id)}</td>}
-                <td style="font-size:.8rem;word-break:break-all">{s.ical_token ? `${base}/cal/${s.ical_token}.ics` : "–"}</td>
+      {rows.length === 0 ? (
+        <div class="card" style="margin-top:1rem">
+          <Empty icon={kind} text={tab === "invited" ? "Ingen venter på å logge inn" : kind === "artists" ? "Ingen artister her ennå" : "Ingen ledere her ennå"} />
+        </div>
+      ) : (
+        <div class="list" style="margin-top:1rem">
+          <table>
+            <thead>
+              <tr>
+                <th>Navn</th>
+                <th>Rolle</th>
+                <th>Innlogging</th>
+                {kind === "artists" && <th class="num">Studioandel</th>}
+                {kind === "artists" && rentOn && <th class="num">Stolleie</th>}
+                {kind === "artists" && <th class="num">Behandlinger</th>}
+                <th>Kalender på telefonen</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {!rows.length && <p class="muted">Ingen ennå.</p>}
-      </div>
-      <p class="muted">
-        Innlogging: e-posten personen logger inn med. Kalender på telefonen: lim inn lenken i iPhone (Innstillinger → Kalender → Kontoer → Legg til
-        abonnement) eller Google Kalender.
+            </thead>
+            <tbody>
+              {rows.map((s) => (
+                <tr class={s.active ? "" : "muted"}>
+                  <td>
+                    <span class="dot" style={`background:${s.color}`} />
+                    {owner ? <a href={`/admin/settings/staff/${s.id}`}>{s.name}</a> : s.name}
+                  </td>
+                  <td>{ROLES[s.role] ?? s.role}</td>
+                  <td>
+                    {s.email ?? <span class="muted">Ikke invitert</span>}
+                    {s.email && !s.last_login_at && <span class="pill requested" style="margin-left:.4rem">Invitert</span>}
+                  </td>
+                  {kind === "artists" && <td class="num">{s.studio_share_pct} %</td>}
+                  {kind === "artists" && rentOn && <td class="num">{formatOre(s.monthly_rent_ore ?? 0)}</td>}
+                  {kind === "artists" && <td class="num">{servicesOf(s.id)}</td>}
+                  <td style="font-size:.8rem;word-break:break-all">{s.ical_token ? `${base}/cal/${s.ical_token}.ics` : "–"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <p class="muted" style="margin-top:1.5rem">
+        Inviter med e-posten personen logger inn med. Kalender på telefonen: lim inn lenken i iPhone (Innstillinger → Kalender → Kontoer → Legg til abonnement)
+        eller Google Kalender.
       </p>
     </Layout>,
   );
@@ -507,8 +359,11 @@ extra.get("/settings/services/:id", async (c) => {
     : await c.env.DB.prepare("SELECT * FROM services WHERE id = ?").bind(Number(c.req.param("id"))).first<ServiceRow>();
   if (!s) return c.notFound();
   return c.html(
-    <Layout title={isNew ? "Ny behandling" : s.name_no} path="/admin/settings" user={c.get("user")} {...flash(c)}>
-      <h1>{isNew ? "Ny behandling" : s.name_no}</h1>
+    <SettingsPage c={c} active="/admin/settings/services" title={isNew ? "Ny behandling" : s.name_no}>
+      <p>
+        <a href="/admin/settings/services">← Behandlinger</a>
+      </p>
+      <h2 style="margin-top:0;font-size:1.3rem">{isNew ? "Ny behandling" : s.name_no}</h2>
       <form method="post" class="card">
         <div class="row">
           <label>
@@ -580,7 +435,7 @@ extra.get("/settings/services/:id", async (c) => {
         </label>
         <label>
           Etterbehandling (norsk) – sendes når avtalen settes til fullført
-          <textarea name="aftercare_no" rows={6}>
+          <textarea name="aftercare_no" rows={6} id="etterbehandling">
             {s.aftercare_no ?? ""}
           </textarea>
         </label>
@@ -592,7 +447,7 @@ extra.get("/settings/services/:id", async (c) => {
         </label>
         <button>Lagre</button>
       </form>
-    </Layout>,
+    </SettingsPage>,
   );
 });
 
@@ -655,22 +510,22 @@ extra.post("/settings/time-off", async (c) => {
   const toDate = str(body, "to_date");
   const fromTime = str(body, "from_time") || "00:00";
   const toTime = str(body, "to_time") || "23:59";
-  if (!isDateString(fromDate) || !isDateString(toDate)) return c.redirect("/admin/settings?error=Ugyldig+dato");
+  if (!isDateString(fromDate) || !isDateString(toDate)) return c.redirect("/admin/settings/time-off?error=Ugyldig+dato");
   const starts = osloToUtc(fromDate, fromTime).toISOString();
   const ends = osloToUtc(toDate, toTime).toISOString();
-  if (ends <= starts) return c.redirect("/admin/settings?error=Slutt+må+være+etter+start");
+  if (ends <= starts) return c.redirect("/admin/settings/time-off?error=Slutt+må+være+etter+start");
   await c.env.DB.prepare("INSERT INTO time_off (staff_id, starts_at, ends_at, reason) VALUES (?, ?, ?, ?)")
     .bind(Number(str(body, "staff_id")) || null, starts, ends, str(body, "reason") || null)
     .run();
   await audit(c.env, c.get("user"), "create", "time_off", null, { starts, ends });
-  return c.redirect("/admin/settings?ok=Fravær+lagt+til");
+  return c.redirect("/admin/settings/time-off?ok=Fravær+lagt+til");
 });
 
 extra.post("/settings/time-off/:id/delete", async (c) => {
   const id = Number(c.req.param("id"));
   await c.env.DB.prepare("DELETE FROM time_off WHERE id = ?").bind(id).run();
   await audit(c.env, c.get("user"), "delete", "time_off", id);
-  return c.redirect("/admin/settings?ok=Fravær+fjernet");
+  return c.redirect("/admin/settings/time-off?ok=Fravær+fjernet");
 });
 
 // =====================================================================
@@ -693,108 +548,167 @@ type CardRow = {
 
 const CARD_SELECT = `SELECT g.*, COALESCE((SELECT SUM(amount_ore) FROM gift_card_movements m WHERE m.gift_card_id = g.id), 0) AS balance_ore FROM gift_cards g`;
 
+/** Selling a gift card in the studio: from the gift card page and from "Nytt salg". */
+export function GiftCardSaleForm({ methods }: { methods: string[] }) {
+  return (
+    <form method="post" action="/admin/gift-cards">
+      <div class="row">
+        <label>
+          Beløp (kr)
+          <input name="amount" inputmode="decimal" required />
+        </label>
+        <label>
+          Betalt med
+          <select name="method">
+            {methods.map((m) => (
+              <option value={m}>{METHOD_LABELS[m]}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Kjøpers navn
+          <input name="buyer_name" />
+        </label>
+        <label>
+          Til (mottaker)
+          <input name="recipient_name" />
+        </label>
+      </div>
+      <p class="muted">Ta betalt i kassen som vanlig. Her registreres gavekortet og betalingen, og koden skrives på kortet.</p>
+      <button>Lag gavekort</button>
+    </form>
+  );
+}
+
+const CARD_STATUS: Record<string, string> = { valid: "Gyldig", used: "Brukt", expired: "Utløpt", void: "Annullert", pending: "Venter på betaling" };
+const cardStatus = (g: CardRow) =>
+  g.status === "void" ? "void" : g.status === "pending" ? "pending" : g.balance_ore <= 0 ? "used" : g.expires_on < today() ? "expired" : "valid";
+const dmy = (d: string) => d.slice(0, 10).split("-").reverse().join(".");
+
+// Same layout as Linework's Gift Cards: store status, search and filters, list, totals bar.
 extra.get("/gift-cards", async (c) => {
   const q = (c.req.query("q") ?? "").trim();
-  const rows = q
-    ? await c.env.DB.prepare(`${CARD_SELECT} WHERE g.code = ? OR g.buyer_name LIKE ?2 OR g.recipient_name LIKE ?2 OR g.buyer_email LIKE ?2 ORDER BY g.id DESC LIMIT 50`)
-        .bind(normalizeCode(q), `%${q}%`)
-        .all<CardRow>()
-    : await c.env.DB.prepare(`${CARD_SELECT} WHERE g.status != 'pending' ORDER BY g.id DESC LIMIT 100`).all<CardRow>();
-  const outstanding = await c.env.DB.prepare(
-    "SELECT COALESCE(SUM(m.amount_ore), 0) AS total FROM gift_card_movements m JOIN gift_cards g ON g.id = m.gift_card_id WHERE g.status = 'active' AND g.expires_on >= ?",
-  )
-    .bind(today())
-    .first<{ total: number }>();
+  const source = c.req.query("source") ?? "";
+  const status = c.req.query("status") ?? "";
+  const all = (
+    q
+      ? await c.env.DB.prepare(`${CARD_SELECT} WHERE g.code = ? OR g.buyer_name LIKE ?2 OR g.recipient_name LIKE ?2 OR g.buyer_email LIKE ?2 ORDER BY g.id DESC LIMIT 200`)
+          .bind(normalizeCode(q), `%${q}%`)
+          .all<CardRow>()
+      : await c.env.DB.prepare(`${CARD_SELECT} WHERE g.status != 'pending' ORDER BY g.id DESC LIMIT 500`).all<CardRow>()
+  ).results;
+  const rows = all.filter((g) => (!source || (source === "online") === (g.source === "online")) && (!status || cardStatus(g) === status));
+  const sold = all.filter((g) => g.status === "active");
+  const valid = sold.filter((g) => cardStatus(g) === "valid");
+  const online = stripeEnabled(c.env);
+  const csv = `/admin/gift-cards.csv${q || source || status ? `?${new URLSearchParams({ q, source, status })}` : ""}`;
 
   return c.html(
     <Layout title="Gavekort" path="/admin/gift-cards" user={c.get("user")} {...flash(c)}>
-      <h1>Gavekort</h1>
-      <div class="grid">
-        <div class="card">
-          <div class="muted">Utestående saldo (gjeld til kunder)</div>
-          <div class="big">{formatOre(outstanding?.total ?? 0)}</div>
-        </div>
-        <div class="card">
-          <div class="muted">Salg på nett</div>
-          <div>{stripeEnabled(c.env) ? "På – kunder kan kjøpe på nettsiden" : "Ikke satt opp"}</div>
-        </div>
-      </div>
-      <form method="get" class="card row">
-        <label>
-          Søk på kode eller navn
-          <input name="q" value={q} />
+      <PageHead title="Gavekort" sub="Se alle solgte gavekort og hvordan nettbutikken for gavekort står.">
+        <a class="button secondary" href="https://infinitytattoo.no/#gift-cards" target="_blank" rel="noopener">
+          <Icon name="share" size={16} /> Del gavekortbutikken
+        </a>
+        <a class="button" href="/admin/payments/new?tab=gift" data-drawer>
+          + Selg gavekort
+        </a>
+      </PageHead>
+      <p class="toolbar">
+        <span class="sectionhead" style="margin:0">
+          <span class="dot" style={`background:${online ? "var(--ok)" : "var(--faint)"}`} />
+          {online ? "Gavekortbutikken er på" : "Gavekortbutikken er av"}
+        </span>
+        {isOwner(c) && (
+          <a class="button secondary small" href="/admin/settings/payments">
+            Innstillinger
+          </a>
+        )}
+      </p>
+      <form method="get" class="toolbar">
+        <label class="search">
+          <Icon name="search" size={16} />
+          <input name="q" value={q} placeholder="Søk" type="search" />
         </label>
-        <div style="flex:0 0 auto">
-          <button>Søk</button>
-        </div>
+        <span class="filters" style="margin:0">
+          <FilterSelect name="source" value={source} all="Alle kilder" options={[["online", "På nett"], ["studio", "I studio"]]} />
+          <FilterSelect name="status" value={status} all="Alle statuser" options={Object.entries(CARD_STATUS).filter(([k]) => k !== "pending")} />
+        </span>
       </form>
-      <div class="card" style="overflow-x:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Kode</th>
-              <th>Til / kjøpt av</th>
-              <th>Status</th>
-              <th>Gyldig til</th>
-              <th class="num">Verdi</th>
-              <th class="num">Saldo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.results.map((g) => (
+      {rows.length === 0 ? (
+        <Empty icon="gift" text="Fant ingen gavekort" />
+      ) : (
+        <div class="list">
+          <table>
+            <thead>
               <tr>
-                <td>
-                  <a href={`/admin/gift-cards/${g.id}`}>{g.code}</a>
-                </td>
-                <td>
-                  {g.recipient_name ?? "–"} <span class="muted">/ {g.buyer_name ?? "–"}</span>
-                </td>
-                <td>{g.status === "active" ? (g.expires_on < today() ? "Utløpt" : "Aktiv") : g.status === "void" ? "Annullert" : "Venter på betaling"}</td>
-                <td>{g.expires_on}</td>
-                <td class="num">{formatOre(g.initial_ore)}</td>
-                <td class="num">{formatOre(g.balance_ore)}</td>
+                <th>Kode</th>
+                <th>Status</th>
+                <th>Kjøpt</th>
+                <th>Utløper</th>
+                <th>Kilde</th>
+                <th>Til / kjøpt av</th>
+                <th class="num">Igjen</th>
+                <th class="num">Opprinnelig verdi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <h2>Selg gavekort i studio</h2>
-      <form method="post" action="/admin/gift-cards" class="card">
-        <div class="row">
-          <label>
-            Beløp (kr)
-            <input name="amount" inputmode="decimal" required />
-          </label>
-          <label>
-            Betalt med
-            <select name="method">
-              {["card", "vipps", "cash"].map((m) => (
-                <option value={m}>{METHOD_LABELS[m]}</option>
+            </thead>
+            <tbody>
+              {rows.map((g) => (
+                <tr>
+                  <td>
+                    <a href={`/admin/gift-cards/${g.id}`}>{g.code}</a>
+                  </td>
+                  <td>{CARD_STATUS[cardStatus(g)]}</td>
+                  <td>{dmy(businessDate(g.created_at))}</td>
+                  <td>{dmy(g.expires_on)}</td>
+                  <td>{g.source === "online" ? "På nett" : "I studio"}</td>
+                  <td class="muted">
+                    {g.recipient_name ?? "–"} / {g.buyer_name ?? "–"}
+                  </td>
+                  <td class="num">{formatOre(g.balance_ore)}</td>
+                  <td class="num">{formatOre(g.initial_ore)}</td>
+                </tr>
               ))}
-            </select>
-          </label>
-          <label>
-            Kjøpers navn
-            <input name="buyer_name" />
-          </label>
-          <label>
-            Til (mottaker)
-            <input name="recipient_name" />
-          </label>
+            </tbody>
+          </table>
         </div>
-        <p class="muted">Ta betalt i kassen som vanlig. Her registreres gavekortet og betalingen, og koden skrives på kortet.</p>
-        <button>Lag gavekort</button>
-      </form>
+      )}
+      <div class="sumbar">
+        <span>
+          <strong>{sold.length}</strong> solgt · {formatOre(sold.reduce((s, g) => s + g.initial_ore, 0))}
+        </span>
+        <span>
+          <strong>{valid.length}</strong> gyldige · {formatOre(valid.reduce((s, g) => s + g.balance_ore, 0))} utestående
+        </span>
+        <span>
+          <a class="button secondary small" href={csv}>
+            <Icon name="download" size={14} /> Eksporter
+          </a>
+        </span>
+      </div>
     </Layout>,
   );
+});
+
+extra.get("/gift-cards.csv", async (c) => {
+  const rows = (await c.env.DB.prepare(`${CARD_SELECT} WHERE g.status != 'pending' ORDER BY g.id`).all<CardRow>()).results;
+  const header = "kode;status;kjopt;utloper;kilde;kjoper;mottaker;opprinnelig;igjen";
+  const kr = (o: number) => (o / 100).toFixed(2).replace(".", ",");
+  const lines = rows.map((g) =>
+    [g.code, CARD_STATUS[cardStatus(g)], businessDate(g.created_at), g.expires_on, g.source, g.buyer_name ?? "", g.recipient_name ?? "", kr(g.initial_ore), kr(g.balance_ore)]
+      .map((v) => (/[;"\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v))
+      .join(";"),
+  );
+  return c.body(`﻿${[header, ...lines].join("\r\n")}\r\n`, 200, {
+    "Content-Type": "text/csv; charset=utf-8",
+    "Content-Disposition": `attachment; filename="gavekort-${today()}.csv"`,
+  });
 });
 
 extra.post("/gift-cards", async (c) => {
   const body = await c.req.parseBody();
   const amount = parseKroner(str(body, "amount"));
   const method = str(body, "method");
-  if (!amount || amount <= 0 || !["card", "vipps", "cash"].includes(method)) return c.redirect("/admin/gift-cards?error=Sjekk+beløp");
+  if (!amount || amount <= 0 || !["card", "vipps", ...(c.get("user").features?.cash ? ["cash"] : [])].includes(method)) return c.redirect("/admin/gift-cards?error=Sjekk+beløp");
   const user = c.get("user");
   const date = today();
   const closed = await c.env.DB.prepare("SELECT 1 FROM day_reports WHERE business_date = ?").bind(date).first();
@@ -1098,30 +1012,19 @@ extra.post("/shifts/correct", async (c) => {
 // Monthly artist settlement
 // =====================================================================
 
+// Linework's Settlements page: totals on top, then the studio's share per artist for a month or year.
 extra.get("/settlements", async (c) => {
-  // A month (?month=2026-10) or a whole year (?year=2026).
-  const year = /^\d{4}$/.test(c.req.query("year") ?? "") ? c.req.query("year")! : null;
-  const month = year ?? (/^\d{4}-\d{2}$/.test(c.req.query("month") ?? "") ? c.req.query("month")! : today().slice(0, 7));
-  const [y, m] = month.split("-").map(Number);
-  let from: string, to: string, prevLink: string, nextLink: string, rentMonths: number;
-  if (year) {
-    from = `${year}-01-01`;
-    to = `${year}-12-31`;
-    prevLink = `?year=${y - 1}`;
-    nextLink = `?year=${y + 1}`;
-    rentMonths = 12;
-  } else {
-    const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
-    const prev = m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, "0")}`;
-    from = `${month}-01`;
-    to = addDays(`${next}-01`, -1);
-    prevLink = `?month=${prev}`;
-    nextLink = `?month=${next}`;
-    rentMonths = 1;
-  }
+  // Old links used ?month=2026-10 or ?year=2026.
+  const qYear = /^\d{4}$/.test(c.req.query("year") ?? "") ? c.req.query("year")! : null;
+  const qMonth = /^\d{4}-\d{2}$/.test(c.req.query("month") ?? "") ? c.req.query("month")! : null;
+  const unit: PeriodUnit = c.req.query("unit") === "year" || qYear ? "year" : "month";
+  const date = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : qYear ? `${qYear}-01-01` : qMonth ? `${qMonth}-01` : `${today().slice(0, 7)}-01`;
+  const { from, to } = periodRange(unit, date);
+  const rentMonths = unit === "year" ? 12 : 1;
+  const onlyActive = c.req.query("all") !== "1";
 
   const [staff, payments] = await Promise.all([
-    c.env.DB.prepare("SELECT id, name, studio_share_pct, monthly_rent_ore FROM staff ORDER BY id").all<{ id: number; name: string; studio_share_pct: number; monthly_rent_ore: number }>(),
+    c.env.DB.prepare("SELECT id, name, color, studio_share_pct, monthly_rent_ore FROM staff ORDER BY id").all<{ id: number; name: string; color: string; studio_share_pct: number; monthly_rent_ore: number }>(),
     c.env.DB.prepare(
       "SELECT id, staff_id, kind, method, amount_ore, business_date, note FROM payments WHERE business_date BETWEEN ? AND ? AND kind != 'gift_card_sale' ORDER BY business_date, id",
     )
@@ -1140,57 +1043,95 @@ extra.get("/settlements", async (c) => {
       const rent = showRent ? s.monthly_rent_ore * rentMonths : 0;
       return { ...s, own, gross, studio, rent, artist: gross - studio - rent };
     })
-    .filter((l) => l.own.length > 0 || l.rent > 0 || isOwner(c));
+    .filter((l) => l.own.length > 0 || l.rent > 0 || (!onlyActive && isOwner(c)));
+  const sum = (k: "gross" | "studio" | "rent" | "artist") => lines.reduce((t, l) => t + l[k], 0);
+  const href = (u: PeriodUnit, d: string) => `/admin/settlements?unit=${u}&date=${d}${onlyActive ? "" : "&all=1"}`;
 
   return c.html(
-    <Layout title="Artistoppgjør" path="/admin/settlements" user={user}>
-      <div class="row" style="justify-content:space-between">
-        <h1>Artistoppgjør {month}</h1>
-        <div style="flex:0 0 auto" class="noprint">
-          <a class="button secondary" href={`/admin/settlements${prevLink}`}>←</a>{" "}
-          <a class="button secondary" href={`/admin/settlements${nextLink}`}>→</a>{" "}
-          <a class="button secondary" href={year ? `/admin/settlements?month=${today().slice(0, 7)}` : `/admin/settlements?year=${y}`}>
-            {year ? "Måned" : "Hele året"}
-          </a>{" "}
-          <button class="secondary" onclick="window.print()">
-            Skriv ut / PDF
-          </button>
+    <Layout title="Oppgjør" path="/admin/settlements" user={user}>
+      <PageHead title="Oppgjør" sub={`Studioandel${showRent ? " og stolleie" : ""} per artist. Andel og leie settes på hver artist.`}>
+        <button class="secondary noprint" onclick="window.print()">
+          Skriv ut / PDF
+        </button>
+      </PageHead>
+      <div class="grid" style="margin-bottom:1.5rem">
+        {showRent && (
+          <div class="card" style="margin:0">
+            <div class="muted">Stolleie i perioden</div>
+            <div class="big">{formatOre(sum("rent"))}</div>
+            <div class="muted">{lines.filter((l) => l.rent > 0).length} artister betaler fast leie</div>
+          </div>
+        )}
+        <div class="card" style="margin:0">
+          <div class="muted">Omsetning på artistene</div>
+          <div class="big">{formatOre(sum("gross"))}</div>
+          <div class="muted">Gavekortsalg telles først når kortet brukes</div>
         </div>
       </div>
-      <p class="muted">Omsetning registrert på hver artist i perioden (gavekortsalg er ikke med før kortet brukes). Studioandel{showRent ? " og fast stolleie" : ""} settes under Innstillinger.</p>
-      <div class="card">
-        <table>
-          <thead>
-            <tr>
-              <th>Artist</th>
-              <th class="num">Antall</th>
-              <th class="num">Omsetning</th>
-              <th class="num">Studioandel</th>
-              {showRent && <th class="num">Stolleie</th>}
-              <th class="num">Til artist</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lines.map((l) => (
-              <tr>
-                <td>
-                  {l.name} <span class="muted">({l.studio_share_pct} %)</span>
-                </td>
-                <td class="num">{l.own.length}</td>
-                <td class="num">{formatOre(l.gross)}</td>
-                <td class="num">{formatOre(l.studio)}</td>
-                {showRent && <td class="num">{formatOre(l.rent)}</td>}
-                <td class="num">{formatOre(l.artist)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <h2 style="font-size:1.15rem;margin-top:0">Studioandel</h2>
+      <div class="toolbar">
+        <PeriodNav unit={unit} date={date} units={["month", "year"]} href={href} />
+        <label class="check noprint" style="margin:0 0 1rem">
+          <input type="checkbox" checked={onlyActive} onchange={`location=${JSON.stringify(href(unit, date).replace("&all=1", ""))}+(this.checked?'':'&all=1')`} />
+          Vis bare artister med omsetning eller leie
+        </label>
       </div>
+      <div class="toolbar">
+        <div class="stat">
+          <Icon name="percent" />
+          <div>
+            <strong>{formatOre(sum("studio"))}</strong>
+            <span>Studioandel totalt</span>
+          </div>
+        </div>
+        <div class="stat">
+          <Icon name="artists" />
+          <div>
+            <strong>{formatOre(sum("artist"))}</strong>
+            <span>Til artistene</span>
+          </div>
+        </div>
+      </div>
+      {lines.length === 0 ? (
+        <div class="card muted" style="text-align:center;background:var(--soft);border:0">Ingen omsetning er registrert i denne perioden</div>
+      ) : (
+        <div class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Artist</th>
+                <th class="num">Antall</th>
+                <th class="num">Omsetning</th>
+                <th class="num">Studioandel</th>
+                {showRent && <th class="num">Stolleie</th>}
+                <th class="num">Til artist</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map((l) => (
+                <tr>
+                  <td>
+                    <span class="dot" style={`background:${l.color}`} />
+                    {l.name} <span class="muted">({l.studio_share_pct} %)</span>
+                  </td>
+                  <td class="num">{l.own.length}</td>
+                  <td class="num">{formatOre(l.gross)}</td>
+                  <td class="num">{formatOre(l.studio)}</td>
+                  {showRent && <td class="num">{formatOre(l.rent)}</td>}
+                  <td class="num">{formatOre(l.artist)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       {lines
         .filter((l) => l.own.length)
         .map((l) => (
-          <div class="card">
-            <strong>{l.name}</strong>
+          <details class="card" style="margin-top:1rem">
+            <summary>
+              <strong>{l.name}</strong> <span class="muted">· {l.own.length} betalinger</span>
+            </summary>
             <table>
               <tbody>
                 {l.own.map((p) => (
@@ -1204,7 +1145,7 @@ extra.get("/settlements", async (c) => {
                 ))}
               </tbody>
             </table>
-          </div>
+          </details>
         ))}
     </Layout>,
   );

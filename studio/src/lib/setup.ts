@@ -33,7 +33,7 @@ export async function setupItems(env: Env, features: Features): Promise<SetupIte
       key: "payments",
       label: "Kom i gang med betaling",
       done: Boolean(env.ZETTLE_CLIENT_ID && env.ZETTLE_API_KEY),
-      href: "/admin/settings#tilkoblinger",
+      href: "/admin/settings/payments",
       hint: "Koble til Zettle, så kommer betalingene fra kassen inn av seg selv.",
     },
     {
@@ -47,28 +47,28 @@ export async function setupItems(env: Env, features: Features): Promise<SetupIte
       key: "forms",
       label: "Beskytt deg med skjema",
       done: true,
-      href: "/admin/settings#behandlinger",
+      href: "/admin/settings/forms",
       hint: "Kunden fyller ut egenerklæring før timen. Alltid på.",
     },
     {
       key: "aftercare",
       label: "Informer med instruksjoner",
       done: (aftercare?.missing ?? 1) === 0,
-      href: "/admin/settings#behandlinger",
+      href: "/admin/settings/instructions",
       hint: "Etterbehandling sendes på e-post når timen er ferdig.",
     },
     {
       key: "services",
       label: "Legg til flere behandlinger",
       done: (services?.without ?? 1) === 0,
-      href: "/admin/settings#behandlinger",
+      href: "/admin/settings/services",
       hint: "Hver artist trenger minst én behandling kunden kan booke.",
     },
     {
       key: "email",
       label: "Gjør det til ditt eget",
       done: Boolean(env.RESEND_API_KEY && env.EMAIL_FROM),
-      href: "/admin/settings#tilkoblinger",
+      href: "/admin/settings/integrations",
       hint: "E-post til kundene sendes fra infinitytattoo.no.",
     },
   ];
@@ -77,7 +77,7 @@ export async function setupItems(env: Env, features: Features): Promise<SetupIte
       key: "sms",
       label: "Slå på SMS-påminnelser",
       done: Boolean(env.ELKS_API_USER && env.ELKS_API_PASSWORD),
-      href: "/admin/settings#tilkoblinger",
+      href: "/admin/settings/integrations",
       hint: "SMS dagen før timen, ca. 0,70 kr per melding.",
     });
   if (features.inks)
@@ -92,7 +92,7 @@ export async function setupItems(env: Env, features: Features): Promise<SetupIte
     key: "online",
     label: "Ta depositum på nett",
     done: stripeEnabled(env),
-    href: "/admin/settings#tilkoblinger",
+    href: "/admin/settings/integrations",
     hint: "Kunden betaler depositum med kort fra lenken i e-posten.",
     later: true,
   });

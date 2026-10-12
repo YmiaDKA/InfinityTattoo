@@ -43,12 +43,16 @@ export async function staffFromRequest(request: Request, env: Env): Promise<Staf
 
   if (!email) return null;
   const row = await env.DB.prepare(
-    "SELECT id, name, role FROM staff WHERE lower(email) = lower(?) AND active = 1",
+    "SELECT id, name, role, last_login_at FROM staff WHERE lower(email) = lower(?) AND active = 1",
   )
     .bind(email)
-    .first<{ id: number; name: string; role: string }>();
+    .first<{ id: number; name: string; role: string; last_login_at: string | null }>();
 
-  if (row) return { email, staffId: row.id, name: row.name, role: row.role };
+  if (row) {
+    // Marks the invitation as accepted the first time they get in.
+    if (!row.last_login_at) await env.DB.prepare("UPDATE staff SET last_login_at = ? WHERE id = ?").bind(new Date().toISOString(), row.id).run();
+    return { email, staffId: row.id, name: row.name, role: row.role };
+  }
 
   // First-time setup: until any staff member has an email, whoever Access lets in is the owner,
   // so they can fill in the staff list. After that, only listed emails get in.

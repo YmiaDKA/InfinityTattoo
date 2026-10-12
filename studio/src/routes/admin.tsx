@@ -16,11 +16,14 @@ import { ageOn, flaggedQuestions, type ConsentAnswers } from "../lib/consent";
 import { giftCardBalance, normalizeCode } from "../lib/giftcards";
 import { FEATURE_PATHS, FEATURES, loadFeatures } from "../lib/features";
 import { syncZettle, zettleEnabled } from "../lib/zettle";
-import { Layout, StatusPill } from "../views/layout";
-import { extra } from "./admin-extra";
+import { Icon, Layout, StatusPill } from "../views/layout";
+import { Empty, FilterSelect, PageHead, PeriodNav, periodRange, SegTabs, type PeriodUnit } from "../views/ui";
+import { extra, GiftCardSaleForm } from "./admin-extra";
 import { bookingStudioData, ProjectAndInks, studio } from "./admin-studio";
 import { calendar } from "./admin-calendar";
 import { accounting, ReportTabs } from "./admin-accounting";
+import { clients } from "./admin-clients";
+import { settings } from "./admin-settings";
 import {
   adminApp,
   METHOD_LABELS,
@@ -35,6 +38,7 @@ import {
   serviceList,
   str,
   EMAIL_LABELS,
+  paymentMethods,
 } from "./admin-shared";
 
 
@@ -51,15 +55,24 @@ admin.use("*", async (c, next) => {
   user.openRequests = open?.n ?? 0;
   const path = new URL(c.req.url).pathname;
   const blocked = FEATURE_PATHS.find(([prefix, key]) => path.startsWith(prefix) && !user.features![key]);
-  if (blocked) return c.redirect(`/admin/settings?error=${encodeURIComponent(`${FEATURES[blocked[1]].label} er slått av under Funksjoner.`)}`);
+  if (blocked) return c.redirect(`/admin/settings/features?error=${encodeURIComponent(`${FEATURES[blocked[1]].label} er slått av under Funksjoner.`)}`);
   c.set("user", user);
   await next();
+  // The right-hand panel asks for just the page body (see DRAWER_JS in the layout).
+  if (c.req.header("x-drawer") && c.res.status === 200 && c.res.headers.get("content-type")?.includes("text/html")) {
+    const html = await c.res.text();
+    const body = html.match(/<main class="content[^"]*">([\s\S]*)<\/main>/)?.[1] ?? html;
+    const title = html.match(/<title>([^<·]*)/)?.[1]?.trim() ?? "";
+    c.res = new Response(body, { headers: { "Content-Type": "text/html; charset=utf-8", "X-Title": encodeURIComponent(title) } });
+  }
 });
 
 admin.route("/", extra);
 admin.route("/", studio);
 admin.route("/", calendar);
 admin.route("/", accounting);
+admin.route("/", clients);
+admin.route("/", settings);
 
 // ---------- Start page ----------
 
@@ -122,13 +135,66 @@ function BookingTable({ rows, showDate }: { rows: BookingRow[]; showDate?: boole
 
 // ---------- Requests & calendar ----------
 
+// Linework's Tattoo requests panel: Ubesvart · Venter · Arkiv, filter by artist, sort.
 admin.get("/requests", async (c) => {
-  const rows = await c.env.DB.prepare(`${BOOKING_SELECT} WHERE b.status = 'requested' ORDER BY b.created_at DESC`).all<BookingRow>();
+  const tab = (["new", "pending", "archive"] as const).find((t) => t === c.req.query("tab")) ?? "new";
+  const staffId = Number(c.req.query("staff")) || 0;
+  const sort = c.req.query("sort") === "oldest" ? "b.created_at ASC" : c.req.query("sort") === "time" ? "b.starts_at IS NULL, b.starts_at" : "b.created_at DESC";
+  const owed = "b.deposit_ore > COALESCE((SELECT SUM(amount_ore) FROM payments p WHERE p.booking_id = b.id AND p.kind = 'deposit'), 0)";
+  const where = {
+    new: "b.status = 'requested'",
+    pending: `b.source = 'web' AND b.status = 'confirmed' AND ${owed}`,
+    archive: `b.source = 'web' AND (b.status IN ('cancelled','completed','no_show') OR (b.status = 'confirmed' AND NOT ${owed}))`,
+  }[tab];
+  const [rows, counts, staff] = await Promise.all([
+    c.env.DB.prepare(`${BOOKING_SELECT} WHERE ${where} ${staffId ? `AND b.staff_id = ${staffId}` : ""} ORDER BY ${sort} LIMIT 100`).all<BookingRow>(),
+    c.env.DB.prepare(
+      `SELECT SUM(b.status = 'requested') AS fresh, SUM(b.source = 'web' AND b.status = 'confirmed' AND ${owed}) AS pending FROM bookings b`,
+    ).first<{ fresh: number | null; pending: number | null }>(),
+    staffList(c.env),
+  ]);
+  const href = (t: string, extra: Record<string, string> = {}) =>
+    `/admin/requests?${new URLSearchParams({ ...(t !== "new" ? { tab: t } : {}), ...(staffId ? { staff: String(staffId) } : {}), ...extra })}`;
   return c.html(
-    <Layout title="Forespørsler" path="/admin/requests" user={c.get("user")} flash={c.req.query("ok")}>
-      <h1>Forespørsler</h1>
-      <p class="muted">Nye forespørsler fra nettsiden. Åpne en for å sette tid, pris og depositum, og bekreft.</p>
-      <BookingTable rows={rows.results} showDate />
+    <Layout title="Tattoo-forespørsler" path="/admin/requests" user={c.get("user")} flash={c.req.query("ok")}>
+      <PageHead title="Tattoo-forespørsler" sub="Nye forespørsler fra nettsiden. Åpne en for å sette tid, pris og depositum, og bekreft." />
+      <form method="get" class="filters" style="margin-bottom:.75rem">
+        {tab !== "new" && <input type="hidden" name="tab" value={tab} />}
+        <FilterSelect name="staff" value={staffId ? String(staffId) : ""} all="Alle forespørsler" options={staff.map((s) => [String(s.id), s.name])} />
+        <select name="sort" onchange="this.form.submit()">
+          <option value="">Nyeste først</option>
+          <option value="oldest" selected={c.req.query("sort") === "oldest"}>
+            Eldste først
+          </option>
+          <option value="time" selected={c.req.query("sort") === "time"}>
+            Etter timetid
+          </option>
+        </select>
+      </form>
+      <p>
+        <SegTabs
+          active={href(tab)}
+          tabs={[
+            { href: href("new"), label: "Ubesvart", count: counts?.fresh ?? 0 },
+            { href: href("pending"), label: "Venter", count: counts?.pending ?? 0 },
+            { href: href("archive"), label: "Arkiv" },
+          ]}
+        />
+      </p>
+      {rows.results.length === 0 && <p class="muted" style="text-align:center;padding:1rem">Ingenting å se her</p>}
+      {rows.results.map((b) => (
+        <a class="req" href={`/admin/bookings/${b.id}`}>
+          <div class="toolbar" style="margin:0;gap:.4rem">
+            <strong style="flex:1">{b.client_name}</strong>
+            <StatusPill status={b.status} />
+          </div>
+          <div class="muted">
+            {b.service_name} · {b.staff_name ?? "Hvem som helst"} · {b.starts_at ? when(b) : `sendt ${businessDate(b.created_at).split("-").reverse().join(".")}`}
+          </div>
+          {b.idea && <div style="font-size:.88rem;margin-top:.3rem">{b.idea.slice(0, 140)}</div>}
+          {tab === "pending" && <div class="muted" style="font-size:.82rem">Venter på depositum {formatOre(b.deposit_ore)}</div>}
+        </a>
+      ))}
     </Layout>,
   );
 });
@@ -485,7 +551,7 @@ admin.get("/bookings/:id", async (c) => {
 
       <h2>Betalinger på avtalen</h2>
       <PaymentTable rows={payments.results} staff={staff} />
-      <PaymentForm staff={staff} bookingId={b.id} staffId={b.staff_id} date={today()} back={`/admin/bookings/${b.id}`} />
+      <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} bookingId={b.id} staffId={b.staff_id} date={today()} back={`/admin/bookings/${b.id}`} />
     </Layout>,
   );
 });
@@ -570,47 +636,6 @@ admin.get("/photos/:id", async (c) => {
 });
 
 // ---------- Clients ----------
-
-admin.get("/clients", async (c) => {
-  const q = (c.req.query("q") ?? "").trim();
-  const rows = (
-    await (q
-      ? c.env.DB.prepare(
-          "SELECT id, name, phone, email, created_at FROM clients WHERE name LIKE ?1 OR phone LIKE ?1 OR email LIKE ?1 ORDER BY name LIMIT 100",
-        ).bind(`%${q}%`)
-      : c.env.DB.prepare("SELECT id, name, phone, email, created_at FROM clients ORDER BY id DESC LIMIT 50")
-    ).all<{ id: number; name: string; phone: string | null; email: string | null; created_at: string }>()
-  ).results;
-  return c.html(
-    <Layout title="Kunder" path="/admin/clients" user={c.get("user")}>
-      <h1>Kunder</h1>
-      <form method="get" class="row card">
-        <label>
-          Søk på navn, telefon eller e-post
-          <input name="q" value={q} autofocus />
-        </label>
-        <div style="flex:0 0 auto">
-          <button>Søk</button>
-        </div>
-      </form>
-      <div class="card">
-        <table>
-          <tbody>
-            {rows.map((r) => (
-              <tr>
-                <td>
-                  <a href={`/admin/clients/${r.id}`}>{r.name}</a>
-                </td>
-                <td>{r.phone}</td>
-                <td>{r.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Layout>,
-  );
-});
 
 admin.get("/clients/:id", async (c) => {
   const id = Number(c.req.param("id"));
@@ -735,7 +760,7 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
   );
 }
 
-function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?: number; staffId?: number | null; date: string; back: string }) {
+function PaymentForm(props: { staff: { id: number; name: string }[]; methods: string[]; bookingId?: number; staffId?: number | null; date: string; back: string }) {
   return (
     <form method="post" action="/admin/payments" class="card noprint" id="ny">
       <input type="hidden" name="booking_id" value={props.bookingId ? String(props.bookingId) : ""} />
@@ -758,7 +783,7 @@ function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?:
         <label>
           Metode
           <select name="method">
-            {PAYMENT_METHODS.map((m) => (
+            {props.methods.map((m) => (
               <option value={m}>{METHOD_LABELS[m]}</option>
             ))}
           </select>
@@ -808,10 +833,47 @@ function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?:
   );
 }
 
-// Top bar "Nytt salg": the sale itself happens in the till; here it is registered.
-admin.get("/payments/new", (c) => c.redirect("/admin/payments#ny"));
+// Top bar "Nytt salg" (opens in the side panel). The sale itself is taken in the till; here it is
+// registered, or a gift card is sold. Linework's version is a till cart, which we must not be.
+admin.get("/payments/new", async (c) => {
+  const tab = c.req.query("tab") === "gift" && c.get("user").features?.gift_cards !== false ? "gift" : "payment";
+  const staff = await staffList(c.env);
+  const date = today();
+  const closed = await c.env.DB.prepare("SELECT seq FROM day_reports WHERE business_date = ?").bind(date).first<{ seq: number }>();
+  return c.html(
+    <Layout title="Nytt salg" path="/admin/payments" user={c.get("user")} error={c.req.query("error")}>
+      <h1>Nytt salg</h1>
+      {c.get("user").features?.gift_cards !== false && (
+        <p>
+          <SegTabs
+            tabs={[
+              { href: "/admin/payments/new", label: "Betaling" },
+              { href: "/admin/payments/new?tab=gift", label: "Gavekort" },
+            ]}
+            active={tab === "gift" ? "/admin/payments/new?tab=gift" : "/admin/payments/new"}
+          />
+        </p>
+      )}
+      {closed ? (
+        <p class="muted">Dagen er avsluttet (dagsoppgjør nr. {closed.seq}). Nye salg registreres i morgen.</p>
+      ) : tab === "gift" ? (
+        <GiftCardSaleForm methods={paymentMethods(c.get("user")).filter((m) => m !== "gift_card" && m !== "bank")} />
+      ) : (
+        <>
+          <p class="muted">
+            {zettleEnabled(c.env)
+              ? "Ta betalt i Zettle, så kommer salget inn her av seg selv. Registrer bare det som ikke gikk gjennom Zettle."
+              : "Ta betalt i kassen som vanlig, og registrer salget her."}
+          </p>
+          <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} date={date} back="/admin/payments" />
+        </>
+      )}
+    </Layout>,
+  );
+});
 
-// Top bar "Nytt depositum": upcoming bookings that still owe a deposit, each with its send button.
+// Top bar "Nytt depositum" (side panel): upcoming bookings that still owe a deposit, each with a
+// send button. In Linework a deposit sits on the client; here it always belongs to a booking.
 admin.get("/deposits/new", async (c) => {
   const rows = (
     await c.env.DB.prepare(
@@ -820,59 +882,174 @@ admin.get("/deposits/new", async (c) => {
        ORDER BY b.starts_at IS NULL, b.starts_at`,
     ).all<BookingRow>()
   ).results;
+  const online = stripeEnabled(c.env);
   return c.html(
     <Layout title="Nytt depositum" path="/admin/deposits" user={c.get("user")}>
       <h1>Nytt depositum</h1>
       <p class="muted">
-        Depositum hører til en avtale. Velg avtalen for å sende betalingslenke på e-post, eller ta det i kassen og registrer det der. Ny kunde? Lag avtalen først.
+        {online
+          ? "Velg avtalen. Kunden får en betalingslenke på e-post, og depositumet trekkes fra prisen."
+          : "Velg avtalen og registrer depositumet når kunden har betalt i kassen."}
       </p>
-      <p>
-        <a class="button" href="/admin/bookings/new">
-          Ny avtale
+      <div class="sectionhead">Venter på depositum</div>
+      {rows.length === 0 && <p class="muted">Ingen avtaler venter på depositum.</p>}
+      {rows.map((b) => (
+        <div class="req">
+          <a href={`/admin/bookings/${b.id}`} style="text-decoration:none">
+            <strong>{b.client_name}</strong>
+            <div class="muted">
+              {when(b)} · {b.staff_name ?? "Hvem som helst"} · {formatOre(b.deposit_ore)}
+            </div>
+          </a>
+          {online && b.client_email && (
+            <form method="post" action={`/admin/bookings/${b.id}/send`} style="margin-top:.5rem">
+              <input type="hidden" name="what" value="deposit" />
+              <button class="small">Send betalingslenke</button>
+            </form>
+          )}
+        </div>
+      ))}
+      <p style="margin-top:1rem">
+        <a class="button secondary" href="/admin/bookings/new">
+          + Ny avtale med depositum
         </a>
       </p>
-      <h2>Venter på depositum</h2>
-      <BookingTable rows={rows} showDate />
     </Layout>,
   );
 });
 
+const SALE_TYPES: [string, string][] = [
+  ["service", "Salg med behandling"],
+  ["product", "Salg med produkter"],
+  ["deposit", "Depositum"],
+  ["gift_card_sale", "Gavekort"],
+  ["refund", "Refusjoner"],
+];
+const PROVIDERS: Record<string, string> = {
+  zettle: "Zettle",
+  stripe: "Nett (Stripe)",
+  vippskassa: "Vippskassa",
+  sumup: "SumUp",
+  gift_card: "Gavekort",
+  manual: "Manuelt",
+};
+
 admin.get("/payments", async (c) => {
+  const unit: PeriodUnit = (["day", "week", "month"] as const).find((u) => u === c.req.query("unit")) ?? "day";
   const date = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : today();
+  const range = periodRange(unit, date);
+  const f = {
+    type: c.req.query("type") ?? "",
+    staff: c.req.query("staff") ?? "",
+    method: c.req.query("method") ?? "",
+    provider: c.req.query("provider") ?? "",
+  };
+  const where = ["p.business_date BETWEEN ?1 AND ?2"];
+  if (f.type === "service") where.push("p.kind = 'payment' AND p.booking_id IS NOT NULL");
+  else if (f.type) where.push(`p.kind = '${SALE_TYPES.find(([k]) => k === f.type)?.[0] ?? "payment"}'`);
+  if (Number(f.staff)) where.push(`p.staff_id = ${Number(f.staff)}`);
+  if (METHOD_LABELS[f.method]) where.push(`p.method = '${f.method}'`);
+  if (PROVIDERS[f.provider]) where.push(`p.provider = '${f.provider}'`);
   const [rows, staff, closed] = await Promise.all([
-    c.env.DB.prepare("SELECT * FROM payments WHERE business_date = ? ORDER BY paid_at, id").bind(date).all<PaymentRow>(),
+    c.env.DB.prepare(
+      `SELECT p.*, s.name AS staff_name, cl.name AS client_name, cl.id AS client_id FROM payments p
+       LEFT JOIN staff s ON s.id = p.staff_id LEFT JOIN bookings b ON b.id = p.booking_id LEFT JOIN clients cl ON cl.id = b.client_id
+       WHERE ${where.join(" AND ")} ORDER BY p.paid_at DESC, p.id DESC`,
+    )
+      .bind(range.from, range.to)
+      .all<PaymentRow & { staff_name: string | null; client_name: string | null; client_id: number | null }>(),
     staffList(c.env),
-    c.env.DB.prepare("SELECT seq FROM day_reports WHERE business_date = ?").bind(date).first<{ seq: number }>(),
+    unit === "day" ? c.env.DB.prepare("SELECT seq FROM day_reports WHERE business_date = ?").bind(date).first<{ seq: number }>() : null,
   ]);
   const total = rows.results.reduce((s, p) => s + p.amount_ore, 0);
+  const qs = (u: PeriodUnit, d: string) =>
+    `/admin/payments?${new URLSearchParams({ unit: u, date: d, ...Object.fromEntries(Object.entries(f).filter(([, v]) => v)) })}`;
   return c.html(
-    <Layout title="Betalinger" path="/admin/payments" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
-      <div class="row" style="justify-content:space-between">
-        <h1>Betalinger {date}</h1>
-        <div style="flex:0 0 auto">
-          <a class="button secondary" href={`/admin/payments?date=${addDays(date, -1)}`}>←</a>{" "}
-          <a class="button secondary" href={`/admin/payments?date=${addDays(date, 1)}`}>→</a>{" "}
-          <a class="button secondary" href={`/admin/export.csv?from=${date.slice(0, 8)}01&to=${date}`}>CSV for regnskap</a>
-        </div>
-      </div>
-      {zettleEnabled(c.env) && (
-        <form method="post" action="/admin/zettle-sync" class="noprint" style="margin-bottom:1rem">
-          <input type="hidden" name="back" value={`/admin/payments?date=${date}`} />
-          <button class="secondary">Hent nye betalinger fra Zettle</button>
-        </form>
-      )}
-      <PaymentTable rows={rows.results} staff={staff} />
-      <p>
-        Sum: <strong>{formatOre(total)}</strong>
-      </p>
-      {closed ? (
-        <p class="muted">
-          Dagen er avsluttet (<a href={`/admin/report/${closed.seq}`}>dagsoppgjør nr. {closed.seq}</a>). Rettelser registreres som refusjon på
-          dagens dato.
-        </p>
+    <Layout title="Salg" path="/admin/payments" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
+      <PageHead title="Salg">
+        {zettleEnabled(c.env) && (
+          <form method="post" action="/admin/zettle-sync" class="noprint">
+            <input type="hidden" name="back" value={qs(unit, date)} />
+            <button class="secondary">Hent fra Zettle</button>
+          </form>
+        )}
+        <a class="button secondary" href={`/admin/export.csv?from=${range.from}&to=${range.to}`}>
+          <Icon name="download" size={16} /> CSV
+        </a>
+      </PageHead>
+      <PeriodNav unit={unit} date={date} href={qs} />
+      <form method="get" class="filters">
+        <input type="hidden" name="unit" value={unit} />
+        <input type="hidden" name="date" value={date} />
+        <FilterSelect name="type" value={f.type} all="Alle salg" options={SALE_TYPES} />
+        <FilterSelect name="staff" value={f.staff} all="Alle artister" options={staff.map((s) => [String(s.id), s.name])} />
+        <FilterSelect
+          name="method"
+          value={f.method}
+          all="Alle betalingsmåter"
+          options={Object.entries(METHOD_LABELS).filter(([m]) => m !== "other" && (m !== "cash" || c.get("user").features?.cash))}
+        />
+        <FilterSelect name="provider" value={f.provider} all="Alle kilder" options={Object.entries(PROVIDERS)} />
+      </form>
+      {rows.results.length === 0 ? (
+        <Empty icon="sales" text={unit === "day" ? "Ingen salg registrert denne dagen" : "Ingen salg i denne perioden"} />
       ) : (
-        <PaymentForm staff={staff} date={date} back={`/admin/payments?date=${date}`} />
+        <div class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Salg</th>
+                <th>Betalingsmåte</th>
+                <th>Tid</th>
+                <th>Artist</th>
+                <th>Kilde</th>
+                <th>Kunde</th>
+                <th class="num">Beløp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.results.map((p) => (
+                <tr>
+                  <td>
+                    {p.booking_id ? <a href={`/admin/bookings/${p.booking_id}`}>{KIND_LABELS[p.kind]}</a> : KIND_LABELS[p.kind]}
+                    {p.note && (
+                      <div class="muted" style="font-size:.82rem">
+                        {p.note}
+                      </div>
+                    )}
+                  </td>
+                  <td>{METHOD_LABELS[p.method]}</td>
+                  <td>
+                    {unit !== "day" && `${p.business_date.split("-").reverse().slice(0, 2).join(".")} `}
+                    {localTime(p.paid_at)}
+                  </td>
+                  <td>{p.staff_name ?? "Studio"}</td>
+                  <td>{PROVIDERS[p.provider ?? ""] ?? p.provider}</td>
+                  <td>{p.client_id ? <a href={`/admin/clients/${p.client_id}`}>{p.client_name}</a> : "–"}</td>
+                  <td class="num">{formatOre(p.amount_ore)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
+      <div class="sumbar">
+        <span>
+          <strong>{rows.results.length}</strong> salg
+        </span>
+        <span>
+          <strong>{formatOre(total)}</strong>
+        </span>
+        {closed ? (
+          <span>
+            <a href={`/admin/report/${closed.seq}`}>Dagsoppgjør nr. {closed.seq}</a>
+          </span>
+        ) : unit === "day" ? (
+          <span>
+            <a href={`/admin/report?date=${date}`}>Til dagsoppgjør</a>
+          </span>
+        ) : null}
+      </div>
     </Layout>,
   );
 });
@@ -890,6 +1067,7 @@ admin.post("/payments", async (c) => {
     return c.redirect(`${back}${sep}error=Sjekk+beløp,+type+og+dato`);
   }
   if (date > today()) return c.redirect(`${back}${sep}error=Kan+ikke+registrere+på+en+fremtidig+dato`);
+  if (method === "cash" && !user.features?.cash) return c.redirect(`${back}${sep}error=Studioet+tar+ikke+kontanter`);
   // Refunds are always stored as negative amounts so sums stay correct.
   amount = kind === "refund" ? -Math.abs(amount) : Math.abs(amount);
 
@@ -969,7 +1147,7 @@ async function computeReport(env: Env, date: string, counted: number | null): Pr
   return buildDayReport(date, payments.results, staff.results, counted);
 }
 
-function ReportView({ report, seq, closedBy, closedAt, note }: { report: DayReport; seq?: number; closedBy?: string; closedAt?: string; note?: string | null }) {
+function ReportView({ report, seq, closedBy, closedAt, note, cash }: { report: DayReport; seq?: number; closedBy?: string; closedAt?: string; note?: string | null; cash: boolean }) {
   return (
     <>
       <div class="card">
@@ -1006,7 +1184,7 @@ function ReportView({ report, seq, closedBy, closedAt, note }: { report: DayRepo
           <h2 style="margin-top:0">Per betalingsmåte</h2>
           <table>
             <tbody>
-              {PAYMENT_METHODS.map((m) => (
+              {PAYMENT_METHODS.filter((m) => report.by_method[m] || ["card", "vipps", "gift_card"].includes(m) || (m === "cash" && cash)).map((m) => (
                 <tr>
                   <td>{METHOD_LABELS[m]}</td>
                   <td class="num">{formatOre(report.by_method[m])}</td>
@@ -1040,25 +1218,27 @@ function ReportView({ report, seq, closedBy, closedAt, note }: { report: DayRepo
             </tbody>
           </table>
         </div>
+        {(cash || report.cash_expected_ore !== 0 || report.cash_counted_ore != null) && (
         <div class="card">
-          <h2 style="margin-top:0">Kontanter</h2>
-          <table>
-            <tbody>
-              <tr>
-                <td>Forventet</td>
-                <td class="num">{formatOre(report.cash_expected_ore)}</td>
-              </tr>
-              <tr>
-                <td>Talt</td>
-                <td class="num">{formatOre(report.cash_counted_ore)}</td>
-              </tr>
-              <tr>
-                <td>Differanse</td>
-                <td class="num">{formatOre(report.cash_difference_ore)}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            <h2 style="margin-top:0">Kontanter</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Forventet</td>
+                  <td class="num">{formatOre(report.cash_expected_ore)}</td>
+                </tr>
+                <tr>
+                  <td>Talt</td>
+                  <td class="num">{formatOre(report.cash_counted_ore)}</td>
+                </tr>
+                <tr>
+                  <td>Differanse</td>
+                  <td class="num">{formatOre(report.cash_difference_ore)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       <div class="card">
         <h2 style="margin-top:0">Per artist</h2>
@@ -1105,9 +1285,9 @@ admin.get("/report", async (c) => {
 
   return c.html(
     <Layout title="Dagsoppgjør" path="/admin/report" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
-      {c.get("user").role === "owner" && <ReportTabs active="day" />}
+      <ReportTabs active="day" owner={c.get("user").role === "owner"} />
       <div class="row" style="justify-content:space-between">
-        <h1>Dagsoppgjør {date}</h1>
+        <h2 style="margin:0;font-size:1.3rem">Dagsoppgjør {date}</h2>
         <div style="flex:0 0 auto">
           <a class="button secondary" href={`/admin/report?date=${addDays(date, -1)}`}>←</a>{" "}
           <a class="button secondary" href={`/admin/report?date=${addDays(date, 1)}`}>→</a>
@@ -1116,14 +1296,16 @@ admin.get("/report", async (c) => {
       <p class="muted">
         Foreløpig oppgjør (X). Når dagen avsluttes blir oppgjøret nummerert og låst, og betalinger kan ikke lenger endres for denne datoen.
       </p>
-      <ReportView report={report} />
+      <ReportView report={report} cash={Boolean(c.get("user").features?.cash)} />
       <form method="post" action="/admin/report/close" class="card">
         <input type="hidden" name="date" value={date} />
         <div class="row">
-          <label>
-            Talt kontantbeholdning (kr)
-            <input name="counted" inputmode="decimal" placeholder={String(report.cash_expected_ore / 100)} />
-          </label>
+          {(c.get("user").features?.cash || report.cash_expected_ore !== 0) && (
+            <label>
+              Talt kontantbeholdning (kr)
+              <input name="counted" inputmode="decimal" placeholder={String(report.cash_expected_ore / 100)} />
+            </label>
+          )}
           <label>
             Kommentar
             <input name="note" />
@@ -1218,7 +1400,7 @@ admin.get("/report/:seq", async (c) => {
           </button>
         </div>
       </div>
-      <ReportView report={JSON.parse(row.totals_json)} seq={row.seq} closedBy={row.closed_by} closedAt={row.closed_at} note={row.note} />
+      <ReportView report={JSON.parse(row.totals_json)} cash={Boolean(c.get("user").features?.cash)} seq={row.seq} closedBy={row.closed_by} closedAt={row.closed_at} note={row.note} />
       <p class="muted">
         Dette er studioets interne dagsoppgjør, ikke en kassasystem-Z-rapport. Den lovpålagte Z-rapporten kommer fra det
         produkterklærte kassasystemet (f.eks. Vippskassa eller Zettle).

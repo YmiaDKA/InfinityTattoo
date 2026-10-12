@@ -8,6 +8,7 @@ import {
   loadAccounting,
   monthRange,
   PROGRAMS,
+  revenueSummary,
   saveAccounting,
   sourceTotals,
   voucherCsv,
@@ -17,8 +18,9 @@ import { monthName, summaryPdf } from "../lib/accounting-pdf";
 import { sendEmail } from "../lib/email";
 import { formatOre } from "../lib/report";
 import { syncStripeMoney } from "../lib/stripe-sync";
-import { addDays } from "../lib/time";
-import { Layout } from "../views/layout";
+import { addDays, isDateString } from "../lib/time";
+import { Icon, Layout } from "../views/layout";
+import { PageHead, PeriodNav, periodRange, Tabs, type PeriodUnit } from "../views/ui";
 import { adminApp, audit, str, today, type AdminEnv } from "./admin-shared";
 
 /** Rapporter → Regnskap: the month's files for the accountant (vouchers CSV, artist CSV, summary PDF). */
@@ -56,18 +58,66 @@ async function monthFor(c: Context<AdminEnv>, month: string, sync: boolean) {
 const download = (body: string | Uint8Array, type: string, name: string) =>
   new Response(body, { headers: { "Content-Type": type, "Content-Disposition": `attachment; filename="${name}"`, "Cache-Control": "no-store" } });
 
-export function ReportTabs({ active }: { active: "day" | "accounting" }) {
+/** Rapporter has Linework's Revenue report first, then our daily settlement and the accountant's files. */
+export function ReportTabs({ active, owner }: { active: "revenue" | "day" | "accounting"; owner: boolean }) {
+  const tabs = [
+    { href: "/admin/reports", label: "Omsetning" },
+    { href: "/admin/report", label: "Dagsoppgjør" },
+    ...(owner ? [{ href: "/admin/accounting", label: "Regnskap" }] : []),
+  ];
   return (
-    <div class="seg noprint" style="margin-bottom:1rem">
-      <a href="/admin/report" aria-current={active === "day" ? "true" : undefined}>
-        Dagsoppgjør
-      </a>
-      <a href="/admin/accounting" aria-current={active === "accounting" ? "true" : undefined}>
-        Regnskap
-      </a>
+    <div class="noprint">
+      <PageHead title="Rapporter" />
+      <Tabs tabs={tabs} active={{ revenue: "/admin/reports", day: "/admin/report", accounting: "/admin/accounting" }[active]} />
     </div>
   );
 }
+
+accounting.get("/reports", async (c) => {
+  const unit: PeriodUnit = (["day", "week", "month", "year"] as const).find((u) => u === c.req.query("unit")) ?? "day";
+  const date = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : today();
+  const { from, to } = periodRange(unit, date);
+  const withRent = c.get("user").features?.rent !== false;
+  const rentMonths = withRent ? (unit === "month" ? 1 : unit === "year" ? 12 : 0) : 0;
+  const r = await revenueSummary(c.env, from, to, rentMonths);
+  const row = (label: string, value: number, total = false) => (
+    <tr class={total ? "total" : undefined}>
+      <td>{label}</td>
+      <td class="num">{formatOre(value)}</td>
+    </tr>
+  );
+  return c.html(
+    <Layout title="Rapporter" path="/admin/reports" user={c.get("user")}>
+      <ReportTabs active="revenue" owner={ownerOnly(c)} />
+      <div class="card" style="max-width:53rem;padding:1.5rem 2rem">
+        <h2 style="margin:0 0 1rem;font-size:1.3rem">Omsetning</h2>
+        <PeriodNav unit={unit} date={date} units={["day", "week", "month", "year"]} href={(u, d) => `/admin/reports?unit=${u}&date=${d}`} />
+        <table class="lines">
+          <tbody>
+            {withRent && row(rentMonths ? "Stolleie" : "Stolleie (vises per måned og år)", r.rent)}
+            {row("Behandlinger", r.service)}
+            {row("Produkter", r.product)}
+            {row("Totalt salg", r.total, true)}
+            {row("Gebyrer (nettbetaling)", r.fees)}
+            {row("Totale kostnader", r.fees, true)}
+            {row("MVA", r.vat, true)}
+            {row("Netto totalt", r.net, true)}
+          </tbody>
+        </table>
+        {r.giftCardsSold > 0 && <p class="muted">Gavekort solgt i perioden: {formatOre(r.giftCardsSold)}. Regnes som salg først når kortet brukes.</p>}
+        <div class="sectionhead">Last ned</div>
+        <div class="toolbar">
+          <a class="button secondary" href={`/admin/export.csv?from=${from}&to=${to}`}>
+            <Icon name="download" size={16} /> CSV
+          </a>
+          <a class="button secondary" href={`/admin/payments?unit=${unit === "year" ? "month" : unit}&date=${date}`}>
+            <Icon name="sales" size={16} /> Salgsrapport
+          </a>
+        </div>
+      </div>
+    </Layout>,
+  );
+});
 
 accounting.get("/accounting", async (c) => {
   if (!ownerOnly(c)) return c.redirect("/admin/report");
@@ -84,9 +134,9 @@ accounting.get("/accounting", async (c) => {
 
   return c.html(
     <Layout title="Regnskap" path="/admin/report" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
-      <ReportTabs active="accounting" />
+      <ReportTabs active="accounting" owner />
       <div class="row" style="justify-content:space-between;align-items:center">
-        <h1 style="text-transform:capitalize">Regnskap {monthName(month)}</h1>
+        <h2 style="text-transform:capitalize;margin:0;font-size:1.3rem">Regnskap {monthName(month)}</h2>
         <div style="flex:0 0 auto">
           <a class="button secondary" href={`/admin/accounting?month=${shiftMonth(month, -1)}`} aria-label="Forrige måned">
             ←
@@ -124,7 +174,7 @@ accounting.get("/accounting", async (c) => {
               <>Alle tre filene sendes på e-post til {s.accountantEmail}.</>
             ) : (
               <>
-                Legg inn e-posten under <a href="/admin/settings#regnskap">Innstillinger → Regnskap</a> først.
+                Legg inn e-posten under <a href="/admin/settings/accounting">Innstillinger → Regnskap</a> først.
               </>
             )}
           </div>
@@ -297,7 +347,6 @@ export async function AccountingSettingsSection({ c }: { c: Context<AdminEnv> })
   const s = await loadAccounting(c.env);
   return (
     <>
-      <h2 id="regnskap">Regnskap</h2>
       <form method="post" action="/admin/settings/accounting" class="card">
         <div class="row">
           <label>
@@ -345,7 +394,7 @@ accounting.post("/settings/accounting", async (c) => {
     if (/^\d{4,6}$/.test(v)) accounts[k] = v;
   }
   const email = str(body, "accountant_email");
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return c.redirect("/admin/settings?error=Ugyldig+e-post#regnskap");
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return c.redirect("/admin/settings/accounting?error=Ugyldig+e-post");
   await saveAccounting(c.env, {
     program: program in PROGRAMS ? (program as keyof typeof PROGRAMS) : current.program,
     accountantEmail: email,
@@ -353,5 +402,5 @@ accounting.post("/settings/accounting", async (c) => {
     accounts,
   });
   await audit(c.env, c.get("user"), "update", "accounting_settings", null, { program, vat: str(body, "vat_registered") === "1" });
-  return c.redirect("/admin/settings?ok=Regnskap+lagret#regnskap");
+  return c.redirect("/admin/settings/accounting?ok=Regnskap+lagret");
 });

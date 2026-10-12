@@ -2,6 +2,7 @@ import type { Context } from "hono";
 
 import { isDateString, osloToUtc } from "../lib/time";
 import { Layout } from "../views/layout";
+import { Empty, PageHead, SegTabs } from "../views/ui";
 import { adminApp, audit, str, type AdminEnv } from "./admin-shared";
 
 /** Ink register and multi-session projects. */
@@ -221,10 +222,24 @@ studio.get("/inks", async (c) => {
     : null;
 
   return c.html(
-    <Layout title="Blekk" path="/admin/inks" user={c.get("user")} {...flash(c)}>
-      <h1>Blekk</h1>
-      <p class="muted">Register over blekk og batchnummer. Legg til blekket på hver tatovering, så kan du finne alle kunder som har fått en batch hvis den blir tilbakekalt.</p>
-      <div class="card">
+    <Layout title="Produkter" path="/admin/inks" user={c.get("user")} {...flash(c)}>
+      <PageHead title="Produkter" sub="Blekk med batch og holdbarhet. Legg blekket på hver tatovering, så finner du alle kundene som fikk en batch hvis den blir tilbakekalt.">
+        <a class="button secondary" href="#nytt">
+          + Legg til blekk
+        </a>
+      </PageHead>
+      <div class="toolbar">
+        <span class="muted">Kategori</span>
+        <SegTabs
+          tabs={[
+            { href: "/admin/inks", label: "Blekk", count: inks.results.filter((i) => i.active).length },
+            { href: "/admin/inks?all=1", label: "Med arkiverte" },
+          ]}
+          active={showAll ? "/admin/inks?all=1" : "/admin/inks"}
+        />
+      </div>
+      <p class="muted" style="font-size:.88rem">Smykker og pleieprodukter du selger, legges inn i kassen (Zettle). Salget kommer hit av seg selv.</p>
+      <div class="list">
         <table>
           <thead>
             <tr>
@@ -262,10 +277,7 @@ studio.get("/inks", async (c) => {
             ))}
           </tbody>
         </table>
-        {!inks.results.length && <p class="muted">Ingen blekk registrert ennå.</p>}
-        <p>
-          <a href={showAll ? "/admin/inks" : "/admin/inks?all=1"}>{showAll ? "Skjul arkiverte" : "Vis arkiverte"}</a>
-        </p>
+        {!inks.results.length && <Empty icon="products" text="Ingen produkter lagt til ennå" />}
       </div>
 
       {traced && (
@@ -288,7 +300,7 @@ studio.get("/inks", async (c) => {
         </div>
       )}
 
-      <h2>Nytt blekk</h2>
+      <h2 id="nytt">Nytt blekk</h2>
       <form method="post" action="/admin/inks/new" class="card">
         <div class="row">
           <label>

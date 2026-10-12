@@ -24,6 +24,11 @@ export const KIND_LABELS: Record<string, string> = {
   product: "Produkt/smykke",
 };
 
+/** Methods offered when registering a payment. Cash only when the studio has switched it on. */
+export function paymentMethods(user: StaffUser): string[] {
+  return ["card", "vipps", "gift_card", ...(user.features?.cash ? ["cash"] : []), "bank"];
+}
+
 export type BookingRow = {
   id: number;
   status: string;

@@ -9,6 +9,7 @@ export const FEATURES = {
   settlements: { label: "Artistoppgjør", note: "Måneds- og årsoppgjør per artist." },
   photos: { label: "Referansebilder", note: "Kunden kan laste opp bilder med tatoveringsforespørselen." },
   sms: { label: "SMS-påminnelser", note: "SMS dagen før (koster ca. 0,70 kr per SMS)." },
+  cash: { label: "Kontanter", note: "Kontant som betalingsmåte, med opptelling i dagsoppgjøret. Av som standard: studioet tar ikke kontanter.", defaultOff: true },
 } as const;
 
 export type FeatureKey = keyof typeof FEATURES;
@@ -24,8 +25,8 @@ export const ALWAYS_ON = [
 
 export async function loadFeatures(env: Env): Promise<Features> {
   const rows = await env.DB.prepare("SELECT key, enabled FROM features").all<{ key: string; enabled: number }>();
-  const off = new Set(rows.results.filter((r) => !r.enabled).map((r) => r.key));
-  return Object.fromEntries(Object.keys(FEATURES).map((k) => [k, !off.has(k)])) as Features;
+  const saved = new Map(rows.results.map((r) => [r.key, Boolean(r.enabled)]));
+  return Object.fromEntries(Object.entries(FEATURES).map(([k, f]) => [k, saved.get(k) ?? !("defaultOff" in f)])) as Features;
 }
 
 export async function setFeature(env: Env, key: FeatureKey, enabled: boolean) {
