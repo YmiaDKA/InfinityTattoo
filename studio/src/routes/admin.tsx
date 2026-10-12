@@ -19,6 +19,7 @@ import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Layout, StatusPill } from "../views/layout";
 import { extra } from "./admin-extra";
 import { bookingStudioData, ProjectAndInks, studio } from "./admin-studio";
+import { calendar } from "./admin-calendar";
 import {
   adminApp,
   METHOD_LABELS,
@@ -41,7 +42,12 @@ export const admin = adminApp();
 admin.use("*", async (c, next) => {
   const user = await staffFromRequest(c.req.raw, c.env);
   if (!user) return c.text("Ingen tilgang. Logg inn via Cloudflare Access med en ansatt-e-post.", 403);
-  user.features = await loadFeatures(c.env);
+  const [features, open] = await Promise.all([
+    loadFeatures(c.env),
+    c.env.DB.prepare("SELECT COUNT(*) AS n FROM bookings WHERE status = 'requested'").first<{ n: number }>(),
+  ]);
+  user.features = features;
+  user.openRequests = open?.n ?? 0;
   const path = new URL(c.req.url).pathname;
   const blocked = FEATURE_PATHS.find(([prefix, key]) => path.startsWith(prefix) && !user.features![key]);
   if (blocked) return c.redirect(`/admin/settings?error=${encodeURIComponent(`${FEATURES[blocked[1]].label} er slått av under Funksjoner.`)}`);
@@ -51,52 +57,14 @@ admin.use("*", async (c, next) => {
 
 admin.route("/", extra);
 admin.route("/", studio);
+admin.route("/", calendar);
 
-// ---------- Today ----------
+// ---------- Start page ----------
 
-admin.get("/", async (c) => {
-  const date = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : today();
-  const [from, to] = dayRange(date);
-  const [bookings, requests, paid] = await Promise.all([
-    c.env.DB.prepare(`${BOOKING_SELECT} WHERE b.starts_at >= ? AND b.starts_at < ? AND b.status != 'cancelled' ORDER BY b.starts_at`)
-      .bind(from, to)
-      .all<BookingRow>(),
-    c.env.DB.prepare("SELECT COUNT(*) AS n FROM bookings WHERE status = 'requested'").first<{ n: number }>(),
-    c.env.DB.prepare("SELECT COALESCE(SUM(amount_ore), 0) AS total, COUNT(*) AS n FROM payments WHERE business_date = ?")
-      .bind(date)
-      .first<{ total: number; n: number }>(),
-  ]);
-
-  return c.html(
-    <Layout title="I dag" path="/admin" user={c.get("user")} flash={c.req.query("ok")}>
-      <div class="row noprint" style="justify-content:space-between">
-        <h1>{date === today() ? "I dag" : date}</h1>
-        <div style="flex:0 0 auto">
-          <a class="button secondary" href={`/admin?date=${addDays(date, -1)}`}>←</a>{" "}
-          <a class="button secondary" href={`/admin?date=${addDays(date, 1)}`}>→</a>{" "}
-          <a class="button" href="/admin/bookings/new">Ny avtale</a>
-        </div>
-      </div>
-      <div class="grid">
-        <div class="card">
-          <div class="muted">Avtaler</div>
-          <div class="big">{bookings.results.length}</div>
-        </div>
-        <div class="card">
-          <div class="muted">Åpne forespørsler</div>
-          <div class="big">
-            <a href="/admin/requests">{requests?.n ?? 0}</a>
-          </div>
-        </div>
-        <div class="card">
-          <div class="muted">Registrert betalt</div>
-          <div class="big">{formatOre(paid?.total ?? 0)}</div>
-          <div class="muted">{paid?.n ?? 0} betalinger</div>
-        </div>
-      </div>
-      <BookingTable rows={bookings.results} />
-    </Layout>,
-  );
+// Linework opens on the calendar, so we do too. Old links to /admin?date= land on that day.
+admin.get("/", (c) => {
+  const date = c.req.query("date");
+  return c.redirect(isDateString(date ?? "") ? `/admin/calendar?view=day&date=${date}` : "/admin/calendar");
 });
 
 function BookingTable({ rows, showDate }: { rows: BookingRow[]; showDate?: boolean }) {
@@ -163,72 +131,14 @@ admin.get("/requests", async (c) => {
   );
 });
 
-admin.get("/calendar", async (c) => {
-  const start = isDateString(c.req.query("from") ?? "") ? c.req.query("from")! : today();
-  const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
-  const [from] = dayRange(days[0]);
-  const [, to] = dayRange(days[6]);
-  const rows = (
-    await c.env.DB.prepare(`${BOOKING_SELECT} WHERE b.starts_at >= ? AND b.starts_at < ? AND b.status IN ('requested','confirmed','completed') ORDER BY b.starts_at`)
-      .bind(from, to)
-      .all<BookingRow>()
-  ).results;
-  const weekday = new Intl.DateTimeFormat("nb-NO", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" });
-
-  return c.html(
-    <Layout title="Kalender" path="/admin/calendar" user={c.get("user")}>
-      <div class="row" style="justify-content:space-between">
-        <h1>Kalender</h1>
-        <div style="flex:0 0 auto">
-          <a class="button secondary" href={`/admin/calendar?from=${addDays(start, -7)}`}>← Forrige uke</a>{" "}
-          <a class="button secondary" href={`/admin/calendar?from=${addDays(start, 7)}`}>Neste uke →</a>
-        </div>
-      </div>
-      {days.map((d) => {
-        const list = rows.filter((b) => b.starts_at && businessDate(b.starts_at) === d);
-        return (
-          <div class="card">
-            <div class="row" style="justify-content:space-between">
-              <strong style="text-transform:capitalize">{weekday.format(new Date(`${d}T12:00:00Z`))}</strong>
-              <a class="muted" style="flex:0 0 auto" href={`/admin?date=${d}`}>
-                Åpne dag
-              </a>
-            </div>
-            {list.length ? (
-              <table>
-                <tbody>
-                  {list.map((b) => (
-                    <tr>
-                      <td style="width:8rem">
-                        <a href={`/admin/bookings/${b.id}`}>{`${localTime(b.starts_at!)}–${b.ends_at ? localTime(b.ends_at) : ""}`}</a>
-                      </td>
-                      <td>
-                        <span class="dot" style={`background:${b.staff_color ?? "#555"}`} />
-                        {b.staff_name ?? "?"}
-                      </td>
-                      <td>{b.client_name}</td>
-                      <td>{b.service_name}</td>
-                      <td>
-                        <StatusPill status={b.status} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div class="muted">Ingen avtaler</div>
-            )}
-          </div>
-        );
-      })}
-    </Layout>,
-  );
-});
-
 // ---------- Bookings ----------
 
 admin.get("/bookings/new", async (c) => {
   const [staff, services] = await Promise.all([staffList(c.env), serviceList(c.env)]);
+  // Prefilled when you click an empty slot in the calendar.
+  const preDate = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : today();
+  const preTime = /^\d{2}:\d{2}$/.test(c.req.query("time") ?? "") ? c.req.query("time")! : "";
+  const preStaff = Number(c.req.query("staff")) || null;
   return c.html(
     <Layout title="Ny avtale" path="/admin/bookings" user={c.get("user")} error={c.req.query("error")}>
       <h1>Ny avtale</h1>
@@ -260,7 +170,9 @@ admin.get("/bookings/new", async (c) => {
             Artist
             <select name="staff_id">
               {staff.map((s) => (
-                <option value={s.id}>{s.name}</option>
+                <option value={s.id} selected={s.id === preStaff}>
+                  {s.name}
+                </option>
               ))}
             </select>
           </label>
@@ -277,11 +189,11 @@ admin.get("/bookings/new", async (c) => {
         <div class="row">
           <label>
             Dato
-            <input name="date" type="date" value={today()} required />
+            <input name="date" type="date" value={preDate} required />
           </label>
           <label>
             Tid
-            <input name="time" type="time" step="900" required />
+            <input name="time" type="time" step="900" value={preTime} required />
           </label>
           <label>
             Varighet (min)
@@ -823,7 +735,7 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
 
 function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?: number; staffId?: number | null; date: string; back: string }) {
   return (
-    <form method="post" action="/admin/payments" class="card noprint">
+    <form method="post" action="/admin/payments" class="card noprint" id="ny">
       <input type="hidden" name="booking_id" value={props.bookingId ? String(props.bookingId) : ""} />
       <input type="hidden" name="back" value={props.back} />
       <div class="row">
@@ -893,6 +805,35 @@ function PaymentForm(props: { staff: { id: number; name: string }[]; bookingId?:
     </form>
   );
 }
+
+// Top bar "Nytt salg": the sale itself happens in the till; here it is registered.
+admin.get("/payments/new", (c) => c.redirect("/admin/payments#ny"));
+
+// Top bar "Nytt depositum": upcoming bookings that still owe a deposit, each with its send button.
+admin.get("/deposits/new", async (c) => {
+  const rows = (
+    await c.env.DB.prepare(
+      `${BOOKING_SELECT} WHERE b.status IN ('requested','confirmed') AND b.deposit_ore > 0
+         AND b.deposit_ore > COALESCE((SELECT SUM(amount_ore) FROM payments p WHERE p.booking_id = b.id AND p.kind = 'deposit'), 0)
+       ORDER BY b.starts_at IS NULL, b.starts_at`,
+    ).all<BookingRow>()
+  ).results;
+  return c.html(
+    <Layout title="Nytt depositum" path="/admin/deposits" user={c.get("user")}>
+      <h1>Nytt depositum</h1>
+      <p class="muted">
+        Depositum hører til en avtale. Velg avtalen for å sende betalingslenke på e-post, eller ta det i kassen og registrer det der. Ny kunde? Lag avtalen først.
+      </p>
+      <p>
+        <a class="button" href="/admin/bookings/new">
+          Ny avtale
+        </a>
+      </p>
+      <h2>Venter på depositum</h2>
+      <BookingTable rows={rows} showDate />
+    </Layout>,
+  );
+});
 
 admin.get("/payments", async (c) => {
   const date = isDateString(c.req.query("date") ?? "") ? c.req.query("date")! : today();

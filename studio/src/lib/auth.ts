@@ -9,6 +9,8 @@ export type StaffUser = {
   role: string;
   /** Which optional modules are switched on; filled in by the admin middleware. */
   features?: import("./features").Features;
+  /** Open tattoo requests, shown as a badge in the top bar; filled in by the admin middleware. */
+  openRequests?: number;
 };
 
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
