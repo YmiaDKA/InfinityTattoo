@@ -84,6 +84,11 @@ export const galleryImages = [
     tag: "#15",
     alt: "Custom tattoo design artwork by Infinity Tattoo",
   },
+  {
+    src: "/media/gallery/infinity/infinity-31.webp",
+    tag: "#16",
+    alt: "Large black script lettering tattoo along the ribs",
+  },
 ];
 
 export const featuredGalleryImages = galleryImages.slice(0, 6);
