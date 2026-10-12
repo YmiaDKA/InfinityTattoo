@@ -1,0 +1,389 @@
+{
+  "url": "https://app.linework.com/manager/settings/instruction",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "elements": [
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px",
+      "position": "static",
+      "rect": {
+        "height": 1000,
+        "width": 1440,
+        "x": 0,
+        "y": 0
+      },
+      "tag": "BODY",
+      "text": "IT\nInfinity test\nMyrveien 17B\nCalendar\nClients\nFinancials\nSales\nGift Cards\nSettlements\nReports\nNews\nFlash\nNEW\nMarketing\nReviews\nArtists\nManagers\nProducts\nSettings\nGet help\nSettings"
+    },
+    {
+      "background": "rgb(239, 241, 243)",
+      "borderRadius": "10px 0px 0px 10px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 32px",
+      "position": "static",
+      "rect": {
+        "height": 980,
+        "width": 286.2265625,
+        "x": 180,
+        "y": 10
+      },
+      "tag": "ASIDE",
+      "text": "Settings\nStudio setup\nTheme\nSkins\nPayment methods\nServices\nFlash\nOnline booking\nForms\nInstructions\nCash Register\nCompany details\nIntegrations\nClient support\nSubscription & Billing"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 105
+      },
+      "tag": "BUTTON",
+      "text": "Studio setup"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 143
+      },
+      "tag": "BUTTON",
+      "text": "Theme"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 181
+      },
+      "tag": "BUTTON",
+      "text": "Skins"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 219
+      },
+      "tag": "BUTTON",
+      "text": "Payment methods"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 257
+      },
+      "tag": "BUTTON",
+      "text": "Services"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 295
+      },
+      "tag": "BUTTON",
+      "text": "Flash"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 333
+      },
+      "tag": "BUTTON",
+      "text": "Online booking"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 371
+      },
+      "tag": "BUTTON",
+      "text": "Forms"
+    },
+    {
+      "background": "rgb(230, 233, 235)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 409
+      },
+      "tag": "BUTTON",
+      "text": "Instructions"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 447
+      },
+      "tag": "BUTTON",
+      "text": "Cash Register"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 485
+      },
+      "tag": "BUTTON",
+      "text": "Company details"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 523
+      },
+      "tag": "BUTTON",
+      "text": "Integrations"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 561
+      },
+      "tag": "BUTTON",
+      "text": "Client support"
+    },
+    {
+      "background": "rgba(0, 0, 0, 0)",
+      "borderRadius": "8px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 8px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 168.2265625,
+        "x": 212,
+        "y": 599
+      },
+      "tag": "BUTTON",
+      "text": "Subscription & Billing"
+    },
+    {
+      "background": "rgb(248, 249, 250)",
+      "borderRadius": "10px",
+      "color": "rgb(0, 0, 0)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "id": "",
+      "padding": "0px 32px",
+      "position": "relative",
+      "rect": {
+        "height": 980,
+        "width": 995.7734375,
+        "x": 434.2265625,
+        "y": 10
+      },
+      "tag": "MAIN",
+      "text": "Instructions\nCreate and manage instructions to share with clients before or after appointments.\n0/8 Created\n0/8 Enabled\nInstructions before appointments\nNo Instructions Added Yet\nA"
+    },
+    {
+      "background": "rgb(51, 51, 51)",
+      "borderRadius": "10px",
+      "color": "rgb(255, 255, 255)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "500",
+      "id": "",
+      "padding": "1px 14px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 144.0078125,
+        "x": 1213.9921875,
+        "y": 304.5
+      },
+      "tag": "BUTTON",
+      "text": "Add Instructions"
+    },
+    {
+      "background": "rgb(51, 51, 51)",
+      "borderRadius": "10px",
+      "color": "rgb(255, 255, 255)",
+      "display": "flex",
+      "font": "Roboto, sans-serif",
+      "fontSize": "13px",
+      "fontWeight": "500",
+      "id": "",
+      "padding": "1px 14px",
+      "position": "relative",
+      "rect": {
+        "height": 36,
+        "width": 144.0078125,
+        "x": 1213.9921875,
+        "y": 509.5
+      },
+      "tag": "BUTTON",
+      "text": "Add Instructions"
+    }
+  ]
+}

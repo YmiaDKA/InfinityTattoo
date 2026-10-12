@@ -1,0 +1,42 @@
+{
+  // Infinity Studio: booking API + internal admin for Infinity Tattoo.
+  // Runs on the Cloudflare free plan (Workers + D1). See docs/studio/SETUP.md.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "infinity-studio",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+  // Hourly: reminders, releasing unpaid deposit holds.
+  "triggers": { "crons": ["0 * * * *"] },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "ALLOWED_ORIGINS": "https://infinitytattoo.no,https://www.infinitytattoo.no",
+    // Change to the custom domain once it's set up (see README).
+    "PUBLIC_BASE_URL": "https://infinity-studio.workers.dev",
+    "SITE_URL": "https://infinitytattoo.no"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "studio",
+      // Filled in after `npx wrangler d1 create studio`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "env": {
+    "dev": {
+      "vars": {
+        "ENVIRONMENT": "development",
+        "ALLOWED_ORIGINS": "http://localhost:3000",
+        "DEV_STAFF_EMAIL": "dev@localhost",
+        "PUBLIC_BASE_URL": "http://localhost:8787",
+        "SITE_URL": "http://localhost:3000"
+      },
+      "d1_databases": [
+        { "binding": "DB", "database_name": "studio", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+      ],
+      "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "studio-photos" }]
+    }
+  }
+}

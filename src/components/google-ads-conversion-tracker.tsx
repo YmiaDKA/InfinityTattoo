@@ -118,13 +118,17 @@ export function GoogleAdsConversionTracker() {
       });
     };
 
+    const handleStudioBookingComplete = () => trackBookingComplete("studio-form");
+
     document.addEventListener("click", handleClick);
     window.addEventListener("message", handleLineworkMessage);
+    window.addEventListener("studio-booking-complete", handleStudioBookingComplete);
     bookingFrame?.addEventListener("load", handleBookingFrameLoad);
 
     return () => {
       document.removeEventListener("click", handleClick);
       window.removeEventListener("message", handleLineworkMessage);
+      window.removeEventListener("studio-booking-complete", handleStudioBookingComplete);
       bookingFrame?.removeEventListener("load", handleBookingFrameLoad);
     };
   }, []);

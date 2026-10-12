@@ -18,7 +18,8 @@ import {
 import { InstagramPill } from "@/components/instagram-pill";
 import { StudioAddress } from "@/components/studio-address";
 import { ArtistSpotlight } from "@/components/artist-spotlight";
-import { LineworkBooking } from "@/components/linework-booking";
+import { StudioBooking } from "@/components/studio-booking";
+import { StudioGiftCard } from "@/components/studio-gift-card";
 import { HeroBackgroundVideo } from "@/components/hero-background-video";
 import { LocalizedText } from "@/components/localized-text";
 import { PanoramaViewer } from "@/components/panorama-viewer";
@@ -898,7 +899,7 @@ export default function Home() {
             duration={9}
             size={240}
           />
-          <LineworkBooking />
+          <StudioBooking />
         </div>
 
         <div
@@ -1072,21 +1073,25 @@ export default function Home() {
                   no="Til tatoveringen de har ventet på."
                 />
               </p>
-              <Button
-                className="rounded-full"
-                nativeButton={false}
-                render={
-                  <a
-                    href="https://giftcard.linework.com/infinity-tattoo-studio-"
-                    rel="noreferrer"
-                    target="_blank"
-                  />
+              <StudioGiftCard
+                fallback={
+                  <Button
+                    className="rounded-full"
+                    nativeButton={false}
+                    render={
+                      <a
+                        href="https://giftcard.linework.com/infinity-tattoo-studio-"
+                        rel="noreferrer"
+                        target="_blank"
+                      />
+                    }
+                    size="lg"
+                  >
+                    <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
+                    <MoveUpRightIcon data-icon="inline-end" />
+                  </Button>
                 }
-                size="lg"
-              >
-                <LocalizedText en="Buy gift card" no="Kjøp gavekort" />
-                <MoveUpRightIcon data-icon="inline-end" />
-              </Button>
+              />
             </div>
           </div>
         </div>
