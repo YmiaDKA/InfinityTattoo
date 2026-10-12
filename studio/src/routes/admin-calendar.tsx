@@ -1,3 +1,6 @@
+import { getCookie, setCookie } from "hono/cookie";
+
+import { setupItems, type SetupItem } from "../lib/setup";
 import { addDays, businessDate, isDateString, isoWeekday, localTime } from "../lib/time";
 import { Icon, Layout, StatusPill } from "../views/layout";
 import { adminApp, BOOKING_SELECT, dayRange, today, type BookingRow } from "./admin-shared";
@@ -61,6 +64,10 @@ calendar.get("/calendar", async (c) => {
       .bind(to, from)
       .all<{ staff_id: number | null; starts_at: string; ends_at: string; reason: string | null }>(),
   ]);
+  const user = c.get("user");
+  const setup =
+    user.role === "owner" && getCookie(c, "setup_hidden") !== "1" ? await setupItems(c.env, user.features!) : null;
+  const showSetup = setup && setup.some((i) => !i.done && !i.later) ? setup : null;
   const staff = staffRows.results;
   const visibleStaff = staffFilter ? staff.filter((s) => s.id === staffFilter) : staff;
   const bookings = bookingRows.results.filter((b) => !staffFilter || b.staff_id === staffFilter);
@@ -248,6 +255,7 @@ calendar.get("/calendar", async (c) => {
             </div>
           </div>
         </section>
+        {showSetup && <SetupPanel items={showSetup} />}
       </div>
       <script
         dangerouslySetInnerHTML={{
@@ -257,6 +265,44 @@ calendar.get("/calendar", async (c) => {
     </Layout>,
   );
 });
+
+calendar.get("/setup/:state", (c) => {
+  const hide = c.req.param("state") === "hide";
+  setCookie(c, "setup_hidden", hide ? "1" : "0", { path: "/admin", maxAge: 60 * 60 * 24 * 365, sameSite: "Lax", secure: true, httpOnly: true });
+  return c.redirect("/admin/calendar");
+});
+
+function SetupPanel({ items }: { items: SetupItem[] }) {
+  const now = items.filter((i) => !i.later);
+  const later = items.filter((i) => i.later);
+  const row = (i: SetupItem) => (
+    <a class={`setup-item${i.done ? " done" : ""}`} href={i.href}>
+      <span class="setup-check">{i.done ? <Icon name="check" size={16} /> : null}</span>
+      <span>
+        <strong>{i.label}</strong>
+        <span class="muted">{i.hint}</span>
+      </span>
+      <Icon name="right" size={16} />
+    </a>
+  );
+  return (
+    <aside class="setup">
+      <div class="setup-head">
+        <h2>Kom i gang</h2>
+        <a class="iconbtn show" href="/admin/setup/hide" aria-label="Skjul">
+          <Icon name="close" size={18} />
+        </a>
+      </div>
+      <p class="muted setup-count">
+        {now.filter((i) => i.done).length} av {now.length} ferdig
+      </p>
+      <div class="navhead">Det du kan gjøre nå</div>
+      {now.map(row)}
+      {later.length > 0 && <div class="navhead" style="margin-top:1rem">Det du kan gjøre etterpå</div>}
+      {later.map(row)}
+    </aside>
+  );
+}
 
 /** Side-by-side lanes for bookings that overlap in time, like any calendar app. */
 function layoutLanes<T extends { pos: Block }>(items: T[]): (T & { lane: number; lanes: number })[] {

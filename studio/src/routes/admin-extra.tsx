@@ -92,6 +92,9 @@ extra.get("/settings", async (c) => {
   return c.html(
     <Layout title="Innstillinger" path="/admin/settings" user={c.get("user")} {...flash(c)}>
       <h1>Innstillinger</h1>
+      <p>
+        <a href="/admin/setup/show">Vis «Kom i gang»-listen i kalenderen</a>
+      </p>
 
       <h2>Ansatte</h2>
       <div class="card" style="overflow-x:auto">
@@ -129,7 +132,7 @@ extra.get("/settings", async (c) => {
         <p class="muted">Kalender-abonnement: lim inn lenken i iPhone (Innstillinger → Kalender → Kontoer → Legg til abonnement) eller Google Kalender.</p>
       </div>
 
-      <h2>Behandlinger og priser</h2>
+      <h2 id="behandlinger">Behandlinger og priser</h2>
       <div class="card" style="overflow-x:auto">
         <table>
           <thead>
@@ -249,7 +252,7 @@ extra.get("/settings", async (c) => {
         {isOwner(c) && <button>Lagre funksjoner</button>}
       </form>
 
-      <h2>Tilkoblinger</h2>
+      <h2 id="tilkoblinger">Tilkoblinger</h2>
       <div class="card">
         <table>
           <tbody>

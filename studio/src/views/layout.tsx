@@ -65,7 +65,7 @@ body.nav-open .side{transform:none}body.nav-open .scrim{display:block;position:f
 .cal-head{display:grid;grid-template-columns:3.5rem repeat(var(--cols),minmax(7.5rem,1fr));position:sticky;top:0;z-index:3;background:var(--panel2);border-bottom:1px solid var(--line)}
 .cal-colhead{padding:.55rem .6rem;text-decoration:none;border-left:1px solid var(--line);display:flex;flex-direction:column;font-size:.85rem;border-top:3px solid transparent}.cal-colhead strong{font-weight:600}.cal-colhead span{color:var(--muted)}.cal-colhead .dot{margin-bottom:.2rem}
 .cal-colhead.today{border-top-color:var(--accent)}.cal-colhead.today strong{color:var(--accent)}
-.cal-body{display:grid;grid-template-columns:3.5rem repeat(var(--cols),minmax(7.5rem,1fr))}
+.cal-body{display:grid;grid-template-columns:3.5rem repeat(var(--cols),minmax(6.5rem,1fr))}
 .cal-gutter{position:relative}.cal-gutter span{position:absolute;right:.45rem;transform:translateY(-.55em);font-size:.72rem;color:var(--muted)}.cal-gutter span:first-child{transform:none}
 .cal-col{position:relative;border-left:1px solid var(--line);background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 64px)}
 .cal-slot{position:absolute;left:0;right:0;height:64px;z-index:0}.cal-slot:hover{background:#ffffff08}
@@ -74,6 +74,10 @@ body.nav-open .side{transform:none}body.nav-open .scrim{display:block;position:f
 .cal-event{position:absolute;left:3px;width:calc(100% - 6px);z-index:2;overflow:hidden;border-radius:8px;padding:.25rem .45rem;font-size:.78rem;line-height:1.3;text-decoration:none;display:flex;flex-direction:column;background:color-mix(in srgb,var(--c) 22%,#141416);border-left:3px solid var(--c)}
 .cal-event:hover{background:color-mix(in srgb,var(--c) 34%,#141416)}.cal-event .t{color:var(--muted);font-size:.72rem}.cal-event strong{font-weight:600}.cal-event .pill{align-self:flex-start;margin-top:.15rem;font-size:.66rem}
 .cal-event.requested{border-left-style:dashed;background:#1c1c1f}.cal-event.completed{opacity:.75}.cal-event.no_show{opacity:.5;text-decoration:line-through}
+.setup{width:21rem;flex:0 0 21rem;border-left:1px solid var(--line);padding:1rem;overflow-y:auto}.setup-head{display:flex;align-items:center}.setup-head h2{flex:1;margin:0;color:var(--text);font-size:1.25rem;font-weight:500}.setup-count{margin:.2rem 0 1rem;font-size:.85rem}
+.setup .navhead{padding-left:0}.setup-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .5rem;border-radius:10px;text-decoration:none}.setup-item:hover{background:var(--panel)}.setup-item>span:nth-child(2){flex:1}.setup-item strong{display:block;font-weight:500;font-size:.92rem}.setup-item .muted{display:block;font-size:.78rem;line-height:1.35}
+.setup-check{width:2.1rem;height:2.1rem;flex:0 0 2.1rem;border-radius:8px;border:1px dashed #52525b;display:grid;place-items:center}.setup-item.done .setup-check{background:var(--ok);border:0;color:#052e16}.setup-item.done strong{color:var(--muted);text-decoration:line-through}
+@media (max-width:1560px){.cal:has(.setup) .cal-side{display:none}}@media (max-width:1200px){.setup{display:none}}
 @media (max-width:860px){.cal-side{display:none}.cal-toolbar{padding:.5rem .6rem}.cal-toolbar h1{font-size:1rem;margin-left:.2rem}.cal-week{display:none}.cal-toolbar>.iconbtn:first-child{display:none}.cal-head,.cal-body{grid-template-columns:2.75rem repeat(var(--cols),minmax(6.5rem,1fr))}}
 @media print{body.app{display:block;height:auto;overflow:visible}.topbar,.side{display:none!important}.content{overflow:visible;border:0;padding:0}}
 @media print{header,form,.noprint{display:none!important}body{background:#fff;color:#000}.card{border-color:#ccc;background:#fff}th{color:#333}}
@@ -98,6 +102,8 @@ const ICONS: Record<string, string> = {
   sidebar: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/>',
   left: '<path d="m15 18-6-6 6-6"/>',
   right: '<path d="m9 18 6-6-6-6"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  close: '<path d="M18 6 6 18M6 6l12 12"/>',
 };
 
 export function Icon({ name, size = 20 }: { name: string; size?: number }) {
