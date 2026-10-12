@@ -397,6 +397,13 @@ function StudioBookingForm({ api }: { api: string }) {
               </>
             )}
 
+            {service.kind === "tattoo" && (
+              <label className="flex items-start gap-2 text-sm">
+                <input type="checkbox" name="adult" required className="mt-1" />
+                <span>{t("Jeg er over 18 år. Vi tatoverer ikke personer under 18.", "I am over 18. We don't tattoo anyone under 18.")}</span>
+              </label>
+            )}
+
             {service.kind === "tattoo" && config?.photos && (
               <Field>
                 <FieldLabel htmlFor="sb-photos">{t("Referansebilder (valgfritt, maks 5)", "Reference photos (optional, up to 5)")}</FieldLabel>
@@ -416,8 +423,8 @@ function StudioBookingForm({ api }: { api: string }) {
               )}
               {service.deposit_ore > 0 && !service.requires_approval && config?.online_payments
                 ? t(
-                    ` Timen holdes av når depositumet på ${kroner(service.deposit_ore)} er betalt, og trekkes fra prisen.`,
-                    ` Your time is held once the ${kroner(service.deposit_ore)} deposit is paid. It comes off the price.`,
+                    ` Timen holdes av når depositumet på ${kroner(service.deposit_ore)} er betalt. Det trekkes fra prisen og refunderes ikke, men flyttes til ny dato hvis du gir beskjed minst 48 timer før.`,
+                    ` Your time is held once the ${kroner(service.deposit_ore)} deposit is paid. It comes off the price and is non-refundable, but moves to a new date if you tell us at least 48 hours before.`,
                   )
                 : ""}
             </FieldDescription>

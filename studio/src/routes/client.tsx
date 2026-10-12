@@ -61,7 +61,15 @@ client.get("/skjema/:publicId", async (c) => {
           {t("Du kan sende det på nytt hvis noe har endret seg.", "You can send it again if anything has changed.")}
         </div>
       )}
-      {error && <div class="flash error">{error === "age" ? t("Under 18 år krever samtykke fra foresatt.", "Under 18s need consent from a parent or guardian.") : t("Fyll ut alle feltene som kreves.", "Please fill in all required fields.")}</div>}
+      {error && (
+        <div class="flash error">
+          {error === "tattoo_age"
+            ? t("Vi tatoverer ikke personer under 18 år. Ta kontakt med studioet.", "We don't tattoo anyone under 18. Please contact the studio.")
+            : error === "age"
+              ? t("Under 18 år krever samtykke fra foresatt.", "Under 18s need consent from a parent or guardian.")
+              : t("Fyll ut alle feltene som kreves.", "Please fill in all required fields.")}
+        </div>
+      )}
       <form method="post" class="card">
         <input type="hidden" name="lang" value={lang} />
         <div class="row">
@@ -96,6 +104,7 @@ client.get("/skjema/:publicId", async (c) => {
             <textarea name="details" rows={3} />
           </label>
         </fieldset>
+        {b.kind !== "tattoo" && (
         <fieldset>
           <legend>{t("Under 18 år", "Under 18")}</legend>
           <label>
@@ -103,6 +112,7 @@ client.get("/skjema/:publicId", async (c) => {
             <input name="guardian_name" />
           </label>
         </fieldset>
+        )}
         {CONFIRMATIONS.map((q) => (
           <label class="check">
             <input type="checkbox" name={`c_${q.key}`} value="1" required />
@@ -149,7 +159,10 @@ client.post("/skjema/:publicId", async (c) => {
   }
   const guardian = get("guardian_name");
   const onDate = b.starts_at ? businessDate(b.starts_at) : businessDate(new Date());
-  if (ageOn(birthDate, onDate) < 18 && guardian.length < 2) return c.redirect(`${back}&error=age`);
+  const age = ageOn(birthDate, onDate);
+  // The studio doesn't tattoo anyone under 18; other services need a guardian's consent.
+  if (age < 18 && b.kind === "tattoo") return c.redirect(`${back}&error=tattoo_age`);
+  if (age < 18 && guardian.length < 2) return c.redirect(`${back}&error=age`);
 
   const answers: ConsentAnswers = { health, details: get("details").slice(0, 2000), confirmations };
   await c.env.DB.batch([

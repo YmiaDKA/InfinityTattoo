@@ -59,6 +59,12 @@ const signature = (lang: Lang) =>
     ? `\n\nHilsen\n${STUDIO.name}\n${STUDIO.address}\n${STUDIO.phone}`
     : `\n\nBest regards,\n${STUDIO.name}\n${STUDIO.address}\n${STUDIO.phone}`;
 
+/** Deposit rules from the FAQ on infinitytattoo.no. */
+export const DEPOSIT_TERMS = {
+  no: "Depositumet trekkes fra sluttprisen og refunderes ikke. Må du flytte timen, gi beskjed minst 48 timer før, så flyttes depositumet til den nye datoen.",
+  en: "The deposit comes off the final price and is non-refundable. If you need to reschedule, tell us at least 48 hours before and the deposit moves to your new date.",
+};
+
 export function requestReceivedEmail(b: MessageBooking): Email {
   const lang = langOf(b);
   return {
@@ -82,7 +88,7 @@ export function confirmationEmail(b: MessageBooking, links: { consent?: string; 
           "",
           `Adresse: ${STUDIO.address}`,
           STUDIO.parking.no,
-          links.deposit ? `\nBetal depositum på ${formatOre(b.deposit_ore)} her for å holde av timen:\n${links.deposit}` : "",
+          links.deposit ? `\nBetal depositum på ${formatOre(b.deposit_ore)} her for å holde av timen:\n${links.deposit}\n${DEPOSIT_TERMS.no}` : "",
           links.consent ? `\nFyll ut egenerklæringen før du kommer (tar 2 minutter):\n${links.consent}` : "",
           "\nMå du endre eller avlyse? Svar på denne e-posten eller ring oss.",
         ]
@@ -93,7 +99,7 @@ export function confirmationEmail(b: MessageBooking, links: { consent?: string; 
           "",
           `Address: ${STUDIO.address}`,
           STUDIO.parking.en,
-          links.deposit ? `\nPay the ${formatOre(b.deposit_ore)} deposit here to hold your time:\n${links.deposit}` : "",
+          links.deposit ? `\nPay the ${formatOre(b.deposit_ore)} deposit here to hold your time:\n${links.deposit}\n${DEPOSIT_TERMS.en}` : "",
           links.consent ? `\nPlease fill in the health and consent form before you come (takes 2 minutes):\n${links.consent}` : "",
           "\nNeed to change or cancel? Reply to this email or call us.",
         ];
@@ -124,8 +130,8 @@ export function depositLinkEmail(b: MessageBooking, url: string): Email {
     subject: lang === "no" ? "Depositum for timen din" : "Deposit for your appointment",
     text:
       (lang === "no"
-        ? `Hei ${firstName(b.client_name)}!\n\nFor å holde av timen ${whenText(b, lang)} ber vi om et depositum på ${formatOre(b.deposit_ore)}. Det trekkes fra prisen på dagen.\n\nBetal her:\n${url}`
-        : `Hi ${firstName(b.client_name)}!\n\nTo hold your appointment on ${whenText(b, lang)} we ask for a ${formatOre(b.deposit_ore)} deposit. It is taken off the price on the day.\n\nPay here:\n${url}`) +
+        ? `Hei ${firstName(b.client_name)}!\n\nFor å holde av timen ${whenText(b, lang)} ber vi om et depositum på ${formatOre(b.deposit_ore)}. ${DEPOSIT_TERMS.no}\n\nBetal her:\n${url}`
+        : `Hi ${firstName(b.client_name)}!\n\nTo hold your appointment on ${whenText(b, lang)} we ask for a ${formatOre(b.deposit_ore)} deposit. ${DEPOSIT_TERMS.en}\n\nPay here:\n${url}`) +
       signature(lang),
   };
 }

@@ -7,9 +7,13 @@ Updated 2026-10-12. Sources are linked inline. Anything marked *inferred* was no
 
 - **Everything Linework does except the till is built** in `studio/` and runs free on Cloudflare: booking, calendar, clients, consent forms, client emails, deposits, gift cards, staff log, daily and monthly reports.
 - **The till (kassasystem) must be a declared product from another company.** Norwegian law requires card, Vipps and cash taken in the studio to go through a *produkterklært kassasystem* whose supplier is independent of the business ([Skatteetaten](https://www.skatteetaten.no/rettskilder/type/uttalelser/prinsipputtalelser/egenutviklede-kassasystemer/)). The legal Z-report comes from that till. Fine for not using one: 10 rettsgebyr ≈ 13 450 kr, doubled on repeat ([Altinn](https://info.altinn.no/starte-og-drive/regnskap-og-revisjon/regnskap/kontantsalg-og-kassasystem/)).
-- **Recommended till: Zettle (PayPal POS).** The app is free with no fixed fees, card is 1.75 %, Vipps through Zettle has no extra Zettle fee, and Zettle says it is on Skatteetaten's declared list with Z-reports and journal ([prices](https://www.zettle.com/no/priser), [kassasystem](https://www.zettle.com/no/kassasystem/godkjent-kassasystem)). It also has an API, so **our system imports every till payment automatically** and the daily settlement/artist split match the till without typing. Alternative: Vippskassa (no monthly fee, 1.75 %, declared when its bookkeeping features, cash drawer and printer are switched on; [Vipps](https://help.vippsmobilepay.com/nb-NO/articles/bookkeeping-obligations)) but no import.
-- **Today:** the owner takes payments in Linework and uses its "Z-report". Linework never calls itself a kassasystem or mentions produkterklæring/Z-rapport on its site, and we couldn't read Skatteetaten's list from here (*inferred:* its report is a sales report, not a statutory Z-report). Worth checking the [list](https://www.skatteetaten.no/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/liste/) for "Linework" in a browser.
-- **Folio** is his business bank (Sparebanken Norge partnership, 89–359 kr/month) with receipts, accountant access and Fiken/Tripletex integration. It has no till or Z-report, so it doesn't replace either ([folio.no/priser](https://www.folio.no/priser)). Our CSV export works for his accountant alongside it.
+- **Recommended till: Zettle (PayPal POS).** The app is free with no fixed fees, card is 1.75 %, Vipps through Zettle is listed at 0 kr, and Zettle markets it as an approved kassasystem with Z-reports ([prices](https://www.zettle.com/no/priser), [kassasystem](https://www.zettle.com/no/kassasystem/godkjent-kassasystem)). **No hardware needed:** Tap to Pay on iPhone works in Norway (iPhone XS or newer) for cards and Apple Pay ([Zettle](https://www.paypal.com/no/zettle), [Apple regions](https://developer.apple.com/tap-to-pay/regions/)). A reader is 249 kr if he wants one. Our system imports every Zettle payment automatically, so the daily settlement and artist split match the till without typing.
+- **Alternatives checked:**
+  - SumUp is 1.49 % on cards with Tap to Pay in Norway ([SumUp](https://www.sumup.com/nb-no/priser/)). That saves about 0.26 points (~500 kr/month on 200 000 kr in card sales), but we found no sign of a declared Norwegian kassasystem from SumUp, so it can't replace the till on its own.
+  - Vippskassa has no monthly fee and 1.75 %, and is declared when its bookkeeping features, cash drawer and printer are switched on ([Vipps](https://help.vippsmobilepay.com/nb-NO/articles/bookkeeping-obligations)), but there's no import into our system.
+  - Stripe, Viva, Nexi and Adyen also do Tap to Pay in Norway, but none of them is a ready kassasystem for a small studio.
+- **Today:** the owner takes payments in Linework and uses its "Z-report". Linework never calls itself a kassasystem or mentions produkterklæring/Z-rapport on its site; its "Utsalgssted" takes payment by QR code or link through Dintero (*inferred:* its report is a sales report, not a statutory Z-report). Skatteetaten's [list](https://www.skatteetaten.no/bedrift-og-organisasjon/starte-og-drive/rutiner-regnskap-og-kassasystem/kassasystem/liste/) only loads in a browser; worth a look for "Zettle" and "Linework".
+- **Folio** is his business bank (89–359 kr/month): account, card, receipts and accounting automation. It has no way to take payments (no terminal, links, Vipps or Tap to Pay) and no till or Z-report ([folio.no](https://folio.no), [FAQ](https://folio.no/sporsmal-og-svar)). Our CSV export works for his accountant alongside it.
 
 ## 2. Feature coverage vs Linework
 
@@ -25,7 +29,7 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Consent / health form | ✅ Sent with confirmation and reminder, signed on phone, 18+ check with guardian, health flags shown on the booking | `/skjema/…` |
 | SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ❌ SMS (costs per message anywhere) | Automatic |
 | Aftercare after the session | ✅ Per-service text (NO/EN), sent when the booking is set to completed | Innstillinger → Behandlinger |
-| Payment in the studio (Utsalgssted) | ↪ Zettle till (declared). Payments imported automatically; manual entry for anything else | Betalinger |
+| Payment in the studio (Utsalgssted) | ↪ Zettle till with Tap to Pay on iPhone (no hardware). Payments imported automatically; manual entry for anything else | Betalinger |
 | Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement; CSV for the accountant | Dagsoppgjør, Artistoppgjør |
 | Studio rent / commission split | ✅ Studio share % per artist on every report | Innstillinger → Ansatte |
 | Multiple artists, managers | ✅ Unlimited staff and logins for free (Cloudflare Access, up to 50) | |
@@ -83,15 +87,26 @@ D1: staff, services, hours, time_off, clients, bookings, consents, payments, day
 4. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
 5. Move the website from Vercel to Cloudflare and serve the API on the same domain.
 
-## 7. Questions for the owner
+## 7. Decisions and defaults
 
-1. **Till:** OK to switch in-studio payments from Linework to Zettle? (Needs a cash drawer + printer only if he takes cash.)
-2. **Studio share:** what % does the studio keep from Filip and from Nora?
-3. **Deposits:** amount per service, and is it refundable on cancellation?
-4. **Logins:** which emails get access, and who is the owner (can change settings)?
-5. **Org.nr.** for the personalliste header, and whether Nora's SUPREME.GEMZ is the same business or her own (affects whose till/report her sales belong to).
-6. **Age policy:** tattoos under 18 at all? (The form currently requires a guardian's name under 18.)
-7. **Health data retention:** how long to keep signed consent forms (we keep them until deleted).
+Decided by the owner (2026-10-12): in-studio payments move from Linework to Zettle; no tattoos under 18 (the booking form asks for 18+ and the consent form blocks it).
+
+Taken from the website FAQ: tattoo deposit 500–1000 kr (default 500 kr, raised per booking), deducted from the price, non-refundable, moved to a new date if rescheduled at least 48 hours ahead. The booking form and emails say this.
+
+Defaults that can be changed any time in *Innstillinger*, so they don't block launch:
+- Studio share per artist: 0 % until set (Filip owns the studio; set Nora's share when known).
+- Org.nr. on the personalliste print: blank until set.
+- Nora's tooth gems/piercings go through the same till and reports as the studio.
+- Signed consent forms are kept until deleted.
+
+Needed to go live: the staff emails that should get a login, and access to his Cloudflare account (or he creates one).
+
+## 8. What Linework has that we don't
+
+- Payments by QR/link with automatic payout split between studio and artists (Dintero). We take online deposits through Stripe and leave in-studio payments to the till; the split is calculated in the settlements instead of paid out automatically.
+- Native iOS/Android apps. Our admin runs in the phone browser and can be added to the home screen.
+- SMS reminders (we send email).
+None of these is a legal requirement or something only Linework can do.
 
 ## Notes
 
