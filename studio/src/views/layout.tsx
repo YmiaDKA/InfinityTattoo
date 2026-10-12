@@ -34,6 +34,7 @@ const links = [
   ["/admin/report", "Dagsoppgjør"],
   ["/admin/settlements", "Artistoppgjør"],
   ["/admin/gift-cards", "Gavekort"],
+  ["/admin/inks", "Blekk"],
   ["/admin/shifts", "Personalliste"],
   ["/admin/settings", "Innstillinger"],
 ] as const;

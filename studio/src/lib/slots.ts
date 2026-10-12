@@ -11,6 +11,8 @@ export type SlotInput = {
   now: Date;
   stepMin?: number;
   minNoticeMin?: number;
+  /** Cleanup time kept free before and after the appointment. */
+  bufferMin?: number;
 };
 
 /** Free start times (UTC ISO) for one staff member on one day. */
@@ -22,6 +24,7 @@ export function freeSlots({
   now,
   stepMin = 30,
   minNoticeMin = 12 * 60,
+  bufferMin = 0,
 }: SlotInput): string[] {
   const weekday = isoWeekday(date);
   const earliest = now.getTime() + minNoticeMin * 60000;
@@ -35,7 +38,8 @@ export function freeSlots({
     for (let start = open; start + duration <= close; start += stepMin * 60000) {
       const end = start + duration;
       if (start < earliest) continue;
-      if (busyRanges.some(([s, e]) => start < e && end > s)) continue;
+      const buffer = bufferMin * 60000;
+      if (busyRanges.some(([s, e]) => start - buffer < e && end + buffer > s)) continue;
       slots.push(new Date(start).toISOString());
     }
   }

@@ -16,6 +16,7 @@ type ServiceRow = {
   name_en: string;
   kind: string;
   duration_min: number;
+  buffer_min?: number;
   price_ore: number | null;
   deposit_ore: number;
   requires_approval: number;
@@ -98,7 +99,7 @@ async function availabilityFor(env: Env, service: ServiceRow, staffFilter: numbe
       busyFor(env, member.id, rangeStart, rangeEnd),
     ]);
     for (const date of dates) {
-      const slots = freeSlots({ date, durationMin: service.duration_min, hours: hours.results, busy, now });
+      const slots = freeSlots({ date, durationMin: service.duration_min, hours: hours.results, busy, now, bufferMin: service.buffer_min ?? 0 });
       if (slots.length) {
         out.push({
           date,

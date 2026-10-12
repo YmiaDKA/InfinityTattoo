@@ -30,6 +30,8 @@ export type BookingRow = {
   starts_at: string | null;
   ends_at: string | null;
   client_id: number;
+  project_id: number | null;
+  service_kind: string;
   client_name: string;
   client_phone: string | null;
   client_email: string | null;
@@ -53,7 +55,7 @@ export type BookingRow = {
 
 export const BOOKING_SELECT = `
   SELECT b.*, c.name AS client_name, c.phone AS client_phone, c.email AS client_email,
-         s.name AS staff_name, s.color AS staff_color, sv.name_no AS service_name
+         s.name AS staff_name, s.color AS staff_color, sv.name_no AS service_name, sv.kind AS service_kind
   FROM bookings b
   JOIN clients c ON c.id = b.client_id
   JOIN services sv ON sv.id = b.service_id

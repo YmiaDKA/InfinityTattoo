@@ -28,7 +28,7 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Calendar sync to phone | ✅ Private subscription link per artist (iPhone/Google) | Innstillinger |
 | Client records | ✅ Search, notes, birth date, history | Kunder |
 | Consent / health form | ✅ Sent with confirmation and reminder, signed on phone, 18+ check with guardian, health flags shown on the booking | `/skjema/…` |
-| SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ✅ SMS reminder the day before through Twilio (~0.75 kr each) | Automatic |
+| SMS/email reminders | ✅ Email: request received, confirmation, reminder ~24 h before, cancellation, aftercare. ✅ SMS reminder the day before through 46elks (0.70 SEK ≈ 0.70 kr each) | Automatic |
 | Aftercare after the session | ✅ Per-service text (NO/EN), sent when the booking is set to completed | Innstillinger → Behandlinger |
 | Payment in the studio (Utsalgssted) | ↪ Zettle till with Tap to Pay on iPhone (no hardware). Payments imported automatically; manual entry for anything else | Betalinger |
 | Daily/weekly/monthly reports | ✅ Numbered, locked daily settlement with cash count; monthly artist settlement; CSV for the accountant | Dagsoppgjør, Artistoppgjør |
@@ -37,7 +37,12 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Piercer | ✅ Nora is a staff member with her own services, hours and calendar | |
 | Gift cards (2.99 % fee) | ✅ Sold online (Stripe) or in the studio, unique code, balance, redeem as payment method, 3-year validity, outstanding liability shown | Gavekort, website |
 | Personalliste (needed for piercing as skjønnhetspleie) | ✅ Start/stop per person, append-only corrections with reason, printable. Linework doesn't have this | Personalliste |
-| Products / ink inventory | ❌ Backlog. Product sales are already tracked as a payment type | |
+| Ink registration, inventory, suppliers | ✅ Ink register with brand, batch, expiry, supplier and stock; inks logged on each tattoo; find every client who got a batch if it's recalled | Blekk, booking page |
+| Multi-session projects | ✅ "Book neste økt" from a booking; sessions listed together | Booking page |
+| Booth rent / commission | ✅ Studio share % and/or fixed monthly rent per artist; month and year settlements | Artistoppgjør |
+| Cleanup time between appointments | ✅ Per service, used when the website offers times | Innstillinger → Behandlinger |
+| No-show history | ✅ Shown on the booking ("Møtte ikke 2 ganger før") | Booking page |
+| Retail products | ↪ Sold in the Zettle till (it has a product list and stock) and imported as payments | |
 | Flash booking | ❌ Backlog (can be a service with a fixed price today) | |
 | Mobile app | Admin is built for phones and installs on the home screen with the studio icon (opens full screen like an app). No App Store app needed | |
 
@@ -45,12 +50,12 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 
 | | Linework today | Infinity Studio |
 |---|---|---|
-| Monthly | 790 kr studio + 490 kr per artist (excl. VAT), +190 kr for daily payouts | 0 kr (Cloudflare free plan, Resend free email up to 100/day) |
+| Monthly | What he pays: about 600 kr studio + 200 kr per user, so about 1 000 kr with Nora (list price on linework.no: 790 + 490 per artist), +190 kr for daily payouts | 0 kr (Cloudflare free plan, Resend free email up to 100/day) |
 | Card in studio | 1.65 % | 1.75 % (Zettle) |
 | Vipps in studio | 1.75 % | Through Zettle: no Zettle fee; Vipps' own pricing applies (*inferred*). Vippskassa: 1.75 % |
 | Online deposits | Card 1.65 %, Vipps 1.75 %, Klarna 3.99 % | Stripe card fee (about 1.5 % + 1.80 kr for European cards; *check current Stripe pricing*) |
 | Gift cards | 2.99 % | Stripe card fee online; till fee in studio |
-| SMS | 0.99 kr each | ~0.75 kr each (Twilio, no monthly fee) |
+| SMS | 0.99 kr each | ~0.70 kr each (46elks, prepaid, no monthly fee) |
 
 **Is Vipps free for businesses?** No, but there's no monthly or setup fee: in person 1.75 %, payment links 2.49 % + 1 kr, integrated online payments 2.99 % + 1 kr ([Vipps pricing](https://vippsmobilepay.com/nb-NO/pricing)).
 
@@ -110,11 +115,20 @@ Linework has no public API, webhooks or export button that we could find, and no
 2. If they don't, or the export is incomplete: with a Linework login, a session uses the browser to read clients and upcoming bookings and imports them.
 3. Upcoming bookings are what matters on switch-over day; old payments stay in Linework's reports for the accounts.
 
-## 9. What Linework has that we don't
+## 9. What Linework has that we don't (and why that's OK)
 
-- Payments by QR/link with automatic payout split between studio and artists (Dintero). We take online deposits through Stripe and leave in-studio payments to the till; the split is calculated in the settlements instead of paid out automatically.
-- Native iOS/Android apps. Our admin installs on the home screen from the browser instead.
-None of these is a legal requirement or something only Linework can do.
+Full sweep of linework.no, linework.com, the App Store version history and terms (2026-10-12). What makes Linework "for tattoo artists" is mostly money handling: one artist account across several studios, automatic payout split of every card payment between studio and artist, rent invoices to artists, and ink registration. Everything else is a normal booking app.
+
+Not copied:
+- **Payout split at payment time (Dintero) and payment links/QR with tips.** In-studio payments must go through the declared till (Zettle has tips); we calculate the split in the settlement instead of splitting payouts.
+- **Artist linked to several studios / marketplace for guest artists.** Guest artists can be added as staff with their own share or rent.
+- **Klarna and invoices with 10/15/30 days.** Not used in a tattoo studio day to day; Folio/Fiken can invoice if needed.
+- **Native app with push.** The home-screen web app covers it; new requests can be emailed to the studio.
+- **Google Calendar import, 3-day/month views, flash gallery, editable email templates, donations at checkout.** Small; can be added when someone asks.
+
+## 10. Open-source projects compared
+
+No mature open-source tattoo system exists. Closest general ones: Cal.com (scheduling), Easy!Appointments, LibreBooking, OpenSalon (Hono + SQLite, very close to our stack), pretix (gift cards/vouchers). Ideas borrowed from them: cleanup buffer, no-show history, multi-session series, minimum notice (12 h). Ideas left for later: client self-reschedule/cancel link with the 48 h rule, waitlist for freed slots, review request after the visit.
 
 ## Notes
 

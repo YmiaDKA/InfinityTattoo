@@ -2,7 +2,7 @@ import type { Env } from "../env";
 import type { EmailResult } from "./email";
 
 export function smsEnabled(env: Env) {
-  return Boolean(env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN);
+  return Boolean(env.ELKS_API_USER && env.ELKS_API_PASSWORD);
 }
 
 /** Turns "403 44 775", "0047 40344775" or "+47 403 44 775" into E.164. Returns null if it doesn't look like a phone number. */
@@ -14,19 +14,20 @@ export function normalizePhone(input: string | null | undefined): string | null 
   return /^\+\d{8,15}$/.test(digits) ? digits : null;
 }
 
-/** Sends one SMS through Twilio. Skipped (not failed) when not configured. */
+/** Sends one SMS through 46elks. Skipped (not failed) when not configured. */
 export async function sendSms(env: Env, to: string, body: string): Promise<EmailResult> {
   if (!smsEnabled(env)) return { status: "skipped", error: "sms not configured" };
   const phone = normalizePhone(to);
   if (!phone) return { status: "skipped", error: "invalid phone number" };
   try {
-    const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
+    const res = await fetch("https://api.46elks.com/a1/sms", {
       method: "POST",
       headers: {
-        Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`,
+        Authorization: `Basic ${btoa(`${env.ELKS_API_USER}:${env.ELKS_API_PASSWORD}`)}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({ To: phone, From: env.SMS_FROM || "Infinity", Body: body }),
+      // dontlog keeps the message text out of 46elks' history.
+      body: new URLSearchParams({ from: env.SMS_FROM || "Infinity", to: phone, message: body, dontlog: "message" }),
     });
     if (!res.ok) return { status: "failed", error: `${res.status} ${(await res.text()).slice(0, 300)}` };
     return { status: "sent" };

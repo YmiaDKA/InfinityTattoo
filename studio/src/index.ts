@@ -11,6 +11,14 @@ import { ICON_180_PNG, ICON_512_PNG } from "./views/icons";
 const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", secureHeaders());
+// Redirects carry Norwegian flash messages; percent-encode æøå so the Location header stays ASCII.
+app.use("*", async (c, next) => {
+  await next();
+  const location = c.res.headers.get("Location");
+  if (location && /[^\x00-\x7f]/.test(location)) {
+    c.res.headers.set("Location", location.replace(/[^\x00-\x7f]+/g, (m) => encodeURIComponent(m)));
+  }
+});
 app.get("/", (c) => c.redirect("/admin"));
 app.get("/health", (c) => c.json({ ok: true }));
 app.route("/api", publicApi);

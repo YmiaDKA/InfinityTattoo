@@ -39,6 +39,7 @@ type StaffRow = {
   email: string | null;
   role: string;
   studio_share_pct: number;
+  monthly_rent_ore?: number;
   color: string;
   bookable: number;
   active: number;
@@ -53,6 +54,7 @@ type ServiceRow = {
   name_en: string;
   kind: string;
   duration_min: number;
+  buffer_min?: number;
   price_ore: number | null;
   deposit_ore: number;
   requires_approval: number;
@@ -77,7 +79,7 @@ extra.get("/settings", async (c) => {
   const base = c.env.PUBLIC_BASE_URL.replace(/\/$/, "");
   const integrations = [
     ["E-post til kunder", Boolean(c.env.RESEND_API_KEY && c.env.EMAIL_FROM)],
-    ["SMS-påminnelser", Boolean(c.env.TWILIO_ACCOUNT_SID && c.env.TWILIO_AUTH_TOKEN)],
+    ["SMS-påminnelser", Boolean(c.env.ELKS_API_USER && c.env.ELKS_API_PASSWORD)],
     ["Nettbetaling (depositum, gavekort)", stripeEnabled(c.env)],
     ["Referansebilder", Boolean(c.env.PHOTOS)],
     ["Zettle-synk", Boolean(c.env.ZETTLE_CLIENT_ID && c.env.ZETTLE_API_KEY)],
@@ -289,6 +291,10 @@ extra.get("/settings/staff/:id", async (c) => {
             <input name="studio_share_pct" type="number" min="0" max="100" value={String(s.studio_share_pct)} />
           </label>
           <label>
+            Fast stolleie per måned (kr)
+            <input name="monthly_rent" inputmode="decimal" value={String((s.monthly_rent_ore ?? 0) / 100)} />
+          </label>
+          <label>
             Farge i kalenderen
             <input name="color" type="color" value={s.color} style="height:2.4rem" />
           </label>
@@ -353,6 +359,8 @@ extra.post("/settings/staff/:id", async (c) => {
   const role = str(body, "role");
   const share = Math.min(100, Math.max(0, Math.round(Number(str(body, "studio_share_pct")) || 0)));
   const birth = str(body, "birth_date");
+  const rent = str(body, "monthly_rent") ? parseKroner(str(body, "monthly_rent")) : 0;
+  if (rent == null || rent < 0) return c.redirect(`/admin/settings/staff/${c.req.param("id")}?error=Sjekk+stolleien`);
   if (!name || !(role in ROLES)) return c.redirect(`/admin/settings/staff/${c.req.param("id")}?error=Mangler+navn+eller+rolle`);
 
   const hours: { weekday: number; start: string; end: string }[] = [];
@@ -365,13 +373,13 @@ extra.post("/settings/staff/:id", async (c) => {
     }
     hours.push({ weekday: d, start, end });
   }
-  const values = [name, str(body, "email").toLowerCase() || null, role, share, str(body, "color") || "#b91c1c", checked(body, "bookable"), checked(body, "active"), isDateString(birth) ? birth : null, str(body, "national_id").replace(/\s/g, "") || null];
+  const values = [name, str(body, "email").toLowerCase() || null, role, share, str(body, "color") || "#b91c1c", checked(body, "bookable"), checked(body, "active"), isDateString(birth) ? birth : null, str(body, "national_id").replace(/\s/g, "") || null, rent];
 
   let id: number;
   if (isNew) {
     const row = await c.env.DB.prepare(
-      `INSERT INTO staff (name, email, role, studio_share_pct, color, bookable, active, birth_date, national_id, ical_token)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, lower(hex(randomblob(16)))) RETURNING id`,
+      `INSERT INTO staff (name, email, role, studio_share_pct, color, bookable, active, birth_date, national_id, monthly_rent_ore, ical_token)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, lower(hex(randomblob(16)))) RETURNING id`,
     )
       .bind(...values)
       .first<{ id: number }>();
@@ -379,7 +387,7 @@ extra.post("/settings/staff/:id", async (c) => {
   } else {
     id = Number(c.req.param("id"));
     await c.env.DB.prepare(
-      "UPDATE staff SET name = ?, email = ?, role = ?, studio_share_pct = ?, color = ?, bookable = ?, active = ?, birth_date = ?, national_id = ? WHERE id = ?",
+      "UPDATE staff SET name = ?, email = ?, role = ?, studio_share_pct = ?, color = ?, bookable = ?, active = ?, birth_date = ?, national_id = ?, monthly_rent_ore = ? WHERE id = ?",
     )
       .bind(...values, id)
       .run();
@@ -440,6 +448,10 @@ extra.get("/settings/services/:id", async (c) => {
           <label>
             Varighet (min)
             <input name="duration_min" type="number" min="15" step="15" required value={String(s.duration_min)} />
+          </label>
+          <label>
+            Rydding etter (min)
+            <input name="buffer_min" type="number" min="0" step="5" value={String(s.buffer_min ?? 0)} />
           </label>
           <label>
             Pris (kr, tom = etter avtale)
@@ -514,12 +526,13 @@ extra.post("/settings/services/:id", async (c) => {
     checked(body, "needs_consent"),
     str(body, "aftercare_no") || null,
     str(body, "aftercare_en") || null,
+    Math.max(0, Math.round(Number(str(body, "buffer_min")) || 0)),
   ];
   let id: number;
   if (isNew) {
     const row = await c.env.DB.prepare(
-      `INSERT INTO services (name_no, name_en, kind, duration_min, price_ore, deposit_ore, requires_approval, public, active, sort, needs_consent, aftercare_no, aftercare_en)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+      `INSERT INTO services (name_no, name_en, kind, duration_min, price_ore, deposit_ore, requires_approval, public, active, sort, needs_consent, aftercare_no, aftercare_en, buffer_min)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
     )
       .bind(...values)
       .first<{ id: number }>();
@@ -528,7 +541,7 @@ extra.post("/settings/services/:id", async (c) => {
     id = Number(c.req.param("id"));
     await c.env.DB.prepare(
       `UPDATE services SET name_no = ?, name_en = ?, kind = ?, duration_min = ?, price_ore = ?, deposit_ore = ?, requires_approval = ?,
-         public = ?, active = ?, sort = ?, needs_consent = ?, aftercare_no = ?, aftercare_en = ? WHERE id = ?`,
+         public = ?, active = ?, sort = ?, needs_consent = ?, aftercare_no = ?, aftercare_en = ?, buffer_min = ? WHERE id = ?`,
     )
       .bind(...values, id)
       .run();
@@ -989,15 +1002,29 @@ extra.post("/shifts/correct", async (c) => {
 // =====================================================================
 
 extra.get("/settlements", async (c) => {
-  const month = /^\d{4}-\d{2}$/.test(c.req.query("month") ?? "") ? c.req.query("month")! : today().slice(0, 7);
-  const from = `${month}-01`;
+  // A month (?month=2026-10) or a whole year (?year=2026).
+  const year = /^\d{4}$/.test(c.req.query("year") ?? "") ? c.req.query("year")! : null;
+  const month = year ?? (/^\d{4}-\d{2}$/.test(c.req.query("month") ?? "") ? c.req.query("month")! : today().slice(0, 7));
   const [y, m] = month.split("-").map(Number);
-  const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
-  const prev = m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, "0")}`;
-  const to = addDays(`${next}-01`, -1);
+  let from: string, to: string, prevLink: string, nextLink: string, rentMonths: number;
+  if (year) {
+    from = `${year}-01-01`;
+    to = `${year}-12-31`;
+    prevLink = `?year=${y - 1}`;
+    nextLink = `?year=${y + 1}`;
+    rentMonths = 12;
+  } else {
+    const next = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
+    const prev = m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, "0")}`;
+    from = `${month}-01`;
+    to = addDays(`${next}-01`, -1);
+    prevLink = `?month=${prev}`;
+    nextLink = `?month=${next}`;
+    rentMonths = 1;
+  }
 
   const [staff, payments] = await Promise.all([
-    c.env.DB.prepare("SELECT id, name, studio_share_pct FROM staff ORDER BY id").all<{ id: number; name: string; studio_share_pct: number }>(),
+    c.env.DB.prepare("SELECT id, name, studio_share_pct, monthly_rent_ore FROM staff ORDER BY id").all<{ id: number; name: string; studio_share_pct: number; monthly_rent_ore: number }>(),
     c.env.DB.prepare(
       "SELECT id, staff_id, kind, method, amount_ore, business_date, note FROM payments WHERE business_date BETWEEN ? AND ? AND kind != 'gift_card_sale' ORDER BY business_date, id",
     )
@@ -1012,23 +1039,27 @@ extra.get("/settlements", async (c) => {
       const own = payments.results.filter((p) => p.staff_id === s.id);
       const gross = own.reduce((sum, p) => sum + p.amount_ore, 0);
       const studio = Math.round((gross * s.studio_share_pct) / 100) || 0;
-      return { ...s, own, gross, studio, artist: gross - studio };
+      const rent = s.monthly_rent_ore * rentMonths;
+      return { ...s, own, gross, studio, rent, artist: gross - studio - rent };
     })
-    .filter((l) => l.own.length > 0 || isOwner(c));
+    .filter((l) => l.own.length > 0 || l.rent > 0 || isOwner(c));
 
   return c.html(
     <Layout title="Artistoppgjør" path="/admin/settlements" user={user}>
       <div class="row" style="justify-content:space-between">
         <h1>Artistoppgjør {month}</h1>
         <div style="flex:0 0 auto" class="noprint">
-          <a class="button secondary" href={`/admin/settlements?month=${prev}`}>←</a>{" "}
-          <a class="button secondary" href={`/admin/settlements?month=${next}`}>→</a>{" "}
+          <a class="button secondary" href={`/admin/settlements${prevLink}`}>←</a>{" "}
+          <a class="button secondary" href={`/admin/settlements${nextLink}`}>→</a>{" "}
+          <a class="button secondary" href={year ? `/admin/settlements?month=${today().slice(0, 7)}` : `/admin/settlements?year=${y}`}>
+            {year ? "Måned" : "Hele året"}
+          </a>{" "}
           <button class="secondary" onclick="window.print()">
             Skriv ut / PDF
           </button>
         </div>
       </div>
-      <p class="muted">Omsetning registrert på hver artist i perioden (gavekortsalg er ikke med før kortet brukes). Studioandel settes under Innstillinger.</p>
+      <p class="muted">Omsetning registrert på hver artist i perioden (gavekortsalg er ikke med før kortet brukes). Studioandel og fast stolleie settes under Innstillinger.</p>
       <div class="card">
         <table>
           <thead>
@@ -1037,6 +1068,7 @@ extra.get("/settlements", async (c) => {
               <th class="num">Antall</th>
               <th class="num">Omsetning</th>
               <th class="num">Studioandel</th>
+              <th class="num">Stolleie</th>
               <th class="num">Til artist</th>
             </tr>
           </thead>
@@ -1049,6 +1081,7 @@ extra.get("/settlements", async (c) => {
                 <td class="num">{l.own.length}</td>
                 <td class="num">{formatOre(l.gross)}</td>
                 <td class="num">{formatOre(l.studio)}</td>
+                <td class="num">{formatOre(l.rent)}</td>
                 <td class="num">{formatOre(l.artist)}</td>
               </tr>
             ))}

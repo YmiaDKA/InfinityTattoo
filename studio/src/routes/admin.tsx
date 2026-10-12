@@ -17,6 +17,7 @@ import { giftCardBalance, normalizeCode } from "../lib/giftcards";
 import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Layout, StatusPill } from "../views/layout";
 import { extra } from "./admin-extra";
+import { bookingStudioData, ProjectAndInks, studio } from "./admin-studio";
 import {
   adminApp,
   METHOD_LABELS,
@@ -44,6 +45,7 @@ admin.use("*", async (c, next) => {
 });
 
 admin.route("/", extra);
+admin.route("/", studio);
 
 // ---------- Today ----------
 
@@ -366,6 +368,7 @@ admin.get("/bookings/:id", async (c) => {
   const consentLink = consentUrl(c.env, hold!.public_id);
   const paidTotal = payments.results.reduce((sum, p) => sum + p.amount_ore, 0);
   const duration = b.starts_at && b.ends_at ? Math.round((Date.parse(b.ends_at) - Date.parse(b.starts_at)) / 60000) : "";
+  const studioData = await bookingStudioData(c.env, b.id, b.project_id ?? b.id, b.client_id);
 
   return c.html(
     <Layout title={b.client_name} path="/admin/bookings" user={c.get("user")} flash={c.req.query("ok")} error={c.req.query("error")}>
@@ -378,6 +381,7 @@ admin.get("/bookings/:id", async (c) => {
           <a href={`/admin/clients/${b.client_id}`}>{b.client_name}</a>
           <div>{b.client_phone && <a href={`tel:${b.client_phone}`}>{b.client_phone}</a>}</div>
           <div>{b.client_email && <a href={`mailto:${b.client_email}`}>{b.client_email}</a>}</div>
+          {studioData.noShows > 0 && <div style="color:var(--warn)">⚠ Møtte ikke {studioData.noShows} gang(er) før</div>}
         </div>
         <div class="card">
           <div class="muted">Tid</div>
@@ -517,6 +521,8 @@ admin.get("/bookings/:id", async (c) => {
         </label>
         <button>Lagre</button>
       </form>
+
+      <ProjectAndInks bookingId={b.id} kind={b.service_kind} data={studioData} when={(iso) => (iso ? `${businessDate(iso)} ${localTime(iso)}` : "Ikke satt")} />
 
       <h2>Kunden</h2>
       <div class="card">
