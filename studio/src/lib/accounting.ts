@@ -265,13 +265,14 @@ export type MonthData = {
 };
 
 export const PAYMENT_ACCOUNTING_SELECT = `SELECT p.id, p.business_date, p.kind, p.method, p.amount_ore, p.provider, p.provider_ref,
-            sv.kind AS service_kind, sv.vat_pct, s.role AS staff_role,
+            sv.kind AS service_kind, CASE WHEN p.kind = 'product' THEN COALESCE(pr.vat_pct, 25) ELSE sv.vat_pct END AS vat_pct, s.role AS staff_role,
             COALESCE(st.fee_ore, p.fee_ore) AS fee_ore,
             COALESCE(st.net_ore, p.amount_ore - p.fee_ore) AS net_ore, st.payout_date
      FROM payments p
      LEFT JOIN bookings b ON b.id = p.booking_id
      LEFT JOIN services sv ON sv.id = b.service_id
      LEFT JOIN staff s ON s.id = p.staff_id
+     LEFT JOIN products pr ON pr.id = p.product_id
      LEFT JOIN stripe_transactions st ON p.provider = 'stripe' AND st.provider_ref = p.provider_ref`;
 
 function paymentsForAccounting(env: Env, from: string, to: string) {
@@ -300,7 +301,7 @@ export async function revenueSummary(env: Env, from: string, to: string, rentMon
     }
     if (p.kind === "product") r.product += p.amount_ore;
     else r.service += p.amount_ore;
-    r.vat += vatOf(p.amount_ore, settings.vatRegistered ? (p.kind === "product" ? 25 : (p.vat_pct ?? 25)) : 0);
+    r.vat += vatOf(p.amount_ore, settings.vatRegistered ? (p.vat_pct ?? 25) : 0);
   }
   r.total = r.rent + r.service + r.product;
   r.net = r.total - r.fees - r.vat;

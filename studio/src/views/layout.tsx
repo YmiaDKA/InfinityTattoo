@@ -34,6 +34,8 @@ body.app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:
 .top-cta{display:inline-flex;align-items:center;padding:.55rem .9rem;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:.92rem}
 .badge{background:var(--accent);color:#fff;border-radius:999px;font-size:.72rem;font-weight:700;padding:0 .45rem;line-height:1.4rem;min-width:1.4rem;text-align:center}
 .iconbtn{background:none;border:0;color:var(--text);padding:.4rem;border-radius:8px;display:none}
+.notes{display:flex;flex-direction:column;gap:.25rem;margin-bottom:1rem}.note{display:flex;gap:.65rem;align-items:flex-start;padding:.6rem .7rem;border-radius:8px;text-decoration:none;color:var(--text);position:relative}.note:hover{background:var(--hover)}.note>span{display:flex;flex-direction:column;gap:.1rem;font-size:.92rem}.note .muted{font-size:.78rem}.note .icon{color:var(--muted);flex:0 0 auto;margin-top:.1rem}.note.unseen{background:var(--soft)}.note.unseen::after{content:"";position:absolute;right:.7rem;top:1rem;width:.45rem;height:.45rem;border-radius:50%;background:var(--accent)}
+.iconbtn.bell{display:inline-flex;position:relative;margin-right:.25rem;color:var(--muted)}.iconbtn.bell:hover,.iconbtn.bell.active{background:var(--hover);color:var(--text)}.iconbtn.bell .badge{position:absolute;top:-2px;right:-4px;font-size:.65rem;line-height:1.1rem;min-width:1.1rem;padding:0 .3rem}
 .shell{flex:1;display:flex;min-height:0}
 .side{width:11.25rem;flex:0 0 11.25rem;display:flex;flex-direction:column;padding:.25rem 1rem 1rem 0;overflow-y:auto}
 .studio{display:flex;align-items:center;gap:.6rem;padding:.4rem 0 1.2rem .9rem}.studio strong{display:block;font-size:.85rem;font-weight:500}.studio .muted{display:block;font-size:.75rem}
@@ -171,7 +173,8 @@ type NavItem = {
   href: string;
   label: string;
   icon: string;
-  feature?: FeatureKey;
+  /** Shown when any of these modules is on. */
+  feature?: FeatureKey | FeatureKey[];
   owner?: boolean;
   also?: string[];
 };
@@ -205,16 +208,24 @@ const NAV: { heading?: string; bottom?: boolean; items: NavItem[] }[] = [
     ],
   },
   {
+    heading: "Markedsføring",
+    items: [
+      { href: "/admin/settings/flash", label: "Flash", icon: "bolt", feature: "flash" },
+      { href: "/admin/reviews", label: "Anmeldelser", icon: "star", feature: "reviews" },
+    ],
+  },
+  {
     bottom: true,
     items: [
       { href: "/admin/artists", label: "Artister", icon: "artists" },
       { href: "/admin/managers", label: "Ledere", icon: "managers" },
       { href: "/admin/shifts", label: "Personalliste", icon: "shifts" },
       {
-        href: "/admin/inks",
+        href: "/admin/products",
         label: "Produkter",
         icon: "products",
-        feature: "inks",
+        feature: ["products", "inks"],
+        also: ["/admin/inks"],
       },
       { href: "/admin/settings", label: "Innstillinger", icon: "settings" },
     ],
@@ -232,7 +243,7 @@ export const STUDIO_NAME = "Infinity Tattoo";
 export const STUDIO_ADDRESS = "Skårersletta 48c";
 
 export function Layout(props: { title: string; path: string; user: StaffUser; flash?: string; error?: string; wide?: boolean; children: Child }) {
-  const on = (item: NavItem) => !item.feature || props.user.features?.[item.feature] !== false;
+  const on = (item: NavItem) => !item.feature || [item.feature].flat().some((f) => props.user.features?.[f] !== false);
   const current = (href: string) => props.path === href || props.path.startsWith(`${href}/`);
   const requests = props.user.openRequests ?? 0;
   return (
@@ -266,6 +277,10 @@ export function Layout(props: { title: string; path: string; user: StaffUser; fl
               {requests > 0 && <span class="badge">{requests}</span>}
             </a>
             <span class="spacer" />
+            <a class={`iconbtn bell${current("/admin/notifications") ? " active" : ""}`} href="/admin/notifications" data-drawer aria-label="Varsler" title="Varsler">
+              <Icon name="bell" size={18} />
+              {(props.user.notifications ?? 0) > 0 && <span class="badge">{props.user.notifications}</span>}
+            </a>
             <a class="top-link" href="/admin/deposits/new" data-drawer>
               <Icon name="deposit" size={18} />
               <span>Nytt depositum</span>

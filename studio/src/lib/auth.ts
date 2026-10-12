@@ -11,6 +11,8 @@ export type StaffUser = {
   features?: import("./features").Features;
   /** Open tattoo requests, shown as a badge in the top bar; filled in by the admin middleware. */
   openRequests?: number;
+  /** Unseen events behind the bell in the top bar. */
+  notifications?: number;
 };
 
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();

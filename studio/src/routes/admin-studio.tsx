@@ -3,6 +3,7 @@ import type { Context } from "hono";
 import { isDateString, osloToUtc } from "../lib/time";
 import { Layout } from "../views/layout";
 import { Empty, PageHead, SegTabs } from "../views/ui";
+import { ProductTabs } from "./admin-products";
 import { adminApp, audit, str, type AdminEnv } from "./admin-shared";
 
 /** Ink register and multi-session projects. */
@@ -228,6 +229,7 @@ studio.get("/inks", async (c) => {
           + Legg til blekk
         </a>
       </PageHead>
+      <ProductTabs c={c} active="inks" />
       <div class="toolbar">
         <span class="muted">Kategori</span>
         <SegTabs
@@ -238,7 +240,9 @@ studio.get("/inks", async (c) => {
           active={showAll ? "/admin/inks?all=1" : "/admin/inks"}
         />
       </div>
-      <p class="muted" style="font-size:.88rem">Smykker og pleieprodukter du selger, legges inn i kassen (Zettle). Salget kommer hit av seg selv.</p>
+      {c.get("user").features?.products === false && (
+        <p class="muted" style="font-size:.88rem">Smykker og pleieprodukter du selger, legges inn i kassen (Zettle). Salget kommer hit av seg selv.</p>
+      )}
       <div class="list">
         <table>
           <thead>

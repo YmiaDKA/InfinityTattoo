@@ -6,12 +6,16 @@ import {
   confirmationEmail,
   depositLinkEmail,
   giftCardEmail,
+  langOf,
   reminderEmail,
   reminderSms,
   requestReceivedEmail,
   type MessageBooking,
 } from "./messages";
 import { loadFeatures } from "./features";
+import { instructionsFor, instructionText } from "./instructions";
+import { reviewLink } from "./reviews";
+import { loadSupport } from "./site-settings";
 import { pushToFiken } from "./fiken";
 import { sweepInvoices } from "./invoices";
 import { sendBookingSms } from "./sms";
@@ -29,19 +33,34 @@ type FullBooking = MessageBooking & {
   needs_consent: number;
   hold_until: string | null;
   client_phone: string | null;
+  service_kind: string;
+  /** SMS lines from Settings → Instruksjoner. */
+  sms_extra?: string;
 };
 
 export async function loadBooking(env: Env, id: number): Promise<FullBooking | null> {
-  return env.DB.prepare(
-    `SELECT b.id, b.public_id, b.status, b.starts_at, b.deposit_ore, b.language, b.hold_until,
-            c.name AS client_name, c.email AS client_email, c.phone AS client_phone,
-            sv.name_no AS service_name_no, sv.name_en AS service_name_en, sv.needs_consent,
-            sv.aftercare_no, sv.aftercare_en, s.name AS staff_name
-     FROM bookings b JOIN clients c ON c.id = b.client_id JOIN services sv ON sv.id = b.service_id
-     LEFT JOIN staff s ON s.id = b.staff_id WHERE b.id = ?`,
-  )
-    .bind(id)
-    .first<FullBooking>();
+  const [b, support] = await Promise.all([
+    env.DB.prepare(
+      `SELECT b.id, b.public_id, b.status, b.starts_at, b.deposit_ore, b.language, b.hold_until,
+              c.name AS client_name, c.email AS client_email, c.phone AS client_phone,
+              sv.name_no AS service_name_no, sv.name_en AS service_name_en, sv.needs_consent, sv.kind AS service_kind,
+              sv.aftercare_no, sv.aftercare_en, s.name AS staff_name
+       FROM bookings b JOIN clients c ON c.id = b.client_id JOIN services sv ON sv.id = b.service_id
+       LEFT JOIN staff s ON s.id = b.staff_id WHERE b.id = ?`,
+    )
+      .bind(id)
+      .first<FullBooking>(),
+    loadSupport(env),
+  ]);
+  return b ? { ...b, support } : null;
+}
+
+/** Instructions for the booking's service kind, as text for its emails (Settings → Instruksjoner). */
+async function withInstructions(env: Env, b: FullBooking, timing: "before" | "after"): Promise<FullBooking> {
+  const rows = await instructionsFor(env, b.service_kind, timing);
+  const text = instructionText(rows, langOf(b));
+  const sms = rows.map((r) => r.sms_text).filter(Boolean).join(" ");
+  return { ...b, ...(text ? { [timing === "before" ? "before_text" : "after_text"]: text } : {}), ...(sms ? { sms_extra: sms } : {}) };
 }
 
 export function consentUrl(env: Env, publicId: string) {
@@ -111,7 +130,7 @@ export async function afterConfirmed(env: Env, bookingId: number, options: { for
     console.error("deposit link failed", error);
     return null;
   })) ?? undefined;
-  await sendBookingEmail(env, b.id, "confirmation", confirmationEmail(b, { consent, deposit }), options);
+  await sendBookingEmail(env, b.id, "confirmation", confirmationEmail(await withInstructions(env, b, "before"), { consent, deposit }), options);
 }
 
 export async function afterCancelled(env: Env, bookingId: number) {
@@ -121,9 +140,13 @@ export async function afterCancelled(env: Env, bookingId: number) {
 
 export async function afterCompleted(env: Env, bookingId: number) {
   const b = await loadBooking(env, bookingId);
-  if (!b?.client_email) return;
-  const email = aftercareEmail(b);
+  if (!b) return;
+  const features = await loadFeatures(env);
+  const full = await withInstructions(env, b, "after");
+  if (features.reviews && b.service_kind !== "consultation" && b.client_email) full.review_url = await reviewLink(env, b.id);
+  const email = b.client_email ? aftercareEmail(full) : null;
   if (email) await sendBookingEmail(env, b.id, "aftercare", email);
+  if (full.sms_extra && b.client_phone && features.sms) await sendBookingSms(env, b.id, "aftercare_sms", b.client_phone, full.sms_extra);
 }
 
 export async function sendDepositLink(env: Env, bookingId: number): Promise<string | null> {
@@ -226,13 +249,14 @@ export async function runScheduled(env: Env, now = new Date()) {
     .bind(from, to)
     .all<{ id: number }>();
   for (const { id } of upcoming.results) {
-    const b = await loadBooking(env, id);
-    if (!b) continue;
+    const loaded = await loadBooking(env, id);
+    if (!loaded) continue;
+    const b = await withInstructions(env, loaded, "before");
     if (b.client_email) {
       const consent = b.needs_consent && !(await hasConsent(env, id)) ? consentUrl(env, b.public_id) : undefined;
       await sendBookingEmail(env, id, "reminder", reminderEmail(b, { consent }));
     }
-    if (b.client_phone && features.sms) await sendBookingSms(env, id, "reminder_sms", b.client_phone, reminderSms(b));
+    if (b.client_phone && features.sms) await sendBookingSms(env, id, "reminder_sms", b.client_phone, [reminderSms(b), b.sms_extra].filter(Boolean).join(" "));
   }
 
   // 3. Pull new till payments from Zettle.

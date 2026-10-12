@@ -6,6 +6,7 @@ import type { Env } from "../env";
 import { afterConfirmed, afterRequestCreated, DEPOSIT_HOLD_MIN, depositCheckoutUrl, recordCheckoutPaid, stripeEnabled } from "../lib/bookings";
 import { loadFeatures } from "../lib/features";
 import { giftCardExpiry, newGiftCardCode } from "../lib/giftcards";
+import { giftCardTerms, loadBookingSettings, loadGiftCardSettings, loadSupport, SIZE_OPTIONS } from "../lib/site-settings";
 import { notifyStudio } from "../lib/notify";
 import { createCheckout, verifyStripeEvent } from "../lib/stripe";
 import { freeSlots, type Busy, type WorkingHours } from "../lib/slots";
@@ -38,11 +39,85 @@ publicApi.use(
 
 /** What the website form can offer, so it never shows a feature that isn't set up. */
 publicApi.get("/config", async (c) => {
-  const features = await loadFeatures(c.env);
+  const [features, booking, gift, support, flash] = await Promise.all([
+    loadFeatures(c.env),
+    loadBookingSettings(c.env),
+    loadGiftCardSettings(c.env),
+    loadSupport(c.env),
+    c.env.DB.prepare("SELECT COUNT(*) AS n FROM flash WHERE on_booking = 1 AND status = 'available'").first<{ n: number }>(),
+  ]);
+  const giftCards = stripeEnabled(c.env) && features.gift_cards && gift.store;
+  // PLACEHOLDER-RESCAN: which of these the website form uses, and how, is our guess at Linework's request form.
   return c.json({
     online_payments: stripeEnabled(c.env),
-    gift_cards: stripeEnabled(c.env) && features.gift_cards,
+    gift_cards: giftCards,
     photos: Boolean(c.env.PHOTOS) && features.photos,
+    flash: features.flash && (flash?.n ?? 0) > 0,
+    reviews: features.reviews,
+    open_requests: booking.openRequests,
+    request_form: {
+      sizes: SIZE_OPTIONS.filter(([k]) => booking.sizes.includes(k)).map(([key, label, hint]) => ({ key, label, hint })),
+      colors: booking.colors,
+      skin_tone: booking.skinTone,
+      budget: booking.budget,
+      reference_images: features.photos && c.env.PHOTOS ? booking.references : "off",
+    },
+    booking_terms: booking.terms.mode === "none" ? null : booking.terms.mode === "link" ? { url: booking.terms.url } : { text: booking.terms.text },
+    meta_pixel: booking.pixel.id ? { id: booking.pixel.id, privacy_url: booking.pixel.privacyUrl } : null,
+    gift_card: giftCards ? { min_kr: gift.minKr, max_kr: gift.maxKr, valid_months: gift.validityMonths, info: gift.info, terms: giftCardTerms(gift) } : null,
+    contact: support,
+  });
+});
+
+// ---------- Flash on the booking page ----------
+
+publicApi.get("/flash", async (c) => {
+  if (!(await loadFeatures(c.env)).flash) return c.json({ flash: [] });
+  const rows = await c.env.DB.prepare(
+    `SELECT f.id, f.title, f.description, f.price_ore, f.size, f.duration_min, f.r2_key, f.image_url, f.repeatable, s.id AS staff_id, s.name AS staff_name
+     FROM flash f LEFT JOIN staff s ON s.id = f.staff_id WHERE f.on_booking = 1 AND f.status = 'available' ORDER BY f.sort, f.id DESC`,
+  ).all<{ id: number; title: string; description: string | null; price_ore: number | null; size: string | null; duration_min: number | null; r2_key: string | null; image_url: string | null; repeatable: number; staff_id: number | null; staff_name: string | null }>();
+  const base = new URL(c.req.url).origin;
+  return c.json({
+    flash: rows.results.map((f) => ({
+      id: f.id,
+      title: f.title,
+      description: f.description,
+      price_ore: f.price_ore,
+      size: f.size,
+      duration_min: f.duration_min,
+      repeatable: Boolean(f.repeatable),
+      artist: f.staff_id ? { id: f.staff_id, name: f.staff_name } : null,
+      image: f.r2_key ? `${base}/api/flash/${f.id}/image` : f.image_url,
+    })),
+  });
+});
+
+publicApi.get("/flash/:id/image", async (c) => {
+  if (!c.env.PHOTOS) return c.notFound();
+  const row = await c.env.DB.prepare("SELECT r2_key, content_type FROM flash WHERE id = ? AND r2_key IS NOT NULL").bind(Number(c.req.param("id"))).first<{ r2_key: string; content_type: string }>();
+  const object = row ? await c.env.PHOTOS.get(row.r2_key) : null;
+  if (!row || !object) return c.notFound();
+  return c.body(object.body, 200, { "Content-Type": row.content_type, "Cache-Control": "public, max-age=86400" });
+});
+
+// ---------- Reviews the clients allowed showing (for the website) ----------
+
+publicApi.get("/reviews", async (c) => {
+  if (!(await loadFeatures(c.env)).reviews) return c.json({ reviews: [], average: null, count: 0 });
+  const [rows, all] = await Promise.all([
+    c.env.DB.prepare(
+      `SELECT r.rating, r.comment, r.submitted_at, cl.name, s.name AS staff_name FROM reviews r
+       JOIN bookings b ON b.id = r.booking_id JOIN clients cl ON cl.id = b.client_id LEFT JOIN staff s ON s.id = r.staff_id
+       WHERE r.may_publish = 1 AND r.hidden = 0 AND r.submitted_at IS NOT NULL ORDER BY r.submitted_at DESC LIMIT 20`,
+    ).all<{ rating: number; comment: string | null; submitted_at: string; name: string; staff_name: string | null }>(),
+    c.env.DB.prepare("SELECT AVG(rating) AS avg, COUNT(*) AS n FROM reviews WHERE hidden = 0 AND submitted_at IS NOT NULL").first<{ avg: number | null; n: number }>(),
+  ]);
+  return c.json({
+    average: all?.avg ? Math.round(all.avg * 10) / 10 : null,
+    count: all?.n ?? 0,
+    // First name only on the public website.
+    reviews: rows.results.map((r) => ({ rating: r.rating, comment: r.comment, date: r.submitted_at.slice(0, 10), name: r.name.split(" ")[0], artist: r.staff_name })),
   });
 });
 
@@ -152,12 +227,31 @@ const bookingSchema = z.object({
   first_tattoo: z.boolean().nullish(),
   budget: z.string().trim().max(100).nullish(),
   timing: z.string().trim().max(200).nullish(),
+  // Online booking settings (PLACEHOLDER-RESCAN: Linework's request form fields).
+  flash_id: z.coerce.number().int().positive().nullish(),
+  cover_up: z.boolean().nullish(),
+  colors: z.enum(["color", "black_grey"]).nullish(),
+  skin_tone: z.enum(["pale", "olive", "tan", "dark"]).nullish(),
   language: z.enum(["no", "en"]).default("no"),
   marketing_consent: z.boolean().default(false),
   // Honeypot: real people never fill this in.
   website: z.string().max(500).optional(),
   turnstile_token: z.string().optional(),
 });
+
+const SKIN = { pale: "lys", olive: "oliven", tan: "brun", dark: "mørk" } as const;
+
+/** The extra request-form answers that have no column of their own go in the internal notes. */
+function requestNotes(input: z.infer<typeof bookingSchema>) {
+  return [
+    input.timing ? `Ønsket tid: ${input.timing}` : "",
+    input.cover_up ? "Cover-up av eksisterende tatovering" : "",
+    input.colors ? `Farge: ${input.colors === "color" ? "farger" : "svart/grå"}` : "",
+    input.skin_tone ? `Hudtone: ${SKIN[input.skin_tone]}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
 
 publicApi.post("/bookings", async (c) => {
   const parsed = bookingSchema.safeParse(await c.req.json().catch(() => null));
@@ -176,7 +270,13 @@ publicApi.post("/bookings", async (c) => {
     .bind(input.service_id)
     .first<ServiceRow>();
   if (!service) return c.json({ error: "invalid", fields: ["service_id"] }, 400);
+  const flash = input.flash_id
+    ? await c.env.DB.prepare("SELECT id, title FROM flash WHERE id = ? AND on_booking = 1 AND status = 'available'").bind(input.flash_id).first<{ id: number; title: string }>()
+    : null;
+  if (input.flash_id && !flash) return c.json({ error: "invalid", fields: ["flash_id"] }, 400);
+  if (flash && !input.idea) input.idea = `Flash: ${flash.title}`;
   if (service.kind === "tattoo" && !input.idea) return c.json({ error: "invalid", fields: ["idea"] }, 400);
+  if (service.requires_approval && service.kind === "tattoo" && !(await loadBookingSettings(c.env)).openRequests) return c.json({ error: "requests_closed" }, 409);
 
   let staffId = input.staff_id ?? null;
   let startsAt: string | null = null;
@@ -217,12 +317,13 @@ publicApi.post("/bookings", async (c) => {
       publicId, client, staffId, service.id, status, startsAt, endsAt,
       input.idea ?? null, input.placement ?? null, input.size ?? null, input.style ?? null,
       input.first_tattoo == null ? null : Number(input.first_tattoo), input.budget ?? null,
-      service.deposit_ore, service.price_ore, input.timing ? `Ønsket tid: ${input.timing}` : null, input.language, holdUntil,
+      service.deposit_ore, service.price_ore, requestNotes(input) || null, input.language, holdUntil,
       startsAt, staffId, endsAt, startsAt,
     )
     .run();
   if (!insert.meta.changes) return c.json({ error: "slot_taken" }, 409);
   const bookingId = Number(insert.meta.last_row_id);
+  if (flash) await c.env.DB.prepare("UPDATE bookings SET flash_id = ? WHERE id = ?").bind(flash.id, bookingId).run();
 
   let paymentUrl: string | null = null;
   if (needsDeposit) {
@@ -332,7 +433,7 @@ publicApi.post("/bookings/:publicId/photos", async (c) => {
 // ---------- Gift cards sold online ----------
 
 const giftCardSchema = z.object({
-  amount_kr: z.coerce.number().int().min(200).max(20000),
+  amount_kr: z.coerce.number().int().positive(),
   buyer_name: z.string().trim().min(2).max(120),
   buyer_email: z.email().max(200),
   recipient_name: z.string().trim().max(120).nullish(),
@@ -346,13 +447,16 @@ publicApi.post("/gift-cards", async (c) => {
   if (!parsed.success) return c.json({ error: "invalid", fields: parsed.error.issues.map((i) => i.path.join(".")) }, 400);
   const input = parsed.data;
   if (input.website) return c.json({ ok: true, payment_url: null }, 201);
+  const store = await loadGiftCardSettings(c.env);
+  if (!store.store) return c.json({ error: "disabled" }, 404);
+  if (input.amount_kr < store.minKr || input.amount_kr > store.maxKr) return c.json({ error: "invalid", fields: ["amount_kr"] }, 400);
 
   const amountOre = input.amount_kr * 100;
   const card = await c.env.DB.prepare(
     `INSERT INTO gift_cards (code, initial_ore, status, buyer_name, buyer_email, recipient_name, message, source, expires_on)
      VALUES (?, ?, 'pending', ?, ?, ?, ?, 'online', ?) RETURNING id`,
   )
-    .bind(newGiftCardCode(), amountOre, input.buyer_name, input.buyer_email, input.recipient_name ?? null, input.message ?? null, giftCardExpiry())
+    .bind(newGiftCardCode(), amountOre, input.buyer_name, input.buyer_email, input.recipient_name ?? null, input.message ?? null, giftCardExpiry(new Date(), store.validityMonths))
     .first<{ id: number }>();
 
   const site = c.env.SITE_URL.replace(/\/$/, "");

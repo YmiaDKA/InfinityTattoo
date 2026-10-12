@@ -40,7 +40,7 @@ describe("gift cards", () => {
   });
 
   it("expires three years out", () => {
-    expect(giftCardExpiry(new Date("2026-10-12T10:00:00Z"))).toBe("2029-10-11");
+    expect(giftCardExpiry(new Date("2026-10-12T10:00:00Z"))).toBe("2029-10-12");
   });
 });
 

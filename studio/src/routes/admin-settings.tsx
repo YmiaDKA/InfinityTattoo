@@ -3,7 +3,6 @@ import type { Child } from "hono/jsx";
 
 import { stripeEnabled } from "../lib/bookings";
 import { formatOrgNumber, loadCompany, saveCompany } from "../lib/company";
-import { CONFIRMATIONS, HEALTH_QUESTIONS } from "../lib/consent";
 import { ALWAYS_ON, FEATURES, setFeature, type FeatureKey } from "../lib/features";
 import { autoEmail, invoicesSince, sellerMissing } from "../lib/invoices";
 import { formatOre } from "../lib/report";
@@ -15,9 +14,9 @@ import { AccountingSettingsSection } from "./admin-accounting";
 import { adminApp, audit, str, today, type AdminEnv } from "./admin-shared";
 
 /**
- * Innstillinger with a menu on the left, in the same order as Linework's settings. Only what the
- * studio needs; Linework's Theme, Skins, Flash, Client support and Subscription have no
- * counterpart (there is no subscription to manage).
+ * Innstillinger with a menu on the left, in the same order as Linework's settings. Linework's Theme
+ * and Skins are left for the design pass, and there is no subscription to manage. Nettbooking,
+ * Skjema, Instruksjoner and Kundeservice live in admin-client-settings.tsx, Flash in admin-marketing.tsx.
  */
 export const settings = adminApp();
 
@@ -25,6 +24,7 @@ const MENU = [
   { href: "/admin/settings", label: "Studio", icon: "home" },
   { href: "/admin/settings/payments", label: "Betalingsmåter", icon: "card" },
   { href: "/admin/settings/services", label: "Behandlinger", icon: "booking" },
+  { href: "/admin/settings/flash", label: "Flash", icon: "bolt", feature: "flash" as FeatureKey },
   { href: "/admin/settings/booking", label: "Nettbooking", icon: "calendar" },
   { href: "/admin/settings/forms", label: "Skjema", icon: "forms" },
   { href: "/admin/settings/instructions", label: "Instruksjoner", icon: "info" },
@@ -32,6 +32,7 @@ const MENU = [
   { href: "/admin/settings/company", label: "Firmaopplysninger", icon: "home" },
   { href: "/admin/settings/accounting", label: "Regnskap", icon: "ledger", owner: true },
   { href: "/admin/settings/integrations", label: "Integrasjoner", icon: "plug" },
+  { href: "/admin/settings/client-support", label: "Kundeservice", icon: "clients" },
   { href: "/admin/settings/time-off", label: "Fravær og stengt", icon: "away" },
   { href: "/admin/settings/features", label: "Funksjoner", icon: "toggles" },
 ];
@@ -47,7 +48,7 @@ export function SettingsPage(props: { c: Context<AdminEnv>; active: string; titl
       <div class="settings">
         <nav class="settings-nav">
           <h1>Innstillinger</h1>
-          {MENU.filter((m) => !m.owner || isOwner(c)).map((m) => (
+          {MENU.filter((m) => (!m.owner || isOwner(c)) && (!m.feature || c.get("user").features?.[m.feature] !== false)).map((m) => (
             <a href={m.href} aria-current={m.href === props.active ? "page" : undefined}>
               <Icon name={m.icon} size={18} />
               {m.label}
@@ -203,123 +204,12 @@ settings.get("/settings/services", async (c) => {
 
 // ---------- Nettbooking ----------
 
-settings.get("/settings/booking", async (c) => {
-  const rows = (await services(c)).filter((s) => s.active);
-  const site = "https://infinitytattoo.no/";
-  return c.html(
-    <SettingsPage c={c} active="/admin/settings/booking">
-      <SettingsTitle icon="calendar" title="Nettbooking" sub="Hva kundene kan bestille selv på nettsiden." />
-      <div class="card toolbar">
-        <div style="flex:1">
-          <strong>Bookingside</strong>
-          <div class="muted">Bookingskjemaet ligger på nettsiden.</div>
-        </div>
-        <a class="button secondary small" href={site} target="_blank" rel="noopener">
-          Åpne
-        </a>
-      </div>
-      <h2>Tattoo-forespørsler</h2>
-      <p class="muted">Kunden beskriver ideen, plassering og størrelse og kan legge ved bilder. Du setter tid, pris og depositum og bekrefter.</p>
-      <h2>Direkte booking</h2>
-      <p class="muted">Kunden velger en ledig tid selv. Med depositum holdes tiden i 30 minutter til det er betalt.</p>
-      <div class="list">
-        <table>
-          <thead>
-            <tr>
-              <th>Behandling</th>
-              <th>På nettsiden</th>
-              <th class="num">Depositum</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((s) => (
-              <tr>
-                <td>
-                  <a href={`/admin/settings/services/${s.id}`}>{s.name_no}</a>
-                </td>
-                <td>{!s.public ? "Vises ikke" : s.requires_approval ? "Forespørsel" : "Direkte booking"}</td>
-                <td class="num">{formatOre(s.deposit_ore)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p class="muted">Depositum er 500 kr som standard (opptil 1000 kr), trekkes fra prisen, refunderes ikke, og flyttes med ved ombooking minst 48 timer før.</p>
-    </SettingsPage>,
-  );
-});
 
 // ---------- Skjema ----------
 
-settings.get("/settings/forms", async (c) => {
-  const rows = (await services(c)).filter((s) => s.active);
-  return c.html(
-    <SettingsPage c={c} active="/admin/settings/forms">
-      <SettingsTitle icon="forms" title="Skjema" sub="Egenerklæringen kunden signerer på telefonen før timen. Sendes med bekreftelsen og påminnelsen." />
-      <div class="card">
-        <strong>Egenerklæring og samtykke</strong>
-        <div class="muted" style="margin-bottom:.75rem">Norsk og engelsk. Krever 18 år eller mer, og viser helsesvarene på avtalen.</div>
-        <div class="sectionhead">Personopplysninger</div>
-        <p style="margin:0">Fullt navn, fødselsdato, eventuelt foresatt, samtykke til bilder.</p>
-        <div class="sectionhead">Helsespørsmål</div>
-        <ol style="margin:0;padding-left:1.2rem">
-          {HEALTH_QUESTIONS.map((q) => (
-            <li>{q.no}</li>
-          ))}
-        </ol>
-        <div class="sectionhead">Bekreftelser</div>
-        <ul style="margin:0;padding-left:1.2rem">
-          {CONFIRMATIONS.map((q) => (
-            <li>{q.no}</li>
-          ))}
-        </ul>
-        <div class="sectionhead">Signatur</div>
-        <p style="margin:0">Kunden skriver navnet sitt som signatur. Tid og IP lagres.</p>
-      </div>
-      <h2>Brukes på</h2>
-      <p>
-        {rows
-          .filter((s) => s.needs_consent)
-          .map((s) => s.name_no)
-          .join(", ") || "Ingen behandlinger"}
-        . Slås av eller på per behandling.
-      </p>
-    </SettingsPage>,
-  );
-});
 
 // ---------- Instruksjoner ----------
 
-settings.get("/settings/instructions", async (c) => {
-  const rows = (await services(c)).filter((s) => s.active && s.kind !== "consultation");
-  return c.html(
-    <SettingsPage c={c} active="/admin/settings/instructions">
-      <SettingsTitle icon="info" title="Instruksjoner" sub="Etterbehandling sendes på e-post når timen settes til fullført. Skrives per behandling, på norsk og engelsk." />
-      <div class="list">
-        <table>
-          <thead>
-            <tr>
-              <th>Behandling</th>
-              <th>Etterbehandling</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((s) => (
-              <tr>
-                <td>{s.name_no}</td>
-                <td>{s.aftercare_no ? <span class="muted">{s.aftercare_no.slice(0, 90)}…</span> : <span class="pill requested">Mangler</span>}</td>
-                <td class="num">
-                  <a href={`/admin/settings/services/${s.id}#etterbehandling`}>Rediger</a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </SettingsPage>,
-  );
-});
 
 // ---------- Kassesystem ----------
 

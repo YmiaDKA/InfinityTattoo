@@ -16,6 +16,7 @@ import { ageOn, flaggedQuestions, type ConsentAnswers } from "../lib/consent";
 import { giftCardBalance, normalizeCode } from "../lib/giftcards";
 import { FEATURE_PATHS, FEATURES, loadFeatures } from "../lib/features";
 import { buyerComplete, saveClientAddress, type Buyer } from "../lib/invoices";
+import { unseenCount } from "../lib/notifications";
 import { syncZettle, zettleEnabled } from "../lib/zettle";
 import { Icon, Layout, StatusPill } from "../views/layout";
 import { Empty, FilterSelect, PageHead, PeriodNav, periodRange, SegTabs, type PeriodUnit } from "../views/ui";
@@ -26,6 +27,10 @@ import { accounting, ReportTabs } from "./admin-accounting";
 import { clients } from "./admin-clients";
 import { fiken } from "./admin-fiken";
 import { buyerFrom, BuyerFields, invoiceAfterSale, invoices } from "./admin-invoices";
+import { artistMoney } from "./admin-artist-money";
+import { clientSettings } from "./admin-client-settings";
+import { marketing } from "./admin-marketing";
+import { activeProducts, products, type Product } from "./admin-products";
 import { settings } from "./admin-settings";
 import {
   adminApp,
@@ -50,12 +55,14 @@ export const admin = adminApp();
 admin.use("*", async (c, next) => {
   const user = await staffFromRequest(c.req.raw, c.env);
   if (!user) return c.text("Ingen tilgang. Logg inn via Cloudflare Access med en ansatt-e-post.", 403);
-  const [features, open] = await Promise.all([
+  const [features, open, unseen] = await Promise.all([
     loadFeatures(c.env),
     c.env.DB.prepare("SELECT COUNT(*) AS n FROM bookings WHERE status = 'requested'").first<{ n: number }>(),
+    unseenCount(c.env, user.email),
   ]);
   user.features = features;
   user.openRequests = open?.n ?? 0;
+  user.notifications = unseen;
   const path = new URL(c.req.url).pathname;
   const blocked = FEATURE_PATHS.find(([prefix, key]) => path.startsWith(prefix) && !user.features![key]);
   if (blocked) return c.redirect(`/admin/settings/features?error=${encodeURIComponent(`${FEATURES[blocked[1]].label} er slått av under Funksjoner.`)}`);
@@ -70,6 +77,8 @@ admin.use("*", async (c, next) => {
   }
 });
 
+// Before extra, so /gift-cards/settings isn't taken for a gift card id.
+admin.route("/", clientSettings);
 admin.route("/", extra);
 admin.route("/", studio);
 admin.route("/", calendar);
@@ -78,6 +87,9 @@ admin.route("/", clients);
 admin.route("/", settings);
 admin.route("/", invoices);
 admin.route("/", fiken);
+admin.route("/", marketing);
+admin.route("/", products);
+admin.route("/", artistMoney);
 
 // ---------- Start page ----------
 
@@ -424,7 +436,7 @@ admin.get("/bookings/:id", async (c) => {
         <div class="flash error">Venter på depositum fra nettbooking. Timen frigjøres automatisk {localTime(hold.hold_until)} hvis den ikke betales.</div>
       )}
       {b.status === "cancelled" && hold?.cancel_reason && <div class="flash error">Avlyst: {hold.cancel_reason}</div>}
-      {answers && (flags.length > 0 || answers.details) && (
+      {answers && (flags.length > 0 || answers.details || answers.id_type || answers.procedure) && (
         <div class="card">
           <strong>Helseopplysninger</strong>
           <ul>
@@ -433,6 +445,8 @@ admin.get("/bookings/:id", async (c) => {
             ))}
           </ul>
           {answers.details && <p style="white-space:pre-wrap">{answers.details}</p>}
+          {answers.procedure && <p style="white-space:pre-wrap">Behandling: {answers.procedure}</p>}
+          {answers.id_type && <div class="muted">Legitimasjon: {answers.id_type}</div>}
           <div class="muted">{consent?.photo_consent ? "Samtykker til bilder i portefølje" : "Ikke samtykke til bilder"}</div>
         </div>
       )}
@@ -585,6 +599,7 @@ admin.get("/bookings/:id", async (c) => {
             ? await c.env.DB.prepare("SELECT name, email, address, postcode, city FROM clients WHERE id = ?").bind(b.client_id).first<Partial<Buyer>>()
             : undefined
         }
+        products={c.get("user").features?.products ? await activeProducts(c) : undefined}
       />
     </Layout>,
   );
@@ -640,6 +655,10 @@ admin.post("/bookings/:id", async (c) => {
     else if (status === "completed" && existing.status !== "completed") await afterCompleted(c.env, id);
   }
   if (status === "cancelled") await c.env.DB.prepare("UPDATE bookings SET hold_until = NULL WHERE id = ?").bind(id).run();
+  // A flash design that can only be tattooed once is taken when the appointment is done.
+  if (status === "completed") {
+    await c.env.DB.prepare("UPDATE flash SET status = 'taken', on_booking = 0 WHERE repeatable = 0 AND id = (SELECT flash_id FROM bookings WHERE id = ?)").bind(id).run();
+  }
   return c.redirect(`/admin/bookings/${id}?ok=Lagret`);
 });
 
@@ -835,6 +854,10 @@ function PaymentTable({ rows, staff }: { rows: PaymentRow[]; staff: { id: number
   );
 }
 
+// PLACEHOLDER-RESCAN: Linework's Nytt salg is a cart with a payment step we never reached. Ours stays a
+// registration (we must not be a till): picking a product (or changing the count) fills in amount and type; the amount can still be changed for a discount.
+const PRODUCT_PICK_JS = "var f=this.form,o=f.product_id.selectedOptions[0],q=+f.quantity.value||1;if(o&&o.value){f.amount.value=String(Math.round(o.dataset.price*q*100)/100).replace('.',',');f.kind.value='product'}";
+
 function PaymentForm(props: {
   staff: { id: number; name: string }[];
   methods: string[];
@@ -844,11 +867,33 @@ function PaymentForm(props: {
   back: string;
   /** Invoice mode: the buyer's name and address go on the invoice (prefilled from the booking's client). */
   buyer?: Partial<Buyer> | null;
+  /** Products for sale (Produkter); picking one fills in the amount and type. */
+  products?: Product[];
 }) {
   return (
     <form method="post" action="/admin/payments" class="card noprint" id="ny">
       <input type="hidden" name="booking_id" value={props.bookingId ? String(props.bookingId) : ""} />
       <input type="hidden" name="back" value={props.back} />
+      {props.products && props.products.length > 0 && (
+        <div class="row">
+          <label style="flex:3 1 260px">
+            Produkt (valgfritt)
+            <select name="product_id" onchange={PRODUCT_PICK_JS}>
+              <option value="">Ingen, bare behandling</option>
+              {props.products.map((p) => (
+                <option value={p.id} data-price={p.price_ore / 100}>
+                  {p.category ? `${p.category}: ` : ""}
+                  {p.name} ({formatOre(p.price_ore)}, {p.vat_pct} % mva{p.stock != null ? `, ${p.stock} på lager` : ""})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label style="flex:0 1 110px">
+            Antall
+            <input name="quantity" type="number" min="1" max="99" value="1" onchange={PRODUCT_PICK_JS} />
+          </label>
+        </div>
+      )}
       <div class="row">
         <label>
           Beløp (kr)
@@ -950,7 +995,14 @@ admin.get("/payments/new", async (c) => {
               ? "Ta betalt i Zettle, så kommer salget inn her av seg selv. Registrer bare det som ikke gikk gjennom Zettle."
               : "Ta betalt i kassen som vanlig, og registrer salget her."}
           </p>
-          <PaymentForm staff={staff} methods={paymentMethods(c.get("user"))} date={date} back="/admin/payments" buyer={c.get("user").features?.invoices ? null : undefined} />
+          <PaymentForm
+            staff={staff}
+            methods={paymentMethods(c.get("user"))}
+            date={date}
+            back="/admin/payments"
+            buyer={c.get("user").features?.invoices ? null : undefined}
+            products={c.get("user").features?.products ? await activeProducts(c) : undefined}
+          />
         </>
       )}
     </Layout>,
@@ -1178,6 +1230,13 @@ admin.post("/payments", async (c) => {
   const paidAt = date === today() ? new Date().toISOString() : osloToUtc(date, "12:00").toISOString();
   const providerRef = str(body, "provider_ref") || null;
 
+  // A product from Produkter: the sale gets its VAT rate and name, and the stock count goes down.
+  const product = Number(str(body, "product_id"))
+    ? await c.env.DB.prepare("SELECT id, name, stock FROM products WHERE id = ? AND active = 1").bind(Number(str(body, "product_id"))).first<{ id: number; name: string; stock: number | null }>()
+    : null;
+  const quantity = product ? Math.min(99, Math.max(1, Math.round(Number(str(body, "quantity")) || 1))) : null;
+  if (product && kind !== "product" && kind !== "refund") return c.redirect(`${back}${sep}error=Velg+typen+Produkt/smykke+for+produktsalg`);
+
   // Paying with a gift card draws down its balance in the same batch as the payment.
   let giftCard: { id: number; code: string } | null = null;
   if (method === "gift_card" && kind !== "refund") {
@@ -1192,11 +1251,28 @@ admin.post("/payments", async (c) => {
   let paymentId = 0;
   try {
     const row = await c.env.DB.prepare(
-      `INSERT INTO payments (booking_id, staff_id, kind, method, amount_ore, provider, provider_ref, note, paid_at, business_date, recorded_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
+      `INSERT INTO payments (booking_id, staff_id, kind, method, amount_ore, provider, provider_ref, note, paid_at, business_date, recorded_by, product_id, quantity)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`,
     )
-      .bind(Number(str(body, "booking_id")) || null, Number(str(body, "staff_id")) || null, kind, method, amount, giftCard ? "gift_card" : str(body, "provider") || "manual", giftCard ? `${giftCard.code}:${crypto.randomUUID().slice(0, 8)}` : providerRef, str(body, "note") || (giftCard ? `Gavekort ${giftCard.code}` : null), paidAt, date, user.email)
+      .bind(
+        Number(str(body, "booking_id")) || null,
+        Number(str(body, "staff_id")) || null,
+        kind,
+        method,
+        amount,
+        giftCard ? "gift_card" : str(body, "provider") || "manual",
+        giftCard ? `${giftCard.code}:${crypto.randomUUID().slice(0, 8)}` : providerRef,
+        str(body, "note") || (product ? `${product.name}${quantity! > 1 ? ` × ${quantity}` : ""}` : null) || (giftCard ? `Gavekort ${giftCard.code}` : null),
+        paidAt,
+        date,
+        user.email,
+        product?.id ?? null,
+        quantity,
+      )
       .first<{ id: number }>();
+    if (product && product.stock != null) {
+      await c.env.DB.prepare("UPDATE products SET stock = stock - ? WHERE id = ?").bind(kind === "refund" ? -quantity! : quantity, product.id).run();
+    }
     if (giftCard) {
       await c.env.DB.prepare("INSERT INTO gift_card_movements (gift_card_id, amount_ore, booking_id, note, by) VALUES (?, ?, ?, ?, ?)")
         .bind(giftCard.id, -amount, Number(str(body, "booking_id")) || null, `Betaling #${row!.id}`, user.email)

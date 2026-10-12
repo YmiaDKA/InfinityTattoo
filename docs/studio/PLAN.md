@@ -43,8 +43,14 @@ Linework features from [linework.no/priser](https://linework.no/priser), [/studi
 | Booth rent / commission | ✅ Studio share % and/or fixed monthly rent per artist; month and year settlements | Artistoppgjør |
 | Cleanup time between appointments | ✅ Per service, used when the website offers times | Innstillinger → Behandlinger |
 | No-show history | ✅ Shown on the booking ("Møtte ikke 2 ganger før") | Booking page |
-| Retail products | ↪ Sold in the Zettle till (it has a product list and stock) and imported as payments | |
-| Flash booking | ❌ Backlog (can be a service with a fixed price today) | |
+| Retail products | ✅ Products with categories, MVA 25/15/12/0 and optional stock, picked in Nytt salg (the till still takes the payment) | Produkter |
+| Flash booking | ✅ Artists share flash, the studio picks what shows on the booking page, `/api/flash` for the website | Markedsføring → Flash |
+| Reviews | ✅ Stars and a comment after the visit, then the Google link; average per artist | Markedsføring → Anmeldelser |
+| Notifications | ✅ Bell with new requests, online deposits, signed forms, online gift cards and reviews | Top bar |
+| Rent invoices / studio commissions / payouts | ✅ Invoices to artists with their own number series and PDF; payouts per month | Oppgjør |
+| Forms, instructions, online booking, client support settings | ✅ Switchable consent form sections and own questions; up to 8 before/after instructions; request form and Meta pixel settings; support contact | Innstillinger |
+
+Parts of these were built without seeing Linework's filled screens; they are marked `PLACEHOLDER-RESCAN` and listed in [PLACEHOLDER-RESCAN.md](PLACEHOLDER-RESCAN.md) to replace after the rescan of the owner's account.
 | Mobile app | Admin is built for phones and installs on the home screen with the studio icon (opens full screen like an app). No App Store app needed | |
 
 ## 3. What it costs
@@ -89,10 +95,9 @@ D1: staff, services, hours, time_off, clients, bookings, consents, payments, day
 
 ## 6. Remaining backlog
 
-1. Products and ink inventory with stock counts.
-2. Flash sheet booking (fixed design + price on the website).
-3. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
-4. Move the website from Vercel to Cloudflare and serve the API on the same domain.
+1. Replace the `PLACEHOLDER-RESCAN` guesses after the rescan, and make the website form read the request-form settings and show flash.
+2. Vipps ePayment for online deposits (2.99 % + 1 kr) if he wants Vipps online; Stripe covers card now.
+3. Move the website from Vercel to Cloudflare and serve the API on the same domain.
 
 ## 7. Decisions and defaults
 
@@ -151,7 +156,7 @@ Not copied:
 - **Artist linked to several studios / marketplace for guest artists.** Guest artists can be added as staff with their own share or rent.
 - **Klarna and invoices with 10/15/30 days.** Not used in a tattoo studio day to day; Folio/Fiken can invoice if needed.
 - **Native app with push.** The home-screen web app covers it; new requests can be emailed to the studio.
-- **Google Calendar import, 3-day/month views, flash gallery, editable email templates, donations at checkout.** Small; can be added when someone asks.
+- **Google Calendar import, 3-day/month views, editable email templates, donations at checkout, Theme/Skins.** Small; can be added when someone asks.
 
 ## 10. Open-source projects compared
 

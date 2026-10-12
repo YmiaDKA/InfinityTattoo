@@ -8,6 +8,9 @@ export const FEATURES = {
   rent: { label: "Fast stolleie", note: "Stolleie per artist i artistoppgjøret." },
   settlements: { label: "Artistoppgjør", note: "Måneds- og årsoppgjør per artist." },
   photos: { label: "Referansebilder", note: "Kunden kan laste opp bilder med tatoveringsforespørselen." },
+  flash: { label: "Flash", note: "Flash-design fra artistene, valgt ut til bookingsiden." },
+  reviews: { label: "Anmeldelser", note: "Ber kunden om stjerner og en kommentar etter timen, og viser Google-lenken." },
+  products: { label: "Produkter for salg", note: "Varer som smykker og krem, med kategorier og MVA, å velge i «Nytt salg»." },
   sms: { label: "SMS-påminnelser", note: "SMS dagen før (koster ca. 0,70 kr per SMS)." },
   invoices: {
     label: "Faktura på hvert salg",
@@ -50,5 +53,7 @@ export const FEATURE_PATHS: [string, FeatureKey][] = [
   ["/admin/gift-cards", "gift_cards"],
   ["/admin/inks", "inks"],
   ["/admin/settlements", "settlements"],
+  ["/admin/reviews", "reviews"],
+  ["/admin/settings/flash", "flash"],
   // Not /admin/invoices: issued invoices must stay readable after invoice mode is switched off.
 ];

@@ -58,4 +58,8 @@ To try the website form against it, run the site with `NEXT_PUBLIC_STUDIO_API_UR
 - **CSV for regnskap** on the payments page exports a period for the accountant.
 - **Fakturaer** (only in invoice mode, *Innstillinger → Kassesystem*): every sale gets a numbered invoice with the client's name and address; *Uten faktura* lists sales still missing an address.
 - **Rapporter → Regnskap → Lag Fiken-bilag** (owner): read in a SumUp report if used, type in the month's payouts from the bank, approve, and type the lines into Fiken with the PDF attached (or they're posted, if a Fiken token is set).
+- **Oppgjør → Fakturaer til artister / Utbetalinger**: invoice artists for chair rent (one button per month) or commission, and record what was paid out.
+- **Markedsføring → Flash / Anmeldelser**: flash designs for the booking page, and the stars and comments clients leave after the visit.
+- **Produkter**: products for sale with MVA and stock, picked in *Nytt salg*; the ink register is the other tab.
+- **Innstillinger → Nettbooking, Skjema, Instruksjoner, Kundeservice** and **Gavekort → Innstillinger**: what clients see. Guesses waiting for the Linework rescan are listed in `docs/studio/PLACEHOLDER-RESCAN.md`.
 - **Rapporter → Regnskap** (owner): pick a month, download `bilag.csv`, `artister.csv` and `oppsummering.pdf`, or press *Send til regnskapsfører*. Set the accountant's email, program, VAT and account numbers in *Innstillinger → Regnskap*. Sending needs Resend.

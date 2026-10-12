@@ -89,16 +89,19 @@ export type PaymentForInvoice = {
   postcode: string | null;
   city: string | null;
   email: string | null;
+  product_name?: string | null;
+  quantity?: number | null;
 };
 
 const PAYMENT_SELECT = `
   SELECT p.id, p.kind, p.method, p.amount_ore, p.note, p.business_date, p.booking_id,
-         b.starts_at, sv.name_no AS service_name, sv.vat_pct, s.name AS staff_name,
-         cl.id AS client_id, cl.name, cl.address, cl.postcode, cl.city, cl.email
+         b.starts_at, sv.name_no AS service_name, CASE WHEN p.kind = 'product' THEN COALESCE(pr.vat_pct, 25) ELSE sv.vat_pct END AS vat_pct,
+         s.name AS staff_name, pr.name AS product_name, p.quantity, cl.id AS client_id, cl.name, cl.address, cl.postcode, cl.city, cl.email
   FROM payments p
   LEFT JOIN bookings b ON b.id = p.booking_id
   LEFT JOIN services sv ON sv.id = b.service_id
   LEFT JOIN staff s ON s.id = p.staff_id
+  LEFT JOIN products pr ON pr.id = p.product_id
   LEFT JOIN clients cl ON cl.id = COALESCE(p.client_id, b.client_id)`;
 
 /** Pure: the invoice lines for one payment. Exported for tests. */
@@ -115,8 +118,8 @@ export function invoiceLines(p: PaymentForInvoice, vatRegistered: boolean): Invo
     vatPct = 0;
   } else if (p.kind === "deposit") text = `Depositum for ${service.toLowerCase()}${when}${who}`;
   else if (p.kind === "product") {
-    text = p.note || "Smykke/produkt";
-    vatPct = vatRegistered ? 25 : 0;
+    text = p.product_name ? `${p.product_name}${(p.quantity ?? 1) > 1 ? ` × ${p.quantity}` : ""}` : p.note || "Smykke/produkt";
+    vatPct = vatRegistered ? (p.vat_pct ?? 25) : 0;
   } else if (p.kind === "refund") text = `Tilbakebetalt: ${p.note || service}`;
   else text = `${service}${who}`;
   if (p.method === "gift_card" && p.kind !== "gift_card_sale") text += " (betalt med gavekort)";

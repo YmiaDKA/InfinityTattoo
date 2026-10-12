@@ -2,6 +2,8 @@ import type { Context } from "hono";
 
 import { activateGiftCard, stripeEnabled } from "../lib/bookings";
 import { giftCardBalance, giftCardExpiry, newGiftCardCode, normalizeCode } from "../lib/giftcards";
+import { loadGiftCardSettings } from "../lib/site-settings";
+import { SettlementTabs, UnpaidCard, unpaidSummary } from "./admin-artist-money";
 import { formatOre, parseKroner } from "../lib/report";
 import { addDays, businessDate, isDateString, localTime, osloToUtc } from "../lib/time";
 import { FEATURES, setFeature, type FeatureKey } from "../lib/features";
@@ -605,13 +607,13 @@ extra.get("/gift-cards", async (c) => {
   const rows = all.filter((g) => (!source || (source === "online") === (g.source === "online")) && (!status || cardStatus(g) === status));
   const sold = all.filter((g) => g.status === "active");
   const valid = sold.filter((g) => cardStatus(g) === "valid");
-  const online = stripeEnabled(c.env);
+  const online = stripeEnabled(c.env) && (await loadGiftCardSettings(c.env)).store;
   const csv = `/admin/gift-cards.csv${q || source || status ? `?${new URLSearchParams({ q, source, status })}` : ""}`;
 
   return c.html(
     <Layout title="Gavekort" path="/admin/gift-cards" user={c.get("user")} {...flash(c)}>
       <PageHead title="Gavekort" sub="Se alle solgte gavekort og hvordan nettbutikken for gavekort står.">
-        <a class="button secondary" href="https://infinitytattoo.no/#gift-cards" target="_blank" rel="noopener">
+        <a class="button secondary" href={`${c.env.SITE_URL.replace(/\/$/, "")}/#gift-cards`} target="_blank" rel="noopener">
           <Icon name="share" size={16} /> Del gavekortbutikken
         </a>
         <a class="button" href="/admin/payments/new?tab=gift" data-drawer>
@@ -623,11 +625,9 @@ extra.get("/gift-cards", async (c) => {
           <span class="dot" style={`background:${online ? "var(--ok)" : "var(--faint)"}`} />
           {online ? "Gavekortbutikken er på" : "Gavekortbutikken er av"}
         </span>
-        {isOwner(c) && (
-          <a class="button secondary small" href="/admin/settings/payments">
-            Innstillinger
-          </a>
-        )}
+        <a class="button secondary small" href="/admin/gift-cards/settings">
+          Innstillinger
+        </a>
       </p>
       <form method="get" class="toolbar">
         <label class="search">
@@ -724,7 +724,7 @@ extra.post("/gift-cards", async (c) => {
     `INSERT INTO gift_cards (code, initial_ore, status, buyer_name, recipient_name, source, expires_on, created_by)
      VALUES (?, ?, 'pending', ?, ?, 'studio', ?, ?) RETURNING id, code`,
   )
-    .bind(newGiftCardCode(), amount, str(body, "buyer_name") || null, str(body, "recipient_name") || null, giftCardExpiry(), user.email)
+    .bind(newGiftCardCode(), amount, str(body, "buyer_name") || null, str(body, "recipient_name") || null, giftCardExpiry(new Date(), (await loadGiftCardSettings(c.env)).validityMonths), user.email)
     .first<{ id: number; code: string }>();
   const now = new Date().toISOString();
   const payment = await c.env.DB.prepare(
@@ -1053,6 +1053,7 @@ extra.get("/settlements", async (c) => {
     .filter((l) => l.own.length > 0 || l.rent > 0 || (!onlyActive && isOwner(c)));
   const sum = (k: "gross" | "studio" | "rent" | "artist") => lines.reduce((t, l) => t + l[k], 0);
   const href = (u: PeriodUnit, d: string) => `/admin/settlements?unit=${u}&date=${d}${onlyActive ? "" : "&all=1"}`;
+  const unpaid = await unpaidSummary(c);
 
   return c.html(
     <Layout title="Oppgjør" path="/admin/settlements" user={user}>
@@ -1061,7 +1062,9 @@ extra.get("/settlements", async (c) => {
           Skriv ut / PDF
         </button>
       </PageHead>
+      <SettlementTabs active="commission" />
       <div class="grid" style="margin-bottom:1.5rem">
+        {isOwner(c) && <UnpaidCard u={unpaid} />}
         {showRent && (
           <div class="card" style="margin:0">
             <div class="muted">Stolleie i perioden</div>
